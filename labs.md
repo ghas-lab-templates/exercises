@@ -17,11 +17,16 @@ before configuring custom security configurations. However, for learning experie
 In this lab, you will learn how to create and apply a custom security configuration to repositories in your organization. Follow the steps below to complete the exercise:
 
 1. Click on your Organisation's settings
-(insert image)
 
-2. 
+![alt text](images/settings.png)
 
+2. In the "Security" section of the sidebar, select the Code security dropdown menu, then click Configurations.
 
+![alt text](images/configurations.png)
 
+3. In the "Code security configurations" section, click New configuration.
 
+![alt text](images/new-conf.png)
+
+4. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. TO DO - Come up with name. 
 
