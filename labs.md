@@ -1,4 +1,4 @@
-![Screenshot_20241212_184240](https://github.com/user-attachments/assets/16caa954-7963-4572-b9c7-22a45de22a06)# GHAS Labs
+# GHAS Labs
 
 ## Enablement Settings 
 
@@ -9,7 +9,7 @@ application of security best practices. Organizations can choose from two option
 - GitHub-recommended security configurations
 - custom security configurations.
 
-### Lab - Setting Up a Custom Security Configuration
+### Lab - Setting Up a Custom Security Configuration and Enabling Dependency Graph
 
 (Instructor notes: Mention how we recommend securing your organization with the GitHub-recommended security configuration, then evaluating the security findings on your repositories
 before configuring custom security configurations. However, for learning experience we will set up our own security configuration. )
@@ -29,3 +29,15 @@ In this lab, you will learn how to create and apply a custom security configurat
 ![alt text](images/new-conf.png)
 
 4. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
+
+![alt text](images/confignameanddesc.png)
+
+5. For each configuration option select the following:
+ - `GitHub Advanced Security Features`: Select `Include`.
+ - `Dependency Graph`: Select `Enabled`.
+ - All Other Settings: Select `Not set`.
+Policies:
+ - For `Use as default for newly created repositories`, select `All repositories`.
+ - For `Enforce Configuration`, select `Enforce`.
+
+![alt text](images/configuration-options.png)
