@@ -39,5 +39,11 @@ In this lab, you will learn how to create and apply a custom security configurat
 Policies:
  - For `Use as default for newly created repositories`, select `All repositories`.
  - For `Enforce Configuration`, select `Enforce`.
-
+ 
 ![alt text](images/configuration-options.png)
+
+6. Click on `Save Configuration` button. Please confirm save if prompted.
+
+7. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+
+![alt text](images/applytoallrepos.png)
