@@ -47,3 +47,20 @@ Policies:
 7. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
 
 ![alt text](images/applytoallrepos.png)
+
+### Lab - Dependency Graph
+
+(Instructor notes: Go through Dependency Graph Module here???) 
+
+1. Navigate to the Dependency Graph at the repository level
+
+(TO DO: Add GIF)
+
+2. Navigate to Dependencies at the Organisation level 
+
+(TO DOL Add GIF)
+
+
+### Lab - Dependency Submission API 
+
+
