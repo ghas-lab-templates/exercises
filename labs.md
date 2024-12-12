@@ -1,4 +1,4 @@
-# GHAS Labs
+![Screenshot_20241212_184240](https://github.com/user-attachments/assets/16caa954-7963-4572-b9c7-22a45de22a06)# GHAS Labs
 
 ## Enablement Settings 
 
@@ -28,5 +28,4 @@ In this lab, you will learn how to create and apply a custom security configurat
 
 ![alt text](images/new-conf.png)
 
-4. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. TO DO - Come up with name. 
-
+4. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
