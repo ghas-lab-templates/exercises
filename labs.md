@@ -16,23 +16,15 @@ before configuring custom security configurations. However, for learning experie
 
 In this lab, you will learn how to create and apply a custom security configuration to repositories in your organization. Follow the steps below to complete the exercise:
 
-1. Click on your Organisation's settings
+1. Click on your Organisation's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the "Code security configurations" page, click `New configuration` button.
 
-![alt text](images/settings.png)
+![alt text](images/new-config.gif)
 
-2. In the "Security" section of the sidebar, select the Code security dropdown menu, then click Configurations.
-
-![alt text](images/configurations.png)
-
-3. In the "Code security configurations" section, click New configuration.
-
-![alt text](images/new-conf.png)
-
-4. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
+1. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
 
 ![alt text](images/confignameanddesc.png)
 
-5. For each configuration option select the following:
+1. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
  - `Dependency Graph`: Select `Enabled`.
  - All Other Settings: Select `Not set`.
@@ -42,9 +34,9 @@ Policies:
  
 ![alt text](images/configuration-options.png)
 
-6. Click on `Save Configuration` button. Please confirm save if prompted.
+1. Click on `Save Configuration` button. Please confirm save if prompted.
 
-7. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+1. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
 
 ![alt text](images/applytoallrepos.png)
 
@@ -56,7 +48,7 @@ Policies:
 
 (TO DO: Add GIF)
 
-2. Navigate to Dependencies at the Organisation level 
+1. Navigate to Dependencies at the Organisation level 
 
 (TO DOL Add GIF)
 
