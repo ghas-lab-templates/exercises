@@ -41,7 +41,7 @@ Follow the steps below to complete the exercise:
    
  </details>
 
-6. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+5. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
    
 <details>
   <summary>Animated Guide</summary>
@@ -76,6 +76,10 @@ Follow the steps below to complete the exercise:
 
 </details>
 
-### Lab - Dependency Submission API 
+### Lab 3 - Dependency Submission API 
+
+#### Exercise: Create Dependency Submission Action
+
+
 
 
