@@ -19,7 +19,7 @@ Follow the steps below to complete the exercise:
 2. To help identify your custom security configuration and clarify its purpose, name your configuration and create a description. 
 
 <details>
-  <summary>Animated Guide</summary>
+  <summary>Need Help? View Configuration Screenshot</summary>
   
 ![alt text](images/confignameanddesc.png)
 
