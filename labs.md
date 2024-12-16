@@ -2,7 +2,7 @@
 
 ## Enablement Settings 
 
-**TO DO: FINISH THIS AFTER DEC 10 WHEN ENTERPRISE CONFIGS HAVE SHIPPED**
+**TO DO: FINISH THIS WHEN ENTERPRISE CONFIGS HAVE SHIPPED**
 
 GitHub security configurations provide a way to manage and enforce security settings across repositories in your organization, enabling consistent 
 application of security best practices. Organizations can choose from two options based on their needs:
@@ -20,11 +20,11 @@ In this lab, you will learn how to create and apply a custom security configurat
 
 ![alt text](images/new-config.gif)
 
-1. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
+2. To help identify your custom security configuration and clarify its purpose on the "Code security configurations" page, name your configuration and create a description. 
 
 ![alt text](images/confignameanddesc.png)
 
-1. For each configuration option select the following:
+3. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
  - `Dependency Graph`: Select `Enabled`.
  - All Other Settings: Select `Not set`.
@@ -34,24 +34,28 @@ Policies:
  
 ![alt text](images/configuration-options.png)
 
-1. Click on `Save Configuration` button. Please confirm save if prompted.
+4. Click on `Save Configuration` button. Please confirm save if prompted.
 
-1. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+5. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+
+**TO DO: GIF THIS WHEN TOTAL NUMBER OF REPOS CONFIRMED**
 
 ![alt text](images/applytoallrepos.png)
 
 ### Lab - Dependency Graph
 
-(Instructor notes: Go through Dependency Graph Module here???) 
+(Instructor notes: Go through dependency graph slides) 
 
-1. Navigate to the Dependency Graph at the repository level
+1. Navigate to the Dependency Graph at the repository level. On the repository page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependency Graph` from the left-hand menu. 
+2. Carefully review the list of dependencies displayed and verify completeness. Look for any missing dependencies.
 
-(TO DO: Add GIF)
+![alt text](images/repo-dependency-graph.gif)
 
-1. Navigate to Dependencies at the Organisation level 
+1. Navigate to Dependencies at the Organisation level. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
+2. Review the licences used in the organisation.
+3. Explore the relationship between dependencies and dependents.
 
-(TO DOL Add GIF)
-
+![alt text](images/org-dependency-graph.gif)
 
 ### Lab - Dependency Submission API 
 
