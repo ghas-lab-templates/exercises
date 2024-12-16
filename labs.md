@@ -1,4 +1,4 @@
-# GHAS Labs
+# Module 1 - Supply Chain Security
 
 ## Enablement Settings 
 
