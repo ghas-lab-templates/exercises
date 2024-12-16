@@ -59,16 +59,22 @@ Follow the steps below to complete the exercise:
 1. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
 2. Review the licences used in the Organization.
 3. Explore the relationship between dependencies and dependents.
+<details>
+  <summary> Animated Guide</summary>
 
 ![alt text](images/org-dependency-graph.gif)
+
+</details>
 
 #### Exercise: Repository Level Dependencies 
 1. On the repository page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependency Graph` from the left-hand menu. 
 2. Carefully review the list of dependencies displayed and verify completeness. Look for any missing dependencies.
+<details>
+  <summary> Animated Guide</summary>
 
 ![alt text](images/repo-dependency-graph.gif)
 
-
+</details>
 
 ### Lab - Dependency Submission API 
 
