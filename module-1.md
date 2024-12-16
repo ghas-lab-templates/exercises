@@ -31,16 +31,25 @@ Follow the steps below to complete the exercise:
  - All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Enforce`.
- 
-![alt text](images/configuration-options.png)
 
 4. Click on `Save Configuration` button. Please confirm save if prompted.
 
-5. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+  <details>
+ <summary>Need Help? View Configuration Screenshot</summary>  
+   
+   ![alt text](images/configuration-options.png)
+   
+ </details>
 
+6. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+   
+<details>
+  <summary>Animated Guide</summary>
+  
 **TO DO: GIF THIS WHEN TOTAL NUMBER OF REPOS CONFIRMED**
 
 ![alt text](images/applytoallrepos.png)
+</details>
 
 ## Supply Chain Security - Know Your Environment
 
