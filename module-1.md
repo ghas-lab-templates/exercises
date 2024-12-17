@@ -78,9 +78,7 @@ Follow the steps below to complete the exercise:
 
 ### Lab 3 - Dependency Submission API 
 
-#### Exercise: Dependency Submission Action
-
-In this exercise we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
+In this Lab we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
 
 1. Navigate to the `moshi` repository in your GitHub Organization
 2. Notice the dependency graph only shows 3 dependencies. This is unusual for a project of its size. This happens because the repository uses Gradle for its build process, and Gradle resolves dependencies dynamically during build time.
@@ -136,8 +134,6 @@ jobs:
 7. Confirm that the dependency graph now shows a complete and accurate list of dependencies.
 
 ### Lab 4 - Software Bill Of Materials (SBOM) Generation and Attestations
-
-#### Exercise: 
 
 A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating an SBOM helps improve supply chain security and enables transparency about the software used.
 
@@ -241,6 +237,8 @@ jobs:
 ## Supply Chain Security - Manage Your Environment
 
 ### Lab 5 - Dependabot Alerts and Security Updates
+
+In this lab, we will enable and review Depenabot Alerts and Dependabot Security Updates
 
 1. Edit your custom security configuration to enable dependabot.
   a.  Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  On the `Code security configurations` page, under `Organization configurations`, locate the custom configuration you created earlier (Custom GHAS Configuration). Click on the Edit (pencil) icon next to the configuration
