@@ -144,13 +144,13 @@ A Software Bill of Materials (SBOM) is a comprehensive list of software componen
 Methods to Retrieve SBOM:
 - UI: You can download an SBOM directly via GitHub's UI under the Dependency graph or Security features.
 - REST API: GitHub provides a REST API to retrieve SBOMs programmatically.
-- GitHub Action: For automation, the SBOM Generator Action is a wrapper around the REST API and integrates directly into your workflows.
+- GitHub Action: For automation, the `sbom-generator-action` uses GitHub's dependency graph to automatically build an SBOM in SPDX 2.3 format. It supports the same [ecosystems](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph) as the dependency graph. If you need support for a different set of formats, we recommend having a look at the [Microsoft SBOM Tool](https://github.com/microsoft/sbom-tool), or Anchore's [Syft](https://github.com/anchore/syft)
 
 In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
 
 1. Navigate to the `mona-gallery`repository in your organization
 2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
-3. Add the following contents to the file: 
+3. Add the following contents to the file to generate an SCOM using the [sbom-generator-action](https://github.com/advanced-security/sbom-generator-action): 
 
 ```yaml
 
@@ -190,7 +190,7 @@ jobs:
           name: "SBOM"
 ```
 
-5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM
+5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the [attest-build-provenance action](https://github.com/actions/attest-build-provenance/tree/main) to create an attestation for our SBOM
 
 ```yaml 
   - uses: actions/attest-build-provenance@v2
