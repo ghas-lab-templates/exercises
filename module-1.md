@@ -245,11 +245,9 @@ In this lab, we will enable and review Depenabot Alerts and Dependabot Security 
 2. Under `Dependency Graph and Dependabot` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
 3. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
 4. Discussion Points:
-    - Considerations for Automation:
-   
+    - Considerations for Automation:   
     What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
-    How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
-   
+    How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?  
    - Triage and Ownership:
     How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
     Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
