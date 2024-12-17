@@ -78,8 +78,59 @@ Follow the steps below to complete the exercise:
 
 ### Lab 3 - Dependency Submission API 
 
-#### Exercise: Create Dependency Submission Action
+#### Exercise: Dependency Submission Action
 
+In this exercise we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
 
+1. Navigate to the `moshi` repository in your GitHub Organisation
+2. Notice the dependency graph only shows 3 dependencies. This is unusual for a project of its size. This happens because the repository uses Gradle for its build process, and Gradle resolves dependencies dynamically during build time.
+3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
+  a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file
+  b. Copy and paste the following workflow into the file:
 
+``` yaml
 
+name: Dependency Submission
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: ['master']
+
+permissions:
+  contents: write
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+    - name: Configure JDK
+      uses: actions/setup-java@v4
+      with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'gradle'
+
+    - name: Generate and submit dependency graph
+      uses: gradle/actions/dependency-submission@v4
+```
+
+4. Commit and push the changes to the repository
+
+<details>
+  <summary>Git Commands </summary>
+
+```bash
+git add .github/workflows/dependency-submission.yml
+git commit -m "Add dependency submission workflow for Gradle"
+git push
+```
+
+</details>
+
+5. Ensure the workflow runs successfully. You can verify this in the `Actions` tab of the repository.
+6. Once the workflow completes, navigate back to `Insights` > `Dependency graph`.
+7. Confirm that the dependency graph now shows a complete and accurate list of dependencies.
