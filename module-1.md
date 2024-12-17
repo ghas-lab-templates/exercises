@@ -30,7 +30,7 @@ Follow the steps below to complete the exercise:
  - `Dependency Graph`: Select `Enabled`.
  - All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
- - In the `Policy` options, for `Enforce Configuration`, select `Enforce`.
+ - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
 
 4. Click on `Save Configuration` button. Please confirm save if prompted.
 
@@ -144,13 +144,13 @@ A Software Bill of Materials (SBOM) is a comprehensive list of software componen
 Methods to Retrieve SBOM:
 - UI: You can download an SBOM directly via GitHub's UI under the Dependency graph or Security features.
 - REST API: GitHub provides a REST API to retrieve SBOMs programmatically.
-- GitHub Action: For automation, the `sbom-generator-action` uses GitHub's dependency graph to automatically build an SBOM in SPDX 2.3 format. It supports the same [ecosystems](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph) as the dependency graph. If you need support for a different set of formats, we recommend having a look at the [Microsoft SBOM Tool](https://github.com/microsoft/sbom-tool), or Anchore's [Syft](https://github.com/anchore/syft)
+- GitHub Action: For automation, the SBOM Generator Action is a wrapper around the REST API and integrates directly into your workflows.
 
 In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
 
 1. Navigate to the `mona-gallery`repository in your organization
 2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
-3. Add the following contents to the file to generate an SCOM using the [sbom-generator-action](https://github.com/advanced-security/sbom-generator-action): 
+3. Add the following contents to the file: 
 
 ```yaml
 
@@ -190,7 +190,7 @@ jobs:
           name: "SBOM"
 ```
 
-5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the [attest-build-provenance action](https://github.com/actions/attest-build-provenance/tree/main) to create an attestation for our SBOM
+5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM
 
 ```yaml 
   - uses: actions/attest-build-provenance@v2
@@ -237,3 +237,20 @@ jobs:
 ```
 
 </details>
+
+## Supply Chain Security - Manage Your Environment
+
+### Lab 5 - Dependabot Alerts and Security Updates
+
+1. Edit your custom security configuration to enable dependabot.
+  a.  Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  On the `Code security configurations` page, under `Organization configurations`, locate the custom configuration you created earlier (Custom GHAS Configuration). Click on the Edit (pencil) icon next to the configuration
+2. Under `Dependency Graph and Dependabot` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
+3. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
+4. Discussion Points:
+  a. Considerations for Automation:
+  What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
+  How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
+  b. Triage and Ownership:
+  How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
+  Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
+
