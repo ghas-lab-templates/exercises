@@ -82,7 +82,7 @@ Follow the steps below to complete the exercise:
 
 In this exercise we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
 
-1. Navigate to the `moshi` repository in your GitHub Organisation
+1. Navigate to the `moshi` repository in your GitHub Organization
 2. Notice the dependency graph only shows 3 dependencies. This is unusual for a project of its size. This happens because the repository uses Gradle for its build process, and Gradle resolves dependencies dynamically during build time.
 3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
   a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file
@@ -120,17 +120,120 @@ jobs:
 
 4. Commit and push the changes to the repository
 
-<details>
-  <summary>Git Commands </summary>
+  <details>
+    <summary>Git Commands </summary>
 
-```bash
-git add .github/workflows/dependency-submission.yml
-git commit -m "Add dependency submission workflow for Gradle"
-git push
-```
+  ```bash
+  git add .github/workflows/dependency-submission.yml
+  git commit -m "Add dependency submission workflow for Gradle"
+  git push
+  ```
 
-</details>
+  </details>
 
 5. Ensure the workflow runs successfully. You can verify this in the `Actions` tab of the repository.
 6. Once the workflow completes, navigate back to `Insights` > `Dependency graph`.
 7. Confirm that the dependency graph now shows a complete and accurate list of dependencies.
+
+### Lab 4 - Software Bill Of Materials (SBOM) Generation and Attestations
+
+#### Exercise: 
+
+A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating an SBOM helps improve supply chain security and enables transparency about the software used.
+
+Methods to Retrieve SBOM:
+- UI: You can download an SBOM directly via GitHub's UI under the Dependency graph or Security features.
+- REST API: GitHub provides a REST API to retrieve SBOMs programmatically.
+- GitHub Action: For automation, the SBOM Generator Action is a wrapper around the REST API and integrates directly into your workflows.
+
+In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
+
+1. Navigate to the `mona-gallery`repository in your organization
+2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
+3. Add the following contents to the file: 
+
+```yaml
+
+name: SBOM Generation and Attestation
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      id-token: write
+      attestations: write
+      packages: write
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Generate SBOM
+      - name: Generate SBOM
+        uses: advanced-security/sbom-generator-action@v0.0.1
+        id: sbom
+        env: 
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # Step 3: Upload SBOM as an artifact
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          path: ${{ steps.sbom.outputs.fileName }}
+          name: "SBOM"
+```
+
+5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM
+
+```yaml 
+  - uses: actions/attest-build-provenance@v2
+      with:
+       subject-path: ${{steps.sbom.outputs.fileName }}
+```
+
+<details>
+  <summary> Solution: workflow file</summary>
+
+```yaml
+name: SBOM Generation and Attestation
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   permissions:
+     actions: read
+     contents: write
+     id-token: write
+     attestations: write
+     packages: write
+    
+   steps:
+    - uses: actions/checkout@v3
+
+    - uses: advanced-security/sbom-generator-action@v0.0.1
+      id: sbom
+      env: 
+        GITHUB_TOKEN: ${{ github.token }}
+        
+    - uses: actions/attest-build-provenance@v2
+      with:
+       subject-path: ${{steps.sbom.outputs.fileName }}
+
+    -  uses: actions/upload-artifact@v3.1.0
+       with: 
+        path: ${{steps.sbom.outputs.fileName }}
+        name: "SBOM"
+```
+
+</details>
