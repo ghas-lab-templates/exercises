@@ -4,9 +4,10 @@
 
 ### Lab 1 - Setting Up a Custom Security Configuration and Enabling Dependency Graph
 
+#### Objective 
 In this lab, you will learn how to create and apply a custom security configuration to repositories in your organization. 
 
-Follow the steps below to complete the exercise:
+#### Steps
 
 1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
 <details>
@@ -55,7 +56,11 @@ Follow the steps below to complete the exercise:
 
 ### Lab 2 - Dependency Graph
 
-#### Exercise: Organization Level Dependencies 
+#### Objective 
+
+Understand how to navigate and interpret dependency graphs at both the organization and repository levels. Gain insights into the licenses used and the relationships between dependencies and dependents to ensure comprehensive dependency management.
+
+#### Steps: Organization Level Dependencies 
 1. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
 2. Review the licences used in the Organization.
 3. Explore the relationship between dependencies and dependents.
@@ -66,7 +71,7 @@ Follow the steps below to complete the exercise:
 
 </details>
 
-#### Exercise: Repository Level Dependencies 
+#### Steps: Repository Level Dependencies 
 1. On the repository page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependency Graph` from the left-hand menu. 
 2. Carefully review the list of dependencies displayed and verify completeness. Look for any missing dependencies.
 <details>
@@ -76,10 +81,16 @@ Follow the steps below to complete the exercise:
 
 </details>
 
+#### Discussion Points 
+- How do dependency relationships (dependencies vs. dependents) impact project maintenance and scalability?
+- What tools or practices can be used to ensure dependency graphs remain accurate and up-to-date?
+
 ### Lab 3 - Dependency Submission API 
 
+#### Objective
 In this Lab we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
 
+#### Steps
 1. Navigate to the `moshi` repository in your GitHub Organization
 2. Notice the dependency graph only shows 3 dependencies. This is unusual for a project of its size. This happens because the repository uses Gradle for its build process, and Gradle resolves dependencies dynamically during build time.
 3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
@@ -133,7 +144,14 @@ jobs:
 6. Once the workflow completes, navigate back to `Insights` > `Dependency graph`.
 7. Confirm that the dependency graph now shows a complete and accurate list of dependencies.
 
+#### Discussion Points
+-  Why is it important to have a complete and accurate dependency graph? How can incomplete graphs affect project security and maintenance?
+- How does automating dependency submission improve workflow efficiency compared to manually tracking dependencies? Are there any drawbacks?
+- How should your team incorporate reviewing and maintaining dependency graphs into their regular workflows?
+
 ### Lab 4 - Software Bill Of Materials (SBOM) Generation and Attestations
+
+#### Objective 
 
 A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating an SBOM helps improve supply chain security and enables transparency about the software used.
 
@@ -144,6 +162,7 @@ Methods to Retrieve SBOM:
 
 In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
 
+#### Steps
 1. Navigate to the `mona-gallery`repository in your organization
 2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
 3. Add the following contents to the file: 
@@ -234,12 +253,23 @@ jobs:
 
 </details>
 
+#### Discussion Points 
+- Why are SBOMs critical for supply chain security? How can they help organizations manage software vulnerabilities and risks?
+- How does SBOM attestation ensure the integrity and authenticity of the generated SBOM? What are the implications of not attesting SBOMs?
+- How can SBOMs assist in meeting compliance requirements and providing transparency to stakeholders or customers?
+- What challenges might teams face in generating, managing, and using SBOMs effectively? How can these challenges be addressed?
+- How can teams integrate SBOM generation and attestation into their CI/CD pipelines without causing disruptions?
+- What strategies should be used to store and manage SBOM artifacts securely and efficiently? How can teams ensure they are accessible when needed?
+
 ## Supply Chain Security - Manage Your Environment
 
 ### Lab 5 - Dependabot Alerts and Security Updates
 
+#### Objective
+
 In this lab, we will enable and review Depenabot Alerts and Dependabot Security Updates
 
+#### Steps
 1. Edit your custom security configuration to enable dependabot.
   a.  Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  On the `Code security configurations` page, under `Organization configurations`, locate the custom configuration you created earlier (Custom GHAS Configuration). Click on the Edit (pencil) icon next to the configuration
 2. Under `Dependency Graph and Dependabot` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
@@ -254,21 +284,19 @@ In this lab, we will enable and review Depenabot Alerts and Dependabot Security 
 
 4. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
 5. Choose a repository and click on the `Actions` tab, select `Dependabot Updates` and review Action run.
-6. Discussion Points:
-    - Considerations for Automation:   
-    What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
-    How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
 
-   - Triage and Ownership:
-    How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
-    Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
-
-
+#### Discussion Points
+- What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
+- How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
+- How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
+- Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
 
 ### Lab 6 - Dependabot Rules 
 
+#### Objective
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
 
+#### Steps
 1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Security`, select `Code security and analysis`.
 2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
 3. Set Up the Rule:
@@ -278,10 +306,18 @@ In this lab, we will configure Dependabot Rules to manage alerts in the `mona-ga
 4. Select `Create Rule` button
 5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
 
+#### Discussion Points
+- What are the potential risks of dismissing alerts for unpatched vulnerabilities? How can these risks be mitigated?
+- How should teams prioritize alerts that cannot be dismissed due to the presence of patches? What criteria should be used to decide on the urgency of addressing these vulnerabilities?
+- How can teams effectively communicate the rationale for dismissing certain alerts to stakeholders, including management and security teams?
 
 ### Lab 7 - Depenabot Version Updates
 
+#### Objective
+
 In this exercise, we will create a Dependabot configuration file to automate version updates for npm dependencies in the frontend directory of the `mona-gallery` repository.
+
+#### Steps
 
 1. Inside the `.github` folder create a `dependabot.yml` file 
 2. Add the following configuration (Note: you must first create the label for this workflow to work)
@@ -317,7 +353,8 @@ git push origin main
   </details>
 
 4. Navigate to the `Pull Requests` tab and review the generated pull requests. 
-5. Discussion Points: 
+
+#### Discussion Points 
 - What factors influence the decision to schedule updates weekly, daily, or monthly?
 - How can you balance the frequency of updates with the workload of reviewing pull requests?
 - Discuss managing dependency updates across multiple teams and projects.
@@ -328,8 +365,11 @@ git push origin main
 
 ### Lab 8 - Dependency Review
 
+#### Objective
+
 In this lab, we will configure a Dependency Review workflow in GitHub Actions to analyze pull requests (PRs) and alert on the introduction of vulnerable dependencies to the `mona-gallery` repository.
 
+#### Steps
 1. Open your repository in Codespaces.
 2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory 
 3. Add the following configuration file: 
@@ -406,7 +446,8 @@ git push
 </details>
 
 8. Raise a Pull Request to the `main` branch
-9. Discussion points:
+
+#### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
 - What steps can teams take to ensure compliance with allowed licenses?
 - What strategies can be implemented to minimize friction during reviews?
