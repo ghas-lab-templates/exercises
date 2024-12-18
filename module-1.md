@@ -243,8 +243,18 @@ In this lab, we will enable and review Depenabot Alerts and Dependabot Security 
 1. Edit your custom security configuration to enable dependabot.
   a.  Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  On the `Code security configurations` page, under `Organization configurations`, locate the custom configuration you created earlier (Custom GHAS Configuration). Click on the Edit (pencil) icon next to the configuration
 2. Under `Dependency Graph and Dependabot` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
-3. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
-4. Discussion Points:
+3. In the `Security` section of the sidebar, select the `Code security` dropdown menu, click on `Global settings` You will be navigated to he `Glocal code security settings` page. Under `Dependabot`, select `Dependabot Action Runners`.
+
+<details>
+  <summary> Animated Guide</summary>
+
+![alt text](images/enable-dependabot.gif)
+
+</details>
+
+4. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
+5. Choose a repository and click on the `Actions` tab, select `Dependabot Updates` and review Action run.
+6. Discussion Points:
     - Considerations for Automation:   
     What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
     How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
@@ -252,4 +262,154 @@ In this lab, we will enable and review Depenabot Alerts and Dependabot Security 
    - Triage and Ownership:
     How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
     Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
+
+
+
+### Lab 6 - Dependabot Rules 
+
+In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
+
+1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Security`, select `Code security and analysis`.
+2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
+3. Set Up the Rule:
+- Rule Name: Dismiss No-Patch Alerts for Go and Pip.
+- Target Alerts > Ecosystem: Select Go and Pip from the dropdown list.
+- Rules : Select Dismiss alerts > Until patch is available
+4. Select `Create Rule` button
+5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
+
+
+### Lab 7 - Depenabot Version Updates
+
+In this exercise, we will create a Dependabot configuration file to automate version updates for npm dependencies in the frontend directory of the `mona-gallery` repository.
+
+1. Inside the `.github` folder create a `dependabot.yml` file 
+2. Add the following configuration (Note: you must first create the label for this workflow to work)
+
+```yaml
+
+version: 2
+updates:
+  # Keep npm dependencies up to date
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    # Raise all npm pull requests with custom labels
+    labels:
+      - "dependabot-version-update"
+    commit-message:
+      prefix: "DEPENDABOT VERSION UPDATES"
+    
+```
+
+3. Commit and push your changes 
+
+
+<details>
+    <summary>Git Commands </summary>
+
+  ```bash
+git add .github/dependabot/dependabot.yml
+git commit -m "Add Dependabot configuration for npm updates"
+git push origin main
+  ```
+  </details>
+
+4. Navigate to the `Pull Requests` tab and review the generated pull requests. 
+5. Discussion Points: 
+- What factors influence the decision to schedule updates weekly, daily, or monthly?
+- How can you balance the frequency of updates with the workload of reviewing pull requests?
+- Discuss managing dependency updates across multiple teams and projects.
+- How can you test the configuration to ensure it is working as expected?
+- What is the process for reviewing and merging Dependabot pull requests?
+- How can you automate testing for these pull requests to ensure they don’t break your code?
+- How do you handle deprecated or unmaintained dependencies
+
+### Lab 8 - Dependency Review
+
+In this lab, we will configure a Dependency Review workflow in GitHub Actions to analyze pull requests (PRs) and alert on the introduction of vulnerable dependencies to the `mona-gallery` repository.
+
+1. Open your repository in Codespaces.
+2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory 
+3. Add the following configuration file: 
+
+```yaml
+
+name: 'Dependency Review'
+on: [pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Repository'
+      uses: actions/checkout@v4
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v4
+      with:
+        # Possible values: "critical", "high", "moderate", "low"
+        fail-on-severity: moderate       
+        # You can only include one of these two options: `allow-licenses` and `deny-licenses`
+        # ([String]). Only allow these licenses (optional)
+        # Possible values: Any SPDX-compliant license identifiers or expressions from https://spdx.org/licenses/
+        allow-licenses: GPL-3.0, BSD-3-Clause, MIT
+        # ([String]). Block the pull request on these licenses (optional)
+        # Possible values: Any SPDX-compliant license identifiers or expressions from https://spdx.org/licenses/
+        #deny-licenses: LGPL-2.0, BSD-2-Clause
+        comment-summary-in-pr: true
+        # ([String]). Skip these GitHub Advisory Database IDs during detection (optional)
+        # Possible values: Any valid GitHub Advisory Database ID from https://github.com/advisories
+        allow-ghsas: GHSA-abcd-1234-5679, GHSA-efgh-1234-5679
+        # ([String]). Block pull requests that introduce vulnerabilities in the scopes that match this list (optional)
+        # Possible values: "development", "runtime", "unknown"
+        fail-on-scopes: development, runtime
+```
+4. Commit and push your changes 
+
+<details>
+    <summary>Git Commands </summary>
+
+```bash
+git add .github/workflows/dependency-review.yml
+git commit -m "Add Dependency Review workflow"
+git push origin main
+```
+</details>
+
+5. Create a branch from the `main` branch
+
+<details>
+    <summary>Git Commands </summary>
+
+  ```bash
+git checkout -b feature-a
+git push origin feature-a
+```
+</details>
+
+6. Open a terminal in Codespaces and run `npm install json-web-token`
+7. Commit and push the code 
+
+<details>
+    <summary>Git Commands </summary>
+
+ ```bash
+git add .
+git commit -m "added json-web-token dependency"
+git push
+```
+</details>
+
+8. Raise a Pull Request to the `main` branch
+9. Discussion points:
+- Why is it important to manage open-source licenses in addition to vulnerabilities?
+- What steps can teams take to ensure compliance with allowed licenses?
+- What strategies can be implemented to minimize friction during reviews?
+- How do you balance security requirements with the need to avoid workflow bottlenecks?
+- When should you allow exceptions for flagged vulnerabilities?
 
