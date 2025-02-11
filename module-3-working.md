@@ -12,10 +12,8 @@ By default, CodeQL uses a selection of queries that provide high quality securit
 #### Objective
 In this lab, you will learn how to customize your workflow to use the `security-and-quality` suite, as well as include and exclude queries for your configuration. With CodeQL code scanning, you can select a specific group of CodeQL queries, called a CodeQL query suite, to run against your code.
 
----
-
 #### Steps
-1. **Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite.**
+1. Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite.
    - This configuration file controls which queries CodeQL will run.
    <details>
      <summary>Need Help? Here's a hint</summary>
@@ -38,7 +36,7 @@ In this lab, you will learn how to customize your workflow to use the `security-
      ```
    </details>
 
-2. **Enable your custom configuration in the code scanning workflow file (e.g., `.github/workflows/codeql.yml`).**
+2. Enable your custom configuration in the code scanning workflow file (e.g., `.github/workflows/codeql.yml`).
    - Reference the custom config file by using the `init` action’s `config-file` parameter.
    <details>
      <summary>Hint</summary>
@@ -79,11 +77,11 @@ In this lab, you will learn how to customize your workflow to use the `security-
      ```
    </details>
 
-3. **Add a custom query to detect a potential XSS vulnerability and exclude a default query.**
+3. Add a custom query to detect a potential XSS vulnerability and exclude a default query.
    - CodeQL query suites let you include or exclude queries based on filename, location, or metadata properties.
    - You can create query suites for queries you frequently use in CodeQL analyses.
 
-   - **Create a QL pack file (e.g., `custom-queries/go/qlpack.yml`):**
+   - Create a QL pack file (e.g., `custom-queries/go/qlpack.yml`):
      ```yaml
      name: my-go-queries
      version: 0.0.0
