@@ -9,8 +9,7 @@ In this lab, you will learn how to customize your CodeQL workflow to enable the 
 
 #### Steps
 
-1. Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite.
-   - This configuration file controls which queries CodeQL will run.
+1. Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite. This configuration file controls which queries CodeQL will run.
 
    <details>
      <summary>Hint</summary>
