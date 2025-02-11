@@ -1,24 +1,21 @@
 # Module 3 - Code Scanning
 
-### Lab X - Customising CodeQL Configuration 
+---
 
-By default, CodeQL uses a selection of queries that provide high quality security results. However, you might want to change this behavior to:
-
-- Include a broader set of security queries.
-- Include queries with a lower signal-to-noise ratio to detect more potential issues.
-- Exclude queries in the default pack that generate false positives for your architecture.
-- Include custom queries written for your project.
+## Lab 1 - Customising CodeQL Configuration
 
 #### Objective
-In this lab, you will learn how to customize your workflow to use the `security-and-quality` suite, as well as include and exclude queries for your configuration. With CodeQL code scanning, you can select a specific group of CodeQL queries, called a CodeQL query suite, to run against your code.
+In this lab, you will learn how to customize your CodeQL workflow to enable the `security-and-quality` query suite.
 
 #### Steps
+
 1. Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite.
    - This configuration file controls which queries CodeQL will run.
-   <details>
-     <summary>Need Help? Here's a hint</summary>
 
-     A configuration file contains a key `queries` where you can specify additional queries as follows:
+   <details>
+     <summary>Hint</summary>
+
+     A configuration file contains a `queries` key where you can specify additional queries as follows:
 
      ```yaml
      name: "My CodeQL config"
@@ -26,6 +23,7 @@ In this lab, you will learn how to customize your workflow to use the `security-
        - uses: <insert your query suite>
      ```
    </details>
+
    <details>
      <summary>Solution</summary>
 
@@ -36,8 +34,9 @@ In this lab, you will learn how to customize your workflow to use the `security-
      ```
    </details>
 
-2. Enable your custom configuration in the code scanning workflow file (e.g., `.github/workflows/codeql.yml`).
+2. Enable your custom configuration in the CodeQL workflow file (for example, `.github/workflows/codeql.yml`).  
    - Reference the custom config file by using the `init` action’s `config-file` parameter.
+
    <details>
      <summary>Hint</summary>
 
@@ -49,9 +48,10 @@ In this lab, you will learn how to customize your workflow to use the `security-
          config-file: ./.github/codeql/codeql-config.yml
      ```
    </details>
+
    <details>
      <summary>Solution</summary>
-       
+
      ```yaml
      name: "CodeQL"
      on:
@@ -77,20 +77,45 @@ In this lab, you will learn how to customize your workflow to use the `security-
      ```
    </details>
 
-3. Add a custom query to detect a potential XSS vulnerability and exclude a default query.
-   - CodeQL query suites let you include or exclude queries based on filename, location, or metadata properties.
-   - You can create query suites for queries you frequently use in CodeQL analyses.
+#### Discussion Points
+- Review the alerts, are you getting more results?
+- It was also possible to not use a custom config file and just add `queries:security-and-quality` in the CodeQL workflow file, like so:
 
-   - Create a QL pack file (e.g., `custom-queries/go/qlpack.yml`):
+```yaml
+   # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+        queries: security-and-quality
+```
+In what cases would we just use the inline method above versus having a config file?
+
+---
+
+## Lab 2 - Running Custom Queries
+
+#### Objective
+In this lab, you will learn how to run your own custom CodeQL queries for different languages. You will also learn how to include these queries in your CodeQL configuration and run as a part of your workflow.
+
+#### Steps
+
+1. Create a QL pack file and query for Go  
+   - Add `custom-queries/go/qlpack.yml`:
      ```yaml
-     name: my-go-queries
-     version: 0.0.0
-     libraryPathDependencies:
-       - codeql-go
+     ---
+     library: false
+     warnOnImplicitThis: false
+     name: queries
+     version: 0.0.1
+     dependencies:
+       codeql/go-all: "*"
      ```
      This file creates a [QL query pack](https://help.semmle.com/codeql/codeql-cli/reference/qlpack-overview.html) used to organize query files and their dependencies.
-   
-   - **Create the actual query file (e.g., `custom-queries/go/jwt.ql`):**
+
+   - Create the query file, for example, `custom-queries/go/jwt.ql`:
+
      ```ql
      /**
       * @name Missing token verification
@@ -116,12 +141,65 @@ In this lab, you will learn how to customize your workflow to use the `security-
      select f, "This function should be using jwt.SigningMethodHMAC"
      ```
 
-4. **Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include your custom query and exclude the default one.**
+2. Create another QL pack file for JavaScript 
+   - For example, `custom-queries/js/qlpack.yml`:
+
+     ```yaml
+     ---
+     library: false
+     warnOnImplicitThis: false
+     name: queries
+     version: 0.0.1
+     dependencies:
+       codeql/javascript-all: "*"
+     ```
+
+- Add a custom Vue-based XSS detection query
+   - Create a suitable `.ql` file, for example: `custom-queries/js/vue-xss.ql`.
+
+     ```ql
+     /**
+      * @name Client-side cross-site scripting
+      * @description Writing user input directly to the DOM allows for
+      *              a cross-site scripting vulnerability.
+      * @kind path-problem
+      * @problem.severity error
+      * @security-severity 6.1
+      * @precision high
+      * @id js/vue-xss
+      * @tags security
+      *       external/cwe/cwe-079
+      *       external/cwe/cwe-116
+      */
+
+     import javascript
+     import semmle.javascript.security.dataflow.DomBasedXssQuery
+     import semmle.javascript.security.dataflow.DomBasedXssCustomizations
+     import DataFlow::PathGraph
+
+     // Unprecise Axios Source
+     class AxiosSource extends DomBasedXss::Source {
+       AxiosSource() {
+         this.(DataFlow::PropRead).getPropertyName() = "data" and
+         exists(DataFlow::ParameterNode response |
+           response.getName() = "response" |
+           response.flowsTo(this.(DataFlow::PropRead).getBase())
+         )
+       }
+     }
+
+     // ...rest of the query omitted for brevity...
+     ```
+
+4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include your custom queries. 
+   - Optionally disable the default queries if you want more fine-grained control.
+
    <details>
      <summary>Need Help? Here's a hint</summary>
 
-     The `uses` key supports paths relative to your repository. You can also disable the default queries using `disable-default-queries: true` if you want full control over which queries are used.
+     The `uses` key supports paths relative to your repository. You can also disable the default queries using `disable-default-queries: true` if you want full control.
    </details>
+
    <details>
      <summary>Solution</summary>
 
@@ -142,6 +220,7 @@ In this lab, you will learn how to customize your workflow to use the `security-
 
    <details>
      <summary>Alternate Example</summary>
+
      <details>
        <summary>Solution</summary>
 
@@ -162,123 +241,7 @@ In this lab, you will learn how to customize your workflow to use the `security-
      </details>
    </details>
 
-5. **Add another custom query for Vue-based XSS detection.**  
-   You can place this query in a suitable `.ql` file (for example, `custom-queries/js/vue-xss.ql`).  
-
-   ```ql
-   /**
-    * @name Client-side cross-site scripting
-    * @description Writing user input directly to the DOM allows for
-    *              a cross-site scripting vulnerability.
-    * @kind path-problem
-    * @problem.severity error
-    * @security-severity 6.1
-    * @precision high
-    * @id js/vue-xss
-    * @tags security
-    *       external/cwe/cwe-079
-    *       external/cwe/cwe-116
-    */
-
-   import javascript
-   import semmle.javascript.security.dataflow.DomBasedXssQuery
-   import semmle.javascript.security.dataflow.DomBasedXssCustomizations
-   import DataFlow::PathGraph
-
-   // Unprecise Axios Source
-   class AxiosSource extends DomBasedXss::Source {
-     AxiosSource() {
-       this.(DataFlow::PropRead).getPropertyName() = "data" and
-       exists(DataFlow::ParameterNode response |
-         response.getName() = "response" |
-         response.flowsTo(this.(DataFlow::PropRead).getBase())
-       )
-     }
-   }
-
-   class VForAttribute extends DataFlow::Node {
-     HTML::Attribute attr;
-
-     VForAttribute() {
-       this.(DataFlow::HtmlAttributeNode).getAttribute() = attr and
-       attr.getName() = "v-for"
-     }
-
-     HTML::Attribute getAttr() { result = attr }
-
-     string getForAlias() {
-       result = attr.getValue().regexpCapture("(.*)\\s+in\\s+(.*)", 1).trim()
-     }
-
-     string getForArraySource() {
-       result = attr.getValue().regexpCapture("(.*)\\s+in\\s+(.*)", 2).trim()
-     }
-
-     Vue::Component getComponent() {
-       result.getTemplateElement().(Vue::Template::HtmlElement).getElement() = this.getAttr().getRoot()
-     }
-
-     DataFlow::Node getAForArraySourceValue() {
-       exists(DataFlow::PropWrite propWrite |
-         resolveRefForArraySourceValue(this, this.getForArraySource(), propWrite) and
-         result = propWrite.getRhs()
-       )
-     }
-   }
-
-   predicate resolveRefForArraySourceValue(
-     VForAttribute vfor, string accessPath, DataFlow::PropRef propRef
-   ) {
-     exists(int dotOffsets, string arraySrc |
-       arraySrc = vfor.getForArraySource() and dotOffsets = arraySrc.indexOf(".")
-       |
-       (
-         arraySrc.prefix(dotOffsets) = accessPath
-         or
-         arraySrc = accessPath
-       )
-       and
-       accessPath != "this"
-     )
-     and
-     (
-       // Base case: foo or this.foo
-       exists(string prop |
-         prop = accessPath.replaceAll("?", "").replaceAll("this.", "") |
-         propRef = vfor.getComponent().getAnInstanceRef().getAPropertyReference(prop)
-       )
-       or
-       // Induction step: foo.bar or this.foo.bar
-       exists(DataFlow::PropRef basePropRef, string baseAccessPath, string prop |
-         baseAccessPath = accessPath.prefix(max(int idx | idx = accessPath.indexOf("."))) and
-         prop = accessPath.suffix(max(int idx | idx = accessPath.indexOf(".")) + 1).replaceAll("?", "") and
-         resolveRefForArraySourceValue(vfor, baseAccessPath, basePropRef) and
-         propRef.getPropertyName() = prop and
-         (
-           propRef.getBase() = basePropRef
-           or
-           basePropRef.(DataFlow::PropWrite).getRhs().getALocalSource().flowsTo(propRef.getBase())
-         )
-       )
-     )
-   }
-
-   class VHtmlAttributeStep extends TaintTracking::SharedTaintStep {
-     override predicate viewComponentStep(DataFlow::Node pred, DataFlow::Node succ) {
-       succ.(VForAttribute).getAForArraySourceValue() = pred
-       or
-       exists(VForAttribute vfor, Vue::VHtmlAttribute vhtml |
-         pred = vfor and succ = vhtml |
-         vfor.getAttr().getElement() = vhtml.getAttr().getElement().getParent+() and
-         vhtml.getAttr().getValue().prefix(
-           vhtml.getAttr().getValue().indexOf(".", 0, 0)
-         ) = vfor.getForAlias()
-       )
-     }
-   }
-
-   from DataFlow::Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
-   where cfg.hasFlowPath(source, sink)
-   select sink.getNode(), source, sink,
-     sink.getNode().(Sink).getVulnerabilityKind() + " vulnerability due to $@.", source.getNode(),
-     "user-provided value"
+#### Discussion Points
+- When would you create a custom query pack vs. rely on the default security suites?
+- Which team members should be responsible for creating or updating custom queries?
+- How could you test new custom queries before enabling them in production pipelines?
