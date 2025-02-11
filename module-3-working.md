@@ -39,12 +39,13 @@ In this lab, you will learn how to customize your CodeQL workflow to enable the 
 
    <details>
      <summary>Hint</summary>
-
+      
      ```yaml
      - name: Initialize CodeQL
-       uses: github/codeql-action/init@v2
+       uses: github/codeql-action/init@v3
        with:
-         languages: <language(s)>
+         languages: ${{ matrix.language }}
+         build-mode: ${{ matrix.build-mode }}
          config-file: ./.github/codeql/codeql-config.yml
      ```
    </details>
@@ -191,8 +192,28 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
      // ...rest of the query omitted for brevity...
      ```
 
+4. Create a [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) called `custom-queries/mycustom-suite.qls` to run the above queries. Since the custom `xss.ql` overlaps with the default one, we can exclude the default one from our analysis.
+
+   ```yaml
+       - queries: custom-queries
+       # Reusing existing QL Pack
+       - import: codeql-suites/javascript-security-and-quality.qls
+         from: codeql-javascript
+       - import: codeql-suites/java-security-and-quality.qls
+         from: codeql-java
+       - import: codeql-suites/python-security-and-quality.qls
+         from: codeql-python
+       - import: codeql-suites/go-security-and-quality.qls
+         from: codeql-go
+       - exclude:
+           id:
+             - javascript/xss
+           
+       ```
+
+
 4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include your custom queries. 
-   - Optionally disable the default queries if you want more fine-grained control.
+   - Op.
 
    <details>
      <summary>Need Help? Here's a hint</summary>
@@ -225,6 +246,7 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
        <summary>Solution</summary>
 
        ```yaml
+       - queries: 
        # Reusing existing QL Pack
        - import: codeql-suites/javascript-security-and-quality.qls
          from: codeql-javascript
@@ -237,9 +259,12 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
        - exclude:
            id:
              - javascript/xss
+   
        ```
      </details>
    </details>
+
+
 
 #### Discussion Points
 - When would you create a custom query pack vs. rely on the default security suites?
