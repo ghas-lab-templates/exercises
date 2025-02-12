@@ -191,8 +191,8 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
      // ...rest of the query omitted for brevity...
      ```
 
-4. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `mycustom-suite.qls` inside a `custom-queries` directory. Your custom suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
-By default, the JavaScript `security-and-quality` suite includes a built-in XSS query (`javascript/xss`). Because you’ve created a `vue-xss.ql` query that covers the same ground, you want to avoid duplication or conflicts.Therefore, you should explicitly exclude the overlapping query from your new suite.
+4. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `mycustom-suite.qls` inside the `custom-queries` directory. The custom query suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
+By default, the JavaScript `security-and-quality` suite includes a built-in XSS query (`javascript/xss`). Because the `vue-xss.ql` query covers the same ground, the default query should be explicitly excluded the new suite.
 
 <details>
 
@@ -221,7 +221,7 @@ To exclude certain queries,use:
 
 <details>
 
-<summary>Solution</summary>
+ <summary>Solution</summary>
 
    ```yaml
        - queries: custom-queries
@@ -234,9 +234,12 @@ To exclude certain queries,use:
          from: codeql-python
        - import: codeql-suites/go-security-and-quality.qls
          from: codeql-go           
-       ```
-</details>
+    ```
 
+
+
+
+</details>
 
 
 
