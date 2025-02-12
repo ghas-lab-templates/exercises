@@ -191,7 +191,37 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
      // ...rest of the query omitted for brevity...
      ```
 
-4. Create a [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) called `custom-queries/mycustom-suite.qls` to run the above queries. Since the custom `xss.ql` overlaps with the default one, we can exclude the default one from our analysis.
+4. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `mycustom-suite.qls` inside a `custom-queries` directory. Your custom suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
+By default, the JavaScript `security-and-quality` suite includes a built-in XSS query (`javascript/xss`). Because you’ve created a `vue-xss.ql` query that covers the same ground, you want to avoid duplication or conflicts.Therefore, you should explicitly exclude the overlapping query from your new suite.
+
+<details>
+
+<summary>Hint</summary>
+
+You can import existing query suites by specifying:
+
+```yaml
+- import: codeql-suites/{language}-security-and-quality.qls
+  from: codeql-{language}
+```
+
+This uses the `import` keyword to include another suite, and the `from` keyword to reference the QL pack containing that suite (for example, `codeql-javascript`). In your custom suite, you can also add local queries by specifying:
+```yaml
+- queries: path-to-local-queries
+```
+To exclude certain queries,use:
+```yaml
+- exclude:
+    id:
+      - path/to/query
+```
+
+</details>
+
+
+<details>
+
+<summary>Solution</summary>
 
    ```yaml
        - queries: custom-queries
@@ -203,12 +233,12 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
        - import: codeql-suites/python-security-and-quality.qls
          from: codeql-python
        - import: codeql-suites/go-security-and-quality.qls
-         from: codeql-go
-       - exclude:
-           id:
-             - javascript/xss
-           
+         from: codeql-go           
        ```
+</details>
+
+
+
 
 
 4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include your custom queries. 
