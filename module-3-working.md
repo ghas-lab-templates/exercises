@@ -353,9 +353,6 @@ By default, the JavaScript `security-and-quality` suite includes a built-in XSS 
    </details>
 
 
-
-
 #### Discussion Points
-- When would you create a custom query pack vs. rely on the default security suites?
-- Which team members should be responsible for creating or updating custom queries?
-- How could you test new custom queries before enabling them in production pipelines?
+- As your application grows, how do you foresee maintaining or extending these custom queries? Who should own that process?
+- What criteria would you use to decide whether a new security concern warrants writing an entirely new custom query versus customizing an existing one?
