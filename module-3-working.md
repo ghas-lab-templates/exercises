@@ -191,7 +191,7 @@ In this lab, you will learn how to run your own custom CodeQL queries for differ
      // ...rest of the query omitted for brevity...
      ```
 
-4. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `mycustom-suite.qls` inside the `custom-queries` directory. The custom query suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
+4. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `custom-suite.qls` inside the `custom-queries` directory. The custom query suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
 By default, the JavaScript `security-and-quality` suite includes a built-in XSS query (`javascript/xss`). Because the `vue-xss.ql` query covers the same ground, the default query should be explicitly excluded the new suite.
 
 <details>
@@ -244,16 +244,16 @@ To exclude certain queries,use:
 
 
 
-4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include your custom queries. 
-   - Op.
+4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include use the custom query suite. 
 
    <details>
      <summary>Need Help? Here's a hint</summary>
 
-     The `uses` key supports paths relative to your repository. You can also disable the default queries using `disable-default-queries: true` if you want full control.
+     The `uses` key supports paths relative to your repository. You can also disable the default queries using `disable-default-queries: true` so that there isn't a duplication in alerts. 
    </details>
 
    <details>
+      
      <summary>Solution</summary>
 
      ```yaml
@@ -262,39 +262,11 @@ To exclude certain queries,use:
      disable-default-queries: true
 
      queries:
-       - uses: security-and-quality
-       - uses: ./custom-queries/code-scanning.qls
-       - uses: ./custom-queries/go/jwt.ql
-
-     paths-ignore:
-       - '**/test/**'
+       - uses: ./custom-queries/custom-suite.qls
      ```
+     
    </details>
 
-   <details>
-     <summary>Alternate Example</summary>
-
-     <details>
-       <summary>Solution</summary>
-
-       ```yaml
-       - queries: 
-       # Reusing existing QL Pack
-       - import: codeql-suites/javascript-security-and-quality.qls
-         from: codeql-javascript
-       - import: codeql-suites/java-security-and-quality.qls
-         from: codeql-java
-       - import: codeql-suites/python-security-and-quality.qls
-         from: codeql-python
-       - import: codeql-suites/go-security-and-quality.qls
-         from: codeql-go
-       - exclude:
-           id:
-             - javascript/xss
-   
-       ```
-     </details>
-   </details>
 
 
 
