@@ -223,7 +223,7 @@ To exclude certain queries,use:
 
  <summary>Solution</summary>
 
-   ```yaml
+```yaml
        - queries: custom-queries
        # Reusing existing QL Pack
        - import: codeql-suites/javascript-security-and-quality.qls
@@ -233,8 +233,8 @@ To exclude certain queries,use:
        - import: codeql-suites/python-security-and-quality.qls
          from: codeql-python
        - import: codeql-suites/go-security-and-quality.qls
-         from: codeql-go           
-    ```
+         from: codeql-go
+```
 
 
 
