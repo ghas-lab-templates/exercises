@@ -2,80 +2,132 @@
 
 ---
 
-## Lab 1 - Customising CodeQL Configuration
+## Lab 1 - Code Scanning for monorepos
 
 #### Objective
-In this lab, you will learn how to customize your CodeQL workflow to enable the `security-and-quality` query suite.
+
+In this lab, you will learn how to configure CodeQL for efficient monorepo scanning.
+
+Monorepos are large in size, which often leads to longer scan times that can delay PR workflows. To optimize performance, teams often choose to split scans, focusing only on the relevant parts of the repository affected by code changes. The feasibility of splitting scans depends on the architecture of the monorepo.
+
+This lab demonstrates the concept of monorepo scanning with CodeQL. However, the way it is ultimately divided will depend on factors such as the bottlenecks in the analysis, the tech stack, and the architecture.
+
+We will be using the `mono-gallery` repository to do the exercises for this lab. 
+
+Due to time and size constraints of real-world monorepos, mono-gallery is a smaller example, but its setup follows the same principles as a full-scale monorepo. This repository is a copy of the mona-gallery template and consists of multiple independent application tiers, each organized into separate directories:
+
+- Directory: auth
+    - Language: go
+    - Build Mode: autbuild
+- Directory: frontend
+    - Language: javascript
+    - Build Mode: none
+- Directory: storage
+    - Language:java
+    - Build Mode: none
+- Directory: auth-ext    
+    - Language:python
+    - Build Mode: none
+- Directory: gallery
+    - Language go
+    - Build Mode: autobuild
+- Directory: .github
+    - Language: actions
+    - Build Mode: none
+
+These are the only directories within the `mono-gallery` that we're interested in scanning. Any changes outside these directories should be skipped. 
 
 #### Steps
 
-1. Create the file `.github/codeql/codeql-config.yml` and enable the `security-and-quality` suite. This configuration file controls which queries CodeQL will run.
+1. Navigate to your code scanning settings and switch from the default workflow to the advanced workflow. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
 
    <details>
      <summary>Hint</summary>
 
-     A configuration file contains a `queries` key where you can specify additional queries as follows:
-
-     ```yaml
-     name: "My CodeQL config"
-     queries:
-       - uses: <insert your query suite>
-     ```
    </details>
+
+
+2. The workflow you are creating will contain two distinct jobs:
+     - **detect_changes**: Identifies modified areas of your monorepo.
+     - **analyze**: Performs the actual CodeQL analysis based on the detected changes.
+     
+     Your task is to:
+     1. Create the YAML structure outlined above.
+     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers.
+
+You can read more about GitHub Actions [here](https://docs.github.com/en/actions)
 
    <details>
      <summary>Solution</summary>
 
-     ```yaml
-     name: "My CodeQL config"
-     queries:
-       - uses: security-and-quality
-     ```
+    ```yaml
+
+      name: "CodeQL Monorepo Analysis"
+
+      on:
+        push:
+          branches: [ "main" ]
+        pull_request:
+          branches: [ "main" ]
+        schedule:
+          - cron: '19 1 * * 1'
+
+      jobs:
+        detect_changes:
+          runs-on: ubuntu-latest
+          permissions:
+            actions: read
+            contents: read
+          outputs:
+            matrix: ${{ steps.detect_changes.outputs.matrix }}
+            matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+          steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 2        
+            - name: Find changed directories and map to directories and languages
+              id: detect_changes
+              run: |
+                # TODO: Implement detection logic
+
+        analyze:
+          name: Analyze (${{ matrix.language }})
+          needs: detect_changes
+          runs-on: ubuntu-latest
+          permissions:
+            security-events: write
+            packages: read
+            actions: read
+            contents: read
+          strategy:
+            fail-fast: true
+            matrix:
+              include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+
+          steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                sparse-checkout: |
+                  ${{ matrix.directory }}
+                  .github/scripts/empty.sarif
+                sparse-checkout-cone-mode: false
+            # TODO: Implement CodeQL analysis steps
+
+    ```    
    </details>
 
-2. Enable your custom configuration in the CodeQL workflow file (for example, `.github/workflows/codeql.yml`).  
-   - Reference the custom config file by using the `init` action’s `config-file` parameter.
+
+   3. Navigate to `.github/scripts` and review the scripts:
+      - Understand the role of `process.awk` in mapping file changes to directories and languages.
+      - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
 
    <details>
      <summary>Hint</summary>
-      
-     ```yaml
-     - name: Initialize CodeQL
-       uses: github/codeql-action/init@v3
-       with:
-         languages: ${{ matrix.language }}
-         build-mode: ${{ matrix.build-mode }}
-         config-file: ./.github/codeql/codeql-config.yml
-     ```
+
    </details>
 
-   <details>
-     <summary>Solution</summary>
-
-     ```yaml
-     name: "CodeQL"
-     on:
-       push:
-         branches: [ "main" ]
-       pull_request:
-         branches: [ "main" ]
-     jobs:
-       analyze:
-         runs-on: ubuntu-latest
-         steps:
-           - name: Checkout repository
-             uses: actions/checkout@v2
-
-           - name: Initialize CodeQL
-             uses: github/codeql-action/init@v2
-             with:
-               languages: js,go
-               config-file: ./.github/codeql/codeql-config.yml
-
-           - name: Perform CodeQL Analysis
-             uses: github/codeql-action/analyze@v2
-     ```
-   </details>
 
 #### Discussion Points
 - Review the alerts, are you getting more results?
