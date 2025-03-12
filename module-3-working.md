@@ -41,15 +41,18 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 1. Navigate to your code scanning settings and switch from the default workflow to the advanced workflow. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
 
-   <details>
-     <summary>Hint</summary>
+<details>
+  <summary> Animated Guide</summary>
 
-   </details>
+  ![alt text](images/default-to-advanced.gif)
+
+</details>
 
 
-2. The workflow you are creating will contain two distinct jobs:
+2. The workflow you are creating will contain three distinct jobs:
      - **detect_changes**: Identifies modified areas of your monorepo.
      - **analyze**: Performs the actual CodeQL analysis based on the detected changes.
+     - **process_sarif**: Processes directories that have not changed. 
      
      Your task is to:
      1. Create the YAML structure outlined above.
@@ -111,9 +114,36 @@ You can read more about GitHub Actions [here](https://docs.github.com/en/actions
               with:
                 sparse-checkout: |
                   ${{ matrix.directory }}
-                  .github/scripts/empty.sarif
                 sparse-checkout-cone-mode: false
             # TODO: Implement CodeQL analysis steps
+
+        process_sarif:
+          name: Process SARIF
+          needs: [detect_changes, analyze]
+          runs-on: ubuntu-latest
+          permissions:
+            # required for all workflows
+            security-events: write
+            # required to fetch internal or private CodeQL packs
+            packages: read
+            # only required for workflows in private repositories
+            actions: read
+            contents: read
+          strategy:
+            fail-fast: true
+            matrix: 
+              include:  # TODO: Implement what needs to be passed into the matrix
+
+          steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+            with:
+              sparse-checkout: |
+                 # TODO: Implement what needs to be checked out
+              sparse-checkout-cone-mode: false
+          
+           # TODO: Implement processing unchanged files 
+                
 
     ```    
    </details>
@@ -124,287 +154,363 @@ You can read more about GitHub Actions [here](https://docs.github.com/en/actions
       - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
 
    <details>
-     <summary>Hint</summary>
+     <summary>Explanation</summary>
 
-   </details>
+     This awk script processes a configuration file (1cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
+     
+     Here is a step-by-step explanation of the script:
+     
+     **BEGIN Block**:
+     Reads the `cfg_for_dir.txt` file line by line.
+     Each line is split into fields based on the semicolon delimiter.
+     Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+     
+     **Main Block**:
+     For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
+     If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
+     Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
 
-
-#### Discussion Points
-- Review the alerts, are you getting more results?
-- It was also possible to not use a custom config file and just add `queries:security-and-quality` in the CodeQL workflow file, like so:
-
-```yaml
-   # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-        queries: security-and-quality
-```
-In what cases would we just use the inline method above versus having a config file?
-
----
-
-## Lab 2 - Running Custom Queries
-
-#### Objective
-In this lab, you will learn how to run your own custom CodeQL queries for different languages. You will also learn how to include these queries in your CodeQL configuration and run as a part of your workflow.
-
-#### Steps
-
-1. Create a QL pack file and query for Go  
-   - Add `custom-queries/go/qlpack.yml`:
-     ```yaml
-     ---
-     library: false
-     warnOnImplicitThis: false
-     name: queries
-     version: 0.0.1
-     dependencies:
-       codeql/go-all: "*"
-     ```
-     This file creates a [QL query pack](https://help.semmle.com/codeql/codeql-cli/reference/qlpack-overview.html) used to organize query files and their dependencies.
-
-   - Create the query file, for example, `custom-queries/go/jwt.ql`:
-
-     ```ql
-     /**
-      * @name Missing token verification
-      * @description Missing token verification
-      * @id go/jwt-sign-check
-      * @kind problem
-      * @problem.severity warning
-      * @precision high
-      * @tags security
-      */
-     import go
-
-     from FuncLit f
-     where
-       f.getParameter(0).getType() instanceof PointerType and
-       f.getParameter(0).getType().(PointerType).getBaseType().getName() = "Token" and
-       f.getParameter(0).getType().(PointerType).getBaseType().getPackage().getName() = "jwt" and
-       not exists(TypeExpr t |
-         f.getBody().getAChild*() = t and
-         t.getType().getName() = "SigningMethodHMAC" and
-         t.getType().getPackage().getName() = "jwt"
-       )
-     select f, "This function should be using jwt.SigningMethodHMAC"
-     ```
-
-2. Create another QL pack file for JavaScript 
-   - For example, `custom-queries/js/qlpack.yml`:
-
-     ```yaml
-     ---
-     library: false
-     warnOnImplicitThis: false
-     name: queries
-     version: 0.0.1
-     dependencies:
-       codeql/javascript-all: "*"
-     ```
-
-   - Add a custom Vue-based XSS `.ql` file, for example: `custom-queries/js/vue-xss.ql`.
-
-      ```ql
-      
-      /**
-       * @name Client-side cross-site scripting
-       * @description Writing user input directly to the DOM allows for
-       *              a cross-site scripting vulnerability.
-       * @kind path-problem
-       * @problem.severity error
-       * @security-severity 6.1
-       * @precision high
-       * @id js/vue-xss
-       * @tags security
-       *       external/cwe/cwe-079
-       *       external/cwe/cwe-116
-       */
-      
-      import javascript
-      import semmle.javascript.security.dataflow.DomBasedXssQuery
-      import semmle.javascript.security.dataflow.DomBasedXssCustomizations
-      import DataFlow::PathGraph
-      
-      // Unprecise Axios Source
-      class AxiosSource extends DomBasedXss::Source {
-        AxiosSource() {
-          this.(DataFlow::PropRead).getPropertyName() = "data" and
-          exists(DataFlow::ParameterNode response | response.getName() = "response" |
-            response.flowsTo(this.(DataFlow::PropRead).getBase())
-          )
-        }
-      }
-      
-      class VForAttribute extends DataFlow::Node {
-        HTML::Attribute attr;
-      
-        VForAttribute() {
-          this.(DataFlow::HtmlAttributeNode).getAttribute() = attr and attr.getName() = "v-for"
-        }
-      
-        /**
-         * Gets the HTML attribute of this sink.
-         */
-        HTML::Attribute getAttr() { result = attr }
-      
-        string getForAlias() { result = attr.getValue().regexpCapture("(.*)\\s+in\\s+(.*)", 1).trim() }
-      
-        string getForArraySource() {
-          result = attr.getValue().regexpCapture("(.*)\\s+in\\s+(.*)", 2).trim()
-        }
-      
-        Vue::Component getComponent() {
-          result.getTemplateElement().(Vue::Template::HtmlElement).getElement() = this.getAttr().getRoot()
-        }
-      
-        DataFlow::Node getAForArraySourceValue() {
-          exists(DataFlow::PropWrite propWrite |
-            resolveRefForArraySourceValue(this, this.getForArraySource(), propWrite) and
-            result = propWrite.getRhs()
-          )
-        }
-      }
-      
-      predicate resolveRefForArraySourceValue(
-        VForAttribute vfor, string accessPath, DataFlow::PropRef propRef
-      ) {
-        // accesssPath must be a prefix of the for array source.
-        exists(int dotOffsets, string arraySrc |
-          arraySrc = vfor.getForArraySource() and dotOffsets = arraySrc.indexOf(".")
-        |
-          (
-            arraySrc.prefix(dotOffsets) = accessPath
-            or
-            arraySrc = accessPath
-          ) and
-          accessPath != "this"
-        ) and
-        (
-          // Base case: foo or this.foo
-          exists(string prop | prop = accessPath.replaceAll("?", "").replaceAll("this.", "") |
-            propRef = vfor.getComponent().getAnInstanceRef().getAPropertyReference(prop)
-          )
-          or
-          // Induction step: foo.bar or this.foo.bar
-          exists(DataFlow::PropRef basePropRef, string baseAccessPath, string prop |
-            baseAccessPath = accessPath.prefix(max(int idx | idx = accessPath.indexOf("."))) and
-            prop = accessPath.suffix(max(int idx | idx = accessPath.indexOf(".")) + 1).replaceAll("?", "") and
-            resolveRefForArraySourceValue(vfor, baseAccessPath, basePropRef) and
-            propRef.getPropertyName() = prop and
-            (
-              propRef.getBase() = basePropRef
-              or
-              // A more precise source can be identified when the source of this.gallery, reponse.data, is flowing through an intermediate variable
-              // to the base of a property reference where the property name matches our current property.
-              // e.g.,
-              // const gallery = response.data
-              // axios.get("http://localhost:8081/gallery/art").then((response) => {
-              //    gallery.art = response.data
-              //    this.gallery = gallery
-              basePropRef.(DataFlow::PropWrite).getRhs().getALocalSource().flowsTo(propRef.getBase())
-            )
-          )
-        )
-      }
-      
-      class VHtmlAttributeStep extends TaintTracking::SharedTaintStep {
-        override predicate viewComponentStep(DataFlow::Node pred, DataFlow::Node succ) {
-          succ.(VForAttribute).getAForArraySourceValue() = pred
-          or
-          exists(VForAttribute vfor, Vue::VHtmlAttribute vhtml | pred = vfor and succ = vhtml |
-            vfor.getAttr().getElement() = vhtml.getAttr().getElement().getParent+() and
-            vhtml.getAttr().getValue().prefix(vhtml.getAttr().getValue().indexOf(".", 0, 0)) =
-              vfor.getForAlias()
-          )
-        }
-      }
-      
-      from DataFlow::Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
-      where cfg.hasFlowPath(source, sink)
-      select sink.getNode(), source, sink,
-        sink.getNode().(Sink).getVulnerabilityKind() + " vulnerability due to $@.", source.getNode(),
-        "user-provided value"
-      
-        ```
-
-3. Create a custom [query suite](https://codeql.github.com/docs/codeql-cli/creating-codeql-query-suites/) in a file named `custom-suite.qls` inside the `custom-queries` directory. The custom query suite should run the custom `vue-xss.ql` and `jwt.ql` queries (created previously) and also include the standard `security-and-quality` suites for JavaScript, Java, Python, and Go.
-By default, the JavaScript `security-and-quality` suite includes a built-in XSS query (`javascript/xss`). Because the `vue-xss.ql` query covers the same ground, the default query should be explicitly excluded the new suite.
-
-      <details>
-      
-      <summary>Hint</summary>
-      
-      You can import existing query suites by specifying:
-      
-      ```yaml
-      - import: codeql-suites/{language}-security-and-quality.qls
-        from: codeql-{language}
-      ```
-      
-      This uses the `import` keyword to include another suite, and the `from` keyword to reference the QL pack containing that suite (for example, `codeql-javascript`). In your custom suite, you can also add local queries by specifying:
-      ```yaml
-      - queries: path-to-local-queries
-      ```
-      To exclude certain queries,use:
-      ```yaml
-      - exclude:
-          id:
-            - path/to/query
-      ```
-      
-      </details>
-      
-      
-      <details>
-      
-       <summary>Solution</summary>
-      
-      ```yaml
-             - queries: custom-queries
-             # Reusing existing QL Pack
-             - import: codeql-suites/javascript-security-and-quality.qls
-               from: codeql-javascript
-             - import: codeql-suites/java-security-and-quality.qls
-               from: codeql-java
-             - import: codeql-suites/python-security-and-quality.qls
-               from: codeql-python
-             - import: codeql-suites/go-security-and-quality.qls
-               from: codeql-go
-      ```
-
-      </details>
-
-
-
-
-4. Update the CodeQL configuration file `.github/codeql/codeql-config.yml` to include use the custom query suite. 
-
-   <details>
-     <summary>Need Help? Here's a hint</summary>
-
-     The `uses` key supports paths relative to your repository. You can also disable the default queries using `disable-default-queries: true` so that there isn't a duplication in alerts. 
-   </details>
-
-   <details>
-      
-     <summary>Solution</summary>
-
-     ```yaml
-     name: "My CodeQL config"
-
-     disable-default-queries: true
-
-     queries:
-       - uses: ./custom-queries/custom-suite.qls
-     ```
+     **END Block**:
+     Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
+     The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
+     The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code analysis or build orchestration.
      
    </details>
 
+   4. Update the action file to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
+
+   <details>
+     <summary>Hint</summary>
+      - To detect changes on a pull request, use:
+           `git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}` 
+      -  To detect changes on a `push` use:
+            `git diff --name-only HEAD^ HEAD`
+      - Ensure the workflow fetches enough history by setting `fetch-depth: 2` on checkout.
+
+   </details>
+
+   <details>
+     <summary>Solution</summary>
+
+    ```yaml
+
+      name: "CodeQL Monorepo Analysis"
+
+      on:
+        push:
+          branches: [ "main" ]
+        pull_request:
+          branches: [ "main" ]
+        schedule:
+          - cron: '19 1 * * 1'
+
+      jobs:
+        detect_changes:
+          runs-on: ubuntu-latest
+          permissions:
+            actions: read
+            contents: read
+          outputs:
+            matrix: ${{ steps.detect_changes.outputs.matrix }}
+            matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+          steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 2        
+            - name: Find changed directories and map to directories and languages
+              id: detect_changes
+              run: |
+                cd .github/scripts
+                if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+                DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk ) 
+                CHANGES=$(echo "$DIFF" | jq -c '.changes')
+                NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+              
+                else
+                  # For push events, compare with the previous commit
+                  DIFF=$(git diff --name-only HEAD^ HEAD | awk -f process.awk)
+                  CHANGES=$(echo "$DIFF" | jq -c '.changes')
+                  NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+                fi
+
+                # Store in output and also in a variable for debugging
+                echo "matrix=$CHANGES" >> $GITHUB_OUTPUT
+                echo "matrix_no_changes=$NO_CHANGES" >> $GITHUB_OUTPUT
+          
+                # Print the changes for debugging
+                echo "Changes found: $CHANGES" 
+                echo "No changes found: $NO_CHANGES"    
+
+        ....
+    ```   
+     
+   </details>
+
+  5.  Update the action file to perform CodeQL analysis. 
+       - Modify the job `analyze` to include CodeQL analysis for different components of the project using the `category` property.
+
+   <details>
+
+      <summary>Hint</summary>
+
+          - Initialize CodeQL using:
+
+          ```yaml
+                  - name: Initialize CodeQL
+                    uses: github/codeql-action/init@v3
+          ```
+
+          - Perform CodeQL analysis using:
+
+          ```yaml
+              - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v3
+          ```
+
+        - Use the `category` property to analyze different components separately, such as:
+
+        `"/language:${{matrix.language}}/app:${{matrix.directory}}"`
+
+   </details>    
+
+
+  <details>
+
+     <summary>Solution</summary>
+          ```yaml
+
+            analyze:
+              name: Analyze (${{ matrix.language }})
+              needs: detect_changes
+              runs-on: 'ubuntu-latest' 
+              permissions:
+                # required for all workflows
+                security-events: write
+                # required to fetch internal or private CodeQL packs
+                packages: read
+                # only required for workflows in private repositories
+                actions: read
+                contents: read
+              strategy:
+                fail-fast: true
+                matrix: 
+                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+
+              steps:
+                  - name: Checkout repository
+                    uses: actions/checkout@v4
+                    with:
+                      sparse-checkout: |
+                        ${{ matrix.directory }}
+                        .github/scripts/empty.sarif
+                      sparse-checkout-cone-mode: false       
+                  - name: Initialize CodeQL
+                    uses: github/codeql-action/init@v3
+                    with:
+                        languages: ${{ matrix.language }}
+                        build-mode: ${{ matrix.build_mode }}
+                  - name: Perform CodeQL Analysis
+                    uses: github/codeql-action/analyze@v3
+                    with:
+                    category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+
+          ```
+
+  </details>
+
+   6. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
+
+      - If a push rule requires all checks to pass before merging, and CodeQL does not analyze certain parts of the monorepo, those checks will remain in a neutral state and merging will be blocked.
+      
+      - To address this, you need to submit can empty SARIF file (available in `.github/scripts/empty.sarif`) for any unmodified components to mark them as successfully analyzed.
+
+
+
+   <details>
+   
+     <summary>Solution</summary>
+     
+          ```yaml
+              process_sarif:
+                name: Process SARIF
+                needs: [detect_changes, analyze]
+                runs-on: ubuntu-latest
+                permissions:
+                  # required for all workflows
+                  security-events: write
+                  # required to fetch internal or private CodeQL packs
+                  packages: read
+                  # only required for workflows in private repositories
+                  actions: read
+                  contents: read
+                strategy:
+                  fail-fast: true
+                  matrix: 
+                    include: ${{ fromJson(needs.detect_changes.outputs.matrix_no_changes) }}
+
+                steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                  with:
+                    sparse-checkout: |
+                      .github/scripts/empty.sarif
+                    sparse-checkout-cone-mode: false
+                
+                - name: Process SARIF
+                  uses: github/codeql-action/upload-sarif@v3
+                  with:
+                      sarif_file: .github/scripts/empty.sarif
+                      category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+                      
+          ```
+
+    </details>
+
+
+#### Final Solution 
+
+
+   <details>
+
+
+      <summary>Solution</summary>
+
+        ```yaml
+
+          # For most projects, this workflow file will not need changing; you simply need
+          # to commit it to your repository.
+          #
+          # You may wish to alter this file to override the set of languages analyzed,
+          # or to provide custom queries or build logic.
+          #
+          # ******** NOTE ********
+          # We have attempted to detect the languages in your repository. Please check
+          # the `language` matrix defined below to confirm you have the correct set of
+          # supported CodeQL languages.
+          #
+          name: "CodeQL Monorepo Analysis"
+
+          on:
+            push:
+              branches: [ "main" ]
+            pull_request:
+              branches: [ "main" ]
+            schedule:
+              - cron: '19 1 * * 1'
+
+          jobs:
+            detect_changes:
+              runs-on: ubuntu-latest
+              permissions:
+                # only required for workflows in private repositories
+                actions: read
+                contents: read
+              outputs:
+                matrix: ${{ steps.detect_changes.outputs.matrix }}
+                matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+              steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                  with:
+                    fetch-depth: 2        
+                - name: Find changed directories and map to directories and languages
+                  id: detect_changes
+                  run: |
+                    cd .github/scripts
+                    if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+                    DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk ) 
+                    CHANGES=$(echo "$DIFF" | jq -c '.changes')
+                    NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+                  
+                    else
+                      # For push events, compare with the previous commit
+                      DIFF=$(git diff --name-only HEAD^ HEAD | awk -f process.awk)
+                      CHANGES=$(echo "$DIFF" | jq -c '.changes')
+                      NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+                    fi
+
+                    # Store in output and also in a variable for debugging
+                    echo "matrix=$CHANGES" >> $GITHUB_OUTPUT
+                    echo "matrix_no_changes=$NO_CHANGES" >> $GITHUB_OUTPUT
+              
+                    # Print the changes for debugging
+                    echo "Changes found: $CHANGES" 
+                    echo "No changes found: $NO_CHANGES"
+
+            analyze:
+              name: Analyze (${{ matrix.language }})
+              needs: detect_changes
+              runs-on: 'ubuntu-latest' 
+              permissions:
+                # required for all workflows
+                security-events: write
+                # required to fetch internal or private CodeQL packs
+                packages: read
+                # only required for workflows in private repositories
+                actions: read
+                contents: read
+              strategy:
+                fail-fast: true
+                matrix: 
+                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+
+              steps:
+                  - name: Checkout repository
+                    uses: actions/checkout@v4
+                    with:
+                      sparse-checkout: |
+                        ${{ matrix.directory }}
+                        .github/scripts/empty.sarif
+                      sparse-checkout-cone-mode: false       
+                  - name: Initialize CodeQL
+                    uses: github/codeql-action/init@v3
+                    with:
+                        languages: ${{ matrix.language }}
+                        build-mode: ${{ matrix.build_mode }}
+                  - name: Perform CodeQL Analysis
+                    uses: github/codeql-action/analyze@v3
+                    with:
+                    category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+
+            process_sarif:
+                name: Process SARIF
+                needs: [detect_changes, analyze]
+                runs-on: ubuntu-latest
+                permissions:
+                  # required for all workflows
+                  security-events: write
+                  # required to fetch internal or private CodeQL packs
+                  packages: read
+                  # only required for workflows in private repositories
+                  actions: read
+                  contents: read
+                strategy:
+                  fail-fast: true
+                  matrix: 
+                    include: ${{ fromJson(needs.detect_changes.outputs.matrix_no_changes) }}
+
+                steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                  with:
+                    sparse-checkout: |
+                      .github/scripts/empty.sarif
+                    sparse-checkout-cone-mode: false
+                
+                - name: Process SARIF
+                  uses: github/codeql-action/upload-sarif@v3
+                  with:
+                      sarif_file: .github/scripts/empty.sarif
+                      category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+        ```
+  </details>
 
 #### Discussion Points
-- As your application grows, how do you foresee maintaining or extending these custom queries? Who should own that process?
-- What criteria would you use to decide whether a new security concern warrants writing an entirely new custom query versus customizing an existing one?
+
+- Why is efficient scanning critical in large monorepos? How do lengthy scan times impact developer productivity and pull request workflows?
+
+- What factors determine whether splitting monorepo scans is feasible? How can a monorepo's architecture influence the ease or complexity of implementing split scans?
+
+- Why is it necessary to handle categories that have not changed by submitting empty SARIF reports?
+
