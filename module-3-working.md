@@ -64,23 +64,23 @@ These are the only directories within the `mono-gallery` that we're interested i
            <details>
              <summary>Explanation</summary>
                
-                     This awk script processes a configuration file (1cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
+                     This awk script processes a configuration file (cfg_for_dir.txt) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
                      
                      Here is a step-by-step explanation of the script:
                      
-                     **BEGIN Block**:
-                     Reads the `cfg_for_dir.txt` file line by line.
+                     BEGIN Block:
+                     Reads the cfg_for_dir.txt file line by line.
                      Each line is split into fields based on the semicolon delimiter.
-                     Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+                     Populates the cfg_for_dir associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
                      
-                     **Main Block**:
-                     For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
+                     Main Block:
+                     For each record processed, it checks if the directory (the first field) is in cfg_for_dir.
                      If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
-                     Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
+                     Also, it iterates through all keys in cfg_for_dir and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
                 
-                     **END Block**:
-                     Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
-                     The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
+                     END Block:
+                     Outputs the contents of dirs and no_changes arrays in JSON format.
+                     The changes array contains directories where files have changed, while the no_changes array contains directories where no files have changed.
                      The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code analysis or build orchestration.
 
         </details>
@@ -177,10 +177,10 @@ These are the only directories within the `mono-gallery` that we're interested i
      <summary>Hint</summary>
 
           - To detect changes on a pull request, use:
-               `git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}` 
-          -  To detect changes on a `push` use:
-                `git diff --name-only HEAD^ HEAD`
-          - Ensure the workflow fetches enough history by setting `fetch-depth: 2` on checkout.
+               git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+          -  To detect changes on a push use:
+                git diff --name-only HEAD^ HEAD
+          - Ensure the workflow fetches enough history by setting fetch-depth: 2 on checkout.
 
    </details>
 
@@ -242,77 +242,69 @@ These are the only directories within the `mono-gallery` that we're interested i
      
    </details>
 
-  5.  Update the action file to perform CodeQL analysis. 
-       - Modify the job `analyze` to include CodeQL analysis for different components of the project using the `category` property.
+  4.  Update the action file to perform CodeQL analysis. Modify the job `analyze` to include CodeQL analysis for different components of the project using the category property.
 
-   <details>
+       <details>
+          <summary>Hint</summary>
+    
+              1. Initialize CodeQL using:
+    
+                      - name: Initialize CodeQL
+                        uses: github/codeql-action/init@v3
+    
+               2. Perform CodeQL analysis using:
+    
+                      - name: Perform CodeQL Analysis
+                        uses: github/codeql-action/analyze@v3
+    
+              3. Use the `category` property to analyze different components separately, such as:
+                      "/language:${{matrix.language}}/app:${{matrix.directory}}"
+    
+       </details>    
+    
+    
+       <details>
+          <summary>Solution</summary>
+              
+         ```yaml
+    
+                analyze:
+                  name: Analyze (${{ matrix.language }})
+                  needs: detect_changes
+                  runs-on: 'ubuntu-latest' 
+                  permissions:
+                    # required for all workflows
+                    security-events: write
+                    # required to fetch internal or private CodeQL packs
+                    packages: read
+                    # only required for workflows in private repositories
+                    actions: read
+                    contents: read
+                  strategy:
+                    fail-fast: true
+                    matrix: 
+                      include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+    
+                  steps:
+                      - name: Checkout repository
+                        uses: actions/checkout@v4
+                        with:
+                          sparse-checkout: |
+                            ${{ matrix.directory }}
+                            .github/scripts/empty.sarif
+                          sparse-checkout-cone-mode: false       
+                      - name: Initialize CodeQL
+                        uses: github/codeql-action/init@v3
+                        with:
+                            languages: ${{ matrix.language }}
+                            build-mode: ${{ matrix.build_mode }}
+                      - name: Perform CodeQL Analysis
+                        uses: github/codeql-action/analyze@v3
+                        with:
+                        category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
 
-      <summary>Hint</summary>
-
-          - Initialize CodeQL using:
-
-          ```yaml
-                  - name: Initialize CodeQL
-                    uses: github/codeql-action/init@v3
-          ```
-
-          - Perform CodeQL analysis using:
-
-          ```yaml
-              - name: Perform CodeQL Analysis
-              uses: github/codeql-action/analyze@v3
-          ```
-
-        - Use the `category` property to analyze different components separately, such as:
-
-        `"/language:${{matrix.language}}/app:${{matrix.directory}}"`
-
-   </details>    
-
-
-  <details>
-
-     <summary>Solution</summary>
-          ```yaml
-
-            analyze:
-              name: Analyze (${{ matrix.language }})
-              needs: detect_changes
-              runs-on: 'ubuntu-latest' 
-              permissions:
-                # required for all workflows
-                security-events: write
-                # required to fetch internal or private CodeQL packs
-                packages: read
-                # only required for workflows in private repositories
-                actions: read
-                contents: read
-              strategy:
-                fail-fast: true
-                matrix: 
-                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
-
-              steps:
-                  - name: Checkout repository
-                    uses: actions/checkout@v4
-                    with:
-                      sparse-checkout: |
-                        ${{ matrix.directory }}
-                        .github/scripts/empty.sarif
-                      sparse-checkout-cone-mode: false       
-                  - name: Initialize CodeQL
-                    uses: github/codeql-action/init@v3
-                    with:
-                        languages: ${{ matrix.language }}
-                        build-mode: ${{ matrix.build_mode }}
-                  - name: Perform CodeQL Analysis
-                    uses: github/codeql-action/analyze@v3
-                    with:
-                    category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-
-          ```
-
-  </details>
+         ```
+       </details>
 
    6. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
 
@@ -323,10 +315,10 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 
    <details>
-   
      <summary>Solution</summary>
      
-          ```yaml
+      ```yaml
+          
               process_sarif:
                 name: Process SARIF
                 needs: [detect_changes, analyze]
@@ -358,7 +350,7 @@ These are the only directories within the `mono-gallery` that we're interested i
                       sarif_file: .github/scripts/empty.sarif
                       category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
                       
-          ```
+        ```
 
     </details>
 
@@ -367,11 +359,9 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 
    <details>
-
-
       <summary>Solution</summary>
 
-        ```yaml
+    ```yaml
 
           # For most projects, this workflow file will not need changing; you simply need
           # to commit it to your repository.
@@ -498,7 +488,7 @@ These are the only directories within the `mono-gallery` that we're interested i
                   with:
                       sarif_file: .github/scripts/empty.sarif
                       category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-        ```
+    ```
   </details>
 
 #### Discussion Points
