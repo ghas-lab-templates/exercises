@@ -41,12 +41,12 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 1. Navigate to your code scanning settings and switch from the default workflow to the advanced workflow. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
 
-<details>
-  <summary> Animated Guide</summary>
-
-  ![alt text](images/default-to-advanced.gif)
-
-</details>
+    <details>
+      <summary> Animated Guide</summary>
+    
+      ![alt text](images/default-to-advanced.gif)
+    
+    </details>
 
 
 2. The workflow you are creating will contain three distinct jobs:
@@ -55,137 +55,132 @@ These are the only directories within the `mono-gallery` that we're interested i
      - **process_sarif**: Processes directories that have not changed. 
      
      Your task is to:
-     1. Create the YAML structure outlined above.
-     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers.
-
-You can read more about GitHub Actions [here](https://docs.github.com/en/actions)
-
-   <details>
-     <summary>Solution</summary>
-
-    ```yaml
-
-      name: "CodeQL Monorepo Analysis"
-
-      on:
-        push:
-          branches: [ "main" ]
-        pull_request:
-          branches: [ "main" ]
-        schedule:
-          - cron: '19 1 * * 1'
-
-      jobs:
-        detect_changes:
-          runs-on: ubuntu-latest
-          permissions:
-            actions: read
-            contents: read
-          outputs:
-            matrix: ${{ steps.detect_changes.outputs.matrix }}
-            matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
-          steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                fetch-depth: 2        
-            - name: Find changed directories and map to directories and languages
-              id: detect_changes
-              run: |
-                # TODO: Implement detection logic
-
-        analyze:
-          name: Analyze (${{ matrix.language }})
-          needs: detect_changes
-          runs-on: ubuntu-latest
-          permissions:
-            security-events: write
-            packages: read
-            actions: read
-            contents: read
-          strategy:
-            fail-fast: true
-            matrix:
-              include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
-
-          steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                sparse-checkout: |
-                  ${{ matrix.directory }}
-                sparse-checkout-cone-mode: false
-            # TODO: Implement CodeQL analysis steps
-
-        process_sarif:
-          name: Process SARIF
-          needs: [detect_changes, analyze]
-          runs-on: ubuntu-latest
-          permissions:
-            # required for all workflows
-            security-events: write
-            # required to fetch internal or private CodeQL packs
-            packages: read
-            # only required for workflows in private repositories
-            actions: read
-            contents: read
-          strategy:
-            fail-fast: true
-            matrix: 
-              include:  # TODO: Implement what needs to be passed into the matrix
-
-          steps:
-          - name: Checkout repository
-            uses: actions/checkout@v4
-            with:
-              sparse-checkout: |
-                 # TODO: Implement what needs to be checked out
-              sparse-checkout-cone-mode: false
-          
-           # TODO: Implement processing unchanged files 
-                
-
-    ```    
-   </details>
-
-
-   3. Navigate to `.github/scripts` and review the scripts:
+     1. Understand the YAML structure in the template below.
+     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions)
+      3. Navigate to `.github/scripts` and review the scripts:
       - Understand the role of `process.awk` in mapping file changes to directories and languages.
       - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
 
-   <details>
-     <summary>Explanation</summary>
+           <details>
+             <summary>Explanation</summary>
+               
+                     This awk script processes a configuration file (1cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
+                     
+                     Here is a step-by-step explanation of the script:
+                     
+                     **BEGIN Block**:
+                     Reads the `cfg_for_dir.txt` file line by line.
+                     Each line is split into fields based on the semicolon delimiter.
+                     Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+                     
+                     **Main Block**:
+                     For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
+                     If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
+                     Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
+                
+                     **END Block**:
+                     Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
+                     The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
+                     The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code analysis or build orchestration.
 
-     This awk script processes a configuration file (1cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
-     
-     Here is a step-by-step explanation of the script:
-     
-     **BEGIN Block**:
-     Reads the `cfg_for_dir.txt` file line by line.
-     Each line is split into fields based on the semicolon delimiter.
-     Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
-     
-     **Main Block**:
-     For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
-     If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
-     Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
+        </details>
 
-     **END Block**:
-     Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
-     The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
-     The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code analysis or build orchestration.
-     
-   </details>
+   **Monorepo CodeQL Template**
+    ```yaml
 
-   4. Update the action file to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
+          name: "CodeQL Monorepo Analysis"
+    
+          on:
+            push:
+              branches: [ "main" ]
+            pull_request:
+              branches: [ "main" ]
+            schedule:
+              - cron: '19 1 * * 1'
+    
+          jobs:
+            detect_changes:
+              runs-on: ubuntu-latest
+              permissions:
+                actions: read
+                contents: read
+              outputs:
+                matrix: ${{ steps.detect_changes.outputs.matrix }}
+                matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+              steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                  with:
+                    fetch-depth: 2        
+                - name: Find changed directories and map to directories and languages
+                  id: detect_changes
+                  run: |
+                    # TODO: Implement detection logic
+    
+            analyze:
+              name: Analyze (${{ matrix.language }})
+              needs: detect_changes
+              runs-on: ubuntu-latest
+              permissions:
+                security-events: write
+                packages: read
+                actions: read
+                contents: read
+              strategy:
+                fail-fast: true
+                matrix:
+                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+    
+              steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                  with:
+                    sparse-checkout: |
+                      ${{ matrix.directory }}
+                    sparse-checkout-cone-mode: false
+                # TODO: Implement CodeQL analysis steps
+    
+            process_sarif:
+              name: Process SARIF
+              needs: [detect_changes, analyze]
+              runs-on: ubuntu-latest
+              permissions:
+                # required for all workflows
+                security-events: write
+                # required to fetch internal or private CodeQL packs
+                packages: read
+                # only required for workflows in private repositories
+                actions: read
+                contents: read
+              strategy:
+                fail-fast: true
+                matrix: 
+                  include:  # TODO: Implement what needs to be passed into the matrix
+    
+              steps:
+              - name: Checkout repository
+                uses: actions/checkout@v4
+                with:
+                  sparse-checkout: |
+                     # TODO: Implement what needs to be checked out
+                  sparse-checkout-cone-mode: false
+              
+               # TODO: Implement processing unchanged files 
+                    
+
+    ```    
+
+
+3. Update the action template to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
 
    <details>
      <summary>Hint</summary>
-      - To detect changes on a pull request, use:
-           `git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}` 
-      -  To detect changes on a `push` use:
-            `git diff --name-only HEAD^ HEAD`
-      - Ensure the workflow fetches enough history by setting `fetch-depth: 2` on checkout.
+
+          - To detect changes on a pull request, use:
+               `git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}` 
+          -  To detect changes on a `push` use:
+                `git diff --name-only HEAD^ HEAD`
+          - Ensure the workflow fetches enough history by setting `fetch-depth: 2` on checkout.
 
    </details>
 
