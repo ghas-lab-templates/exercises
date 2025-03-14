@@ -320,7 +320,7 @@ These are the only directories within the `mono-gallery` that we're interested i
          ```
        </details>
 
-   6. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
+   5. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
 
       - If a push rule requires all checks to pass before merging, and CodeQL does not analyze certain parts of the monorepo, those checks will remain in a neutral state and merging will be blocked.
       
@@ -328,11 +328,10 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 
 
-   <details>
-     <summary>Solution</summary>
+      <details>
+          <summary>Solution</summary>
      
-      ```yaml
-          
+        ```yaml        
               process_sarif:
                 name: Process SARIF
                 needs: [detect_changes, analyze]
@@ -362,18 +361,16 @@ These are the only directories within the `mono-gallery` that we're interested i
                   uses: github/codeql-action/upload-sarif@v3
                   with:
                       sarif_file: .github/scripts/empty.sarif
-                      category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-                      
-        ```
+                      category: "/language:${{matrix.language}}/app:${{matrix.directory}}"                      
+         ```
 
-    </details>
-
-
-#### Final Solution 
+       </details>
 
 
-   <details>
-      <summary>Solution</summary>
+#### Final Solution
+
+  <details>
+       <summary>Solution</summary>
 
     ```yaml
 
@@ -412,16 +409,16 @@ These are the only directories within the `mono-gallery` that we're interested i
                 - name: Checkout repository
                   uses: actions/checkout@v4
                   with:
-                    fetch-depth: 2        
+                    fetch-depth: 2
                 - name: Find changed directories and map to directories and languages
                   id: detect_changes
                   run: |
                     cd .github/scripts
                     if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-                    DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk ) 
+                    DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk )
                     CHANGES=$(echo "$DIFF" | jq -c '.changes')
                     NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
-                  
+
                     else
                       # For push events, compare with the previous commit
                       DIFF=$(git diff --name-only HEAD^ HEAD | awk -f process.awk)
@@ -432,15 +429,15 @@ These are the only directories within the `mono-gallery` that we're interested i
                     # Store in output and also in a variable for debugging
                     echo "matrix=$CHANGES" >> $GITHUB_OUTPUT
                     echo "matrix_no_changes=$NO_CHANGES" >> $GITHUB_OUTPUT
-              
+
                     # Print the changes for debugging
-                    echo "Changes found: $CHANGES" 
+                    echo "Changes found: $CHANGES"
                     echo "No changes found: $NO_CHANGES"
 
             analyze:
               name: Analyze (${{ matrix.language }})
               needs: detect_changes
-              runs-on: 'ubuntu-latest' 
+              runs-on: 'ubuntu-latest'
               permissions:
                 # required for all workflows
                 security-events: write
@@ -451,7 +448,7 @@ These are the only directories within the `mono-gallery` that we're interested i
                 contents: read
               strategy:
                 fail-fast: true
-                matrix: 
+                matrix:
                   include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
 
               steps:
@@ -461,7 +458,7 @@ These are the only directories within the `mono-gallery` that we're interested i
                       sparse-checkout: |
                         ${{ matrix.directory }}
                         .github/scripts/empty.sarif
-                      sparse-checkout-cone-mode: false       
+                      sparse-checkout-cone-mode: false
                   - name: Initialize CodeQL
                     uses: github/codeql-action/init@v3
                     with:
@@ -486,7 +483,7 @@ These are the only directories within the `mono-gallery` that we're interested i
                   contents: read
                 strategy:
                   fail-fast: true
-                  matrix: 
+                  matrix:
                     include: ${{ fromJson(needs.detect_changes.outputs.matrix_no_changes) }}
 
                 steps:
@@ -496,14 +493,16 @@ These are the only directories within the `mono-gallery` that we're interested i
                     sparse-checkout: |
                       .github/scripts/empty.sarif
                     sparse-checkout-cone-mode: false
-                
+
                 - name: Process SARIF
                   uses: github/codeql-action/upload-sarif@v3
                   with:
                       sarif_file: .github/scripts/empty.sarif
                       category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
     ```
+
   </details>
+
 
 #### Discussion Points
 
