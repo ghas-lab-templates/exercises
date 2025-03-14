@@ -182,10 +182,14 @@ These are the only directories within the `mono-gallery` that we're interested i
      <summary>Hint</summary>
 
      - To detect changes on a pull request, use:
+       
           `git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}`
-          -  To detect changes on a push use:
-                git diff --name-only HEAD^ HEAD
-          - Ensure the workflow fetches enough history by setting fetch-depth: 2 on checkout.
+       
+     -  To detect changes on a push use:
+       
+          `git diff --name-only HEAD^ HEAD`
+        
+     -  Ensure the workflow fetches enough history by setting `fetch-depth: 2` on checkout.
 
    </details>
 
