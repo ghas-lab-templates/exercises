@@ -256,7 +256,7 @@ These are the only directories within the `mono-gallery` that we're interested i
        <details>
           <summary>Hint</summary>
     
-              1. Initialize CodeQL using:
+          1. Initialize CodeQL using:
     
                       - name: Initialize CodeQL
                         uses: github/codeql-action/init@v3
