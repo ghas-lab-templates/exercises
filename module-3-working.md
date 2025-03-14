@@ -266,10 +266,10 @@ These are the only directories within the `mono-gallery` that we're interested i
                   
         2. Perform CodeQL analysis using:
             
-          ```yaml
-             - name: Perform CodeQL Analysis
-               uses: github/codeql-action/analyze@v3
-          ```
+         ```yaml
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v3
+         ```
     
         3. Use the `category` property to analyze different components separately, such as:
                 `"/language:${{matrix.language}}/app:${{matrix.directory}}"`
