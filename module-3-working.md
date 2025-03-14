@@ -369,137 +369,126 @@ These are the only directories within the `mono-gallery` that we're interested i
 
 #### Final Solution
 
-  <details>
-       <summary>Solution</summary>
+<details>
+<summary>Solution</summary>
 
-    ```yaml
-          # For most projects, this workflow file will not need changing; you simply need
-          # to commit it to your repository.
-          #
-          # You may wish to alter this file to override the set of languages analyzed,
-          # or to provide custom queries or build logic.
-          #
-          # ******** NOTE ********
-          # We have attempted to detect the languages in your repository. Please check
-          # the `language` matrix defined below to confirm you have the correct set of
-          # supported CodeQL languages.
-          #
-          name: "CodeQL Monorepo Analysis"
-
-          on:
-            push:
-              branches: [ "main" ]
-            pull_request:
-              branches: [ "main" ]
-            schedule:
-              - cron: '19 1 * * 1'
-
-          jobs:
-            detect_changes:
-              runs-on: ubuntu-latest
-              permissions:
-                # only required for workflows in private repositories
-                actions: read
-                contents: read
-              outputs:
-                matrix: ${{ steps.detect_changes.outputs.matrix }}
-                matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  with:
-                    fetch-depth: 2
-                - name: Find changed directories and map to directories and languages
-                  id: detect_changes
-                  run: |
-                    cd .github/scripts
-                    if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-                    DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk )
-                    CHANGES=$(echo "$DIFF" | jq -c '.changes')
-                    NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
-
-                    else
-                      # For push events, compare with the previous commit
-                      DIFF=$(git diff --name-only HEAD^ HEAD | awk -f process.awk)
-                      CHANGES=$(echo "$DIFF" | jq -c '.changes')
-                      NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
-                    fi
-
-                    # Store in output and also in a variable for debugging
-                    echo "matrix=$CHANGES" >> $GITHUB_OUTPUT
-                    echo "matrix_no_changes=$NO_CHANGES" >> $GITHUB_OUTPUT
-
-                    # Print the changes for debugging
-                    echo "Changes found: $CHANGES"
-                    echo "No changes found: $NO_CHANGES"
-
-            analyze:
-              name: Analyze (${{ matrix.language }})
-              needs: detect_changes
-              runs-on: 'ubuntu-latest'
-              permissions:
-                # required for all workflows
-                security-events: write
-                # required to fetch internal or private CodeQL packs
-                packages: read
-                # only required for workflows in private repositories
-                actions: read
-                contents: read
-              strategy:
-                fail-fast: true
-                matrix:
-                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
-
-              steps:
-                  - name: Checkout repository
-                    uses: actions/checkout@v4
-                    with:
-                      sparse-checkout: |
-                        ${{ matrix.directory }}
-                        .github/scripts/empty.sarif
-                      sparse-checkout-cone-mode: false
-                  - name: Initialize CodeQL
-                    uses: github/codeql-action/init@v3
-                    with:
-                        languages: ${{ matrix.language }}
-                        build-mode: ${{ matrix.build_mode }}
-                  - name: Perform CodeQL Analysis
-                    uses: github/codeql-action/analyze@v3
-                    with:
-                    category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-
-            process_sarif:
-                name: Process SARIF
-                needs: [detect_changes, analyze]
-                runs-on: ubuntu-latest
-                permissions:
-                  # required for all workflows
-                  security-events: write
-                  # required to fetch internal or private CodeQL packs
-                  packages: read
-                  # only required for workflows in private repositories
-                  actions: read
-                  contents: read
-                strategy:
-                  fail-fast: true
-                  matrix:
-                    include: ${{ fromJson(needs.detect_changes.outputs.matrix_no_changes) }}
-
-                steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  with:
-                    sparse-checkout: |
-                      .github/scripts/empty.sarif
-                    sparse-checkout-cone-mode: false
-
-                - name: Process SARIF
-                  uses: github/codeql-action/upload-sarif@v3
-                  with:
-                      sarif_file: .github/scripts/empty.sarif
-                      category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-    ```
-
+```yaml
+   # For most projects, this workflow file will not need changing; you simply need
+   # to commit it to your repository.
+   #
+   # You may wish to alter this file to override the set of languages analyzed,
+   # or to provide custom queries or build logic.
+   #
+   # ******** NOTE ********
+   # We have attempted to detect the languages in your repository. Please check
+   # the `language` matrix defined below to confirm you have the correct set of
+   # supported CodeQL languages.
+   #
+   name: "CodeQL Monorepo Analysis"
+   on:
+     push:
+       branches: [ "main" ]
+     pull_request:
+       branches: [ "main" ]
+     schedule:
+       - cron: '19 1 * * 1'
+   jobs:
+     detect_changes:
+       runs-on: ubuntu-latest
+       permissions:
+         # only required for workflows in private repositories
+         actions: read
+         contents: read
+       outputs:
+         matrix: ${{ steps.detect_changes.outputs.matrix }}
+         matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+       steps:
+         - name: Checkout repository
+           uses: actions/checkout@v4
+           with:
+             fetch-depth: 2
+         - name: Find changed directories and map to directories and languages
+           id: detect_changes
+           run: |
+             cd .github/scripts
+             if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+             DIFF=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | awk -f process.awk )
+             CHANGES=$(echo "$DIFF" | jq -c '.changes')
+             NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+             else
+               # For push events, compare with the previous commit
+               DIFF=$(git diff --name-only HEAD^ HEAD | awk -f process.awk)
+               CHANGES=$(echo "$DIFF" | jq -c '.changes')
+               NO_CHANGES=$(echo "$DIFF" | jq -c '.no_changes')
+             fi
+             # Store in output and also in a variable for debugging
+             echo "matrix=$CHANGES" >> $GITHUB_OUTPUT
+             echo "matrix_no_changes=$NO_CHANGES" >> $GITHUB_OUTPUT
+             # Print the changes for debugging
+             echo "Changes found: $CHANGES"
+             echo "No changes found: $NO_CHANGES"
+     analyze:
+       name: Analyze (${{ matrix.language }})
+       needs: detect_changes
+       runs-on: 'ubuntu-latest'
+       permissions:
+         # required for all workflows
+         security-events: write
+         # required to fetch internal or private CodeQL packs
+         packages: read
+         # only required for workflows in private repositories
+         actions: read
+         contents: read
+       strategy:
+         fail-fast: true
+         matrix:
+           include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+       steps:
+           - name: Checkout repository
+             uses: actions/checkout@v4
+             with:
+               sparse-checkout: |
+                 ${{ matrix.directory }}
+                 .github/scripts/empty.sarif
+               sparse-checkout-cone-mode: false
+           - name: Initialize CodeQL
+             uses: github/codeql-action/init@v3
+             with:
+                 languages: ${{ matrix.language }}
+                 build-mode: ${{ matrix.build_mode }}
+           - name: Perform CodeQL Analysis
+             uses: github/codeql-action/analyze@v3
+             with:
+             category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+     process_sarif:
+         name: Process SARIF
+         needs: [detect_changes, analyze]
+         runs-on: ubuntu-latest
+         permissions:
+           # required for all workflows
+           security-events: write
+           # required to fetch internal or private CodeQL packs
+           packages: read
+           # only required for workflows in private repositories
+           actions: read
+           contents: read
+         strategy:
+           fail-fast: true
+           matrix:
+             include: ${{ fromJson(needs.detect_changes.outputs.matrix_no_changes) }}
+         steps:
+         - name: Checkout repository
+           uses: actions/checkout@v4
+           with:
+             sparse-checkout: |
+               .github/scripts/empty.sarif
+             sparse-checkout-cone-mode: false
+         - name: Process SARIF
+           uses: github/codeql-action/upload-sarif@v3
+           with:
+               sarif_file: .github/scripts/empty.sarif
+               category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+```
   </details>
 
 #### Discussion Points
