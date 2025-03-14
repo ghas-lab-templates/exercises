@@ -57,33 +57,32 @@ These are the only directories within the `mono-gallery` that we're interested i
      Your task is to:
      1. Understand the YAML structure in the template below.
      2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions)
-      3. Navigate to `.github/scripts` and review the scripts:
+     3. Navigate to `.github/scripts` and review the scripts:
       - Understand the role of `process.awk` in mapping file changes to directories and languages.
       - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
 
         <details>
-              <summary>Explanation</summary>
+          <summary>Explanation</summary>
                
-            This awk script processes a configuration file (cfg_for_dir.txt) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and 
-            outputs this information in JSON format.
+          This awk script processes a configuration file (cfg_for_dir.txt) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
                      
-            Here is a step-by-step explanation of the script:
+          Here is a step-by-step explanation of the script:
                      
-            BEGIN Block:
-            Reads the cfg_for_dir.txt file line by line.
-            Each line is split into fields based on the semicolon delimiter.
-            Populates the cfg_for_dir associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+          BEGIN Block:
+          Reads the cfg_for_dir.txt file line by line.
+          Each line is split into fields based on the semicolon delimiter.
+          Populates the cfg_for_dir associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
                      
-            Main Block:
-            For each record processed, it checks if the directory (the first field) is in cfg_for_dir.
-            If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
-            Also, it iterates through all keys in cfg_for_dir and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
+          Main Block:
+          For each record processed, it checks if the directory (the first field) is in cfg_for_dir.
+          If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
+          Also, it iterates through all keys in cfg_for_dir and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
                 
-            END Block:
-            Outputs the contents of dirs and no_changes arrays in JSON format.
-            The changes array contains directories where files have changed, while the no_changes array contains directories where no files have changed.
-            The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code 
-            analysis or build orchestration.
+          END Block:
+          Outputs the contents of dirs and no_changes arrays in JSON format.
+          The changes array contains directories where files have changed, while the no_changes array contains directories where no files have changed.
+          The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code 
+          analysis or build orchestration.
 
         </details>
 
