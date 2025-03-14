@@ -63,24 +63,28 @@ These are the only directories within the `mono-gallery` that we're interested i
 
         <details>
           <summary>Explanation</summary>
+          
                
-          This awk script processes a configuration file (cfg_for_dir.txt) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
+          This awk script processes a configuration file (`cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
                      
           Here is a step-by-step explanation of the script:
                      
-          BEGIN Block:
-          Reads the cfg_for_dir.txt file line by line.
+          `BEGIN` Block:
+        
+          Reads the `cfg_for_dir.txt` file line by line.
           Each line is split into fields based on the semicolon delimiter.
-          Populates the cfg_for_dir associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+          Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
                      
-          Main Block:
-          For each record processed, it checks if the directory (the first field) is in cfg_for_dir.
-          If the directory is not yet in the dirs array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
-          Also, it iterates through all keys in cfg_for_dir and checks if they are not in dirs. If they are not, it adds them to the no_changes array with similar JSON-formatted information.
+          `Main` Block:
+        
+          For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
+          If the directory is not yet in the `dirs` array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
+          Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in `dirs`. If they are not, it adds them to the `no_changes` array with similar JSON-formatted information.
                 
-          END Block:
-          Outputs the contents of dirs and no_changes arrays in JSON format.
-          The changes array contains directories where files have changed, while the no_changes array contains directories where no files have changed.
+          `END` Block:
+        
+          Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
+          The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
           The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code 
           analysis or build orchestration.
 
