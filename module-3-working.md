@@ -373,7 +373,6 @@ These are the only directories within the `mono-gallery` that we're interested i
        <summary>Solution</summary>
 
     ```yaml
-
           # For most projects, this workflow file will not need changing; you simply need
           # to commit it to your repository.
           #
@@ -502,7 +501,6 @@ These are the only directories within the `mono-gallery` that we're interested i
     ```
 
   </details>
-
 
 #### Discussion Points
 
