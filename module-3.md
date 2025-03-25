@@ -5,51 +5,44 @@
 ## Lab 1 - Default CodeQL 
 
 #### Objective
-In this lab, you will learn how to configure the code sacanning default setup at the repository level. The default CodeQL scan can also be enforced at the Org level.
+In this lab, you will learn how to configure the code sacanning default setup at the Organization level.
 
 Default setup for code scanning is the quickest, easiest, most low-maintenance way to enable code scanning for your repository. Based on the code in your repository, 
-default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned. We will use the mona-gallery repository to initiate the default codeql scan for the repository
+default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned. We will be using the Org that you have been given access to configure Default CodeQL scan at the org level
 
 #### Steps
 
-1. Click on your Repository settings. In the `Security` section of the sidebar, click the `Code security` menu on the left hand pane
-2. Navigate to the `Code scanning` section in this page where you will see the CodeQL analysis option with the set up allowing the below scan config options
-    1. Default
-    2. Advanced
-3. Click on the `Default` setup
-4. The subsequent pop up window, you will see that that the Languages is automatically populated along with the Query suites, Runner type and Scan events on which the CodeQL default scan will trigger. And finally the schedule of scan
-   
-<details>
-  <summary> Animated Guide</summary>
+1. Navigate to the Org that you have been given access to
+2. Click on the `Settings` menu at the Org level
+3. Navigate to `Advanced Security` menu on the left hand pane and then click on `Configurations`
+4. Click on `New Configuration`
+5. In the subsequent page that renders, key in a configuratio name and give an appropriate description
+6. Select `Not set` for all the config options under `Secret scanning` , `Dependency Scanning` & `Private vulnerability reporting`
+7. Next click on `Save configuration`
 
-![alt text](images/code-scan-default-settings-1.gif)
+     <details>
+      <summary> Animated Guide </summary>  
+        
+      ![create-branch](/images/code-scan-default-settings-4.gif)
 
-</details>
+    </details>
 
-5. If you wish to modify the scan parameters of the `Default scan` you can click on `Edit` button on this screen
-6. In this Edit screen of Default Scanning, you can select the languages that you want to scan for (if the repository has multiple programming languages). By default all the programming languages that CodeQL supports will be selected
-7. You can also select the runner type. For this exercise we will use the `Standard GitHub runner`
-8. Next select the `Query suit`
-9. Also there is an option to select `Threat model` to define and refine additional sources
-10. Finally we have the `Scan events` which will define the event on which the scan will be triggered and also the frequency of scan (weekly)
+8. Once the configuration is created, you can navigate to the newly created config and click on the drop down `Apply to` menu.
+9. Ideally you can select either 
+       a. All repositories
+       b. All repositories without configurations
 
-<details>
-  <summary> Animated Guide</summary>
+10. For this exercise, we will select all the repositories under the given org in the `Apply configurations` except **mono** repository. And finally we will select `Apply configuration` drop down menu and select the newly created Security configuration
+11. Finally click on `Apply` (this would start a CodeQL scan for all the eligible repositories under this org)
 
-![alt text](images/code-scan-default-settings-2.gif)
+    ` Note: Do not apply the default code scanning to the **mono** repository `
 
-</details>
+    <details>
+      <summary> Animated Guide </summary>  
+        
+      ![create-branch](/images/code-scan-default-settings-5.gif)
 
-11. As the final step once you have validated all the config iptions in the `Default scan`, you can go ahead and click on the `Enable CdeQL` button
-12. This will start the CodeQL analysis using the GitHub Hosted Runners. You can validate the scan progress in the `Actions` tab
-13. Once the scan is completed for all the listed technologies, you can navigate to the `Security` tab and then under `Code scanning` you can see all the CodeQL vulnerabilities
-
-<details>
-  <summary> Animated Guide</summary>
-
-![alt text](images/code-scan-default-settings-3.gif)
-
-</details>
+    </details>
 
 ## Lab 2 - Policies: Branch Ruleset to require code scanning results 
 
@@ -151,7 +144,7 @@ You can solve this exercise using either the codespaces or the UI. Codespaces is
 
 5. Raise a pull request to the `main` branch. Wait for the scans to complete and you should see a CodeQL javascript alert in your pull request. Oh no! There is a vulnerability in our vulnerability! Lucky we have autofix. Review the fix generated by autofix and if satisfied with it accept it. 
 
-## Lab 3 - Autofix on Open Alerts
+## Lab 4 - Autofix on Open Alerts
 
 #### Objective 
 In this lab, we will address two CodeQL alerts related to SQL Injection vulnerabilities in our Go code.
@@ -173,7 +166,7 @@ Proceed with these steps until both alerts are resolved.
 </details>
 
 
-## Lab 4 - Advanced Configuration with custom build command
+## Lab 5 - Advanced Configuration with custom build command
 
 ### Objective
 In this lab, you will learn how to configure CodeQL scan with an advanced setup (Actions based). We will be defining a custom CodeQL scanning yml file, but with a custom build command to build the application before scanning the application for vulnerabilities. The idea is to showcase how custom build commands can be used to scan compiled languages in CodeQL. 
@@ -368,7 +361,7 @@ c. Replace these with the actual java build command. In this case, since it is a
 ```
 </details>
 
-## Lab 5 - Security Campaigns
+## Lab 6 - Security Campaigns
 
 #### Objective
 Security campaigns are a way to group alerts and share them with developers, so you can collaborate to remediate vulnerabilities in the code. In this lab we will try creating a security campaign for identified security alerts in the default branch and see how the Campaigns feature in GHAS will help bring in focussed remediation effort from Dev teams. With this feature you can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.
@@ -402,7 +395,7 @@ For this exercise, we will use the ORG level Security tab for creating `Campaign
 
 </details>  
 
-## Lab 6 - Code Scanning for monorepos
+## Lab 7 - Code Scanning for monorepos
 
 #### Objective
 
