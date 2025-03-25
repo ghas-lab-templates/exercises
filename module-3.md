@@ -79,10 +79,17 @@ We will verify the new ruleset by creating a pull request to the default branch 
   ![rulesets](/images/rulesets.gif)
   
    </details>
+
+#### Discussion Points
+
+1. Why would setting up branch rulesets for code scanning results be beneficial for an organization? 
+2. How does enforcing rules at the organization level help maintain security consistency?
+3. What potential issues could arise from incorrectly configured branch rulesets?
+4. How could you adapt this ruleset for different types of repositories within your organization?
+5. What additional rules or security measures might complement required code s
      
 
-
-## Lab 2 - Autofix on PR 
+## Lab 3 - Autofix on PR 
 
 #### Objective
 
