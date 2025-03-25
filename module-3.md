@@ -40,7 +40,7 @@ default setup will automatically create a custom code scanning configuration. Af
 
 </details>
 
-11. As the final step once you have validated all the config iptions in the `Default scan`, you can go ahead and click on the `Enable COdeQL` button
+11. As the final step once you have validated all the config iptions in the `Default scan`, you can go ahead and click on the `Enable CdeQL` button
 12. This will start the CodeQL analysis using the GitHub Hosted Runners. You can validate the scan progress in the `Actions` tab
 13. Once the scan is completed for all the listed technologies, you can navigate to the `Security` tab and then under `Code scanning` you can see all the CodeQL vulnerabilities
 
@@ -50,6 +50,37 @@ default setup will automatically create a custom code scanning configuration. Af
 ![alt text](images/code-scan-default-settings-3.gif)
 
 </details>
+
+## Lab 2 - Policies: Branch Ruleset to require code scanning results 
+
+#### Objective 
+
+Ensuring secure code is crucial in software development. Configuring branch protection rules to require passing code scanning results helps enforce security best practices and prevents vulnerabilities from being merged into the main branch.
+
+You will complete this exercise using GitHub's web UI at the organization level.
+
+#### Steps 
+
+1. Navigate to the `Settings` tab at the `Organization` level.
+2. In the left sidebar, select `Repository` and then click on `Rulesets`.
+3. Click the green button labelled `New ruleset` and choose `New branch ruleset`.
+4. Enter a clear name for your ruleset (e.g Require CodeQL results on PR).
+5. Select `Enforcement status` to `Active`.
+6. Under `Target repositories` select `All repositories`. 
+7. Under `Target branches` select `Add target` and choose `Include default branch` from the dropdown menu. 
+8. Under `Branch rules`, select`Require code scanning results`. Keen the default settings (`Security alers:High or higher` and `Alerts:Errors`).
+9. Click the green `Create` button to finalise and activate your branch ruleset.
+
+We will verify the new ruleset by creating a pull request to the default branch in the next lab.
+
+   <details>
+      <summary> Animated Guide </summary>  
+        
+  ![rulesets](/images/rulesets.gif)
+  
+   </details>
+     
+
 
 ## Lab 2 - Autofix on PR 
 
