@@ -2,38 +2,23 @@
 
 ## Enablement  
 
-### Lab 1 - Setting Up a Custom Security Configuration and Enabling Dependency Graph
+### Lab 1 - Editing your Security Configuration and Enabling Dependency Graph
 
 #### Objective 
-In this lab, you will learn how to create and apply a custom security configuration to repositories in your organization. 
+In this lab, you will learn how to apply a custom security configuration to repositories in your organization.
 
 #### Steps
 
-1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
-<details>
-  <summary> Animated Guide</summary>
-
-![alt text](images/new-config.gif)
-
-</details>
-
-2. To help identify your custom security configuration and clarify its purpose, name your configuration and create a description. 
-
-<details>
-  <summary>Need Help? View Configuration Screenshot</summary>
-  
-![alt text](images/confignameanddesc.png)
-
-</details>
-
-3. For each configuration option select the following:
+1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the configuration you created earlier in Module 0.
+2. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
- - `Dependency Graph`: Select `Enabled`.
- - All Other Settings: Select `Not set`.
+ - Under the `Dependency Scanning` section:
+  - `Dependency Graph`: Select `Enabled`.
+  -  All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
 
-4. Click on `Save Configuration` button. Please confirm save if prompted.
+4. Click on the `Save Configuration` button. Please confirm save if prompted.
 
   <details>
  <summary>Need Help? View Configuration Screenshot</summary>  
@@ -42,7 +27,7 @@ In this lab, you will learn how to create and apply a custom security configurat
    
  </details>
 
-5. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+5. The page will be redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
    
 <details>
   <summary>Animated Guide</summary>
@@ -62,7 +47,7 @@ Understand how to navigate and interpret dependency graphs at both the organizat
 
 #### Steps: Organization Level Dependencies 
 1. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
-2. Review the licences used in the Organization.
+2. Review the licenses used in the Organization.
 3. Explore the relationship between dependencies and dependents.
 <details>
   <summary> Animated Guide</summary>
@@ -72,6 +57,7 @@ Understand how to navigate and interpret dependency graphs at both the organizat
 </details>
 
 #### Steps: Repository Level Dependencies 
+1. Navigate to the `mona-gallery` repository in your GitHub Organization.
 1. On the repository page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependency Graph` from the left-hand menu. 
 2. Carefully review the list of dependencies displayed and verify completeness. Look for any missing dependencies.
 <details>
@@ -85,16 +71,16 @@ Understand how to navigate and interpret dependency graphs at both the organizat
 - How do dependency relationships (dependencies vs. dependents) impact project maintenance and scalability?
 - What tools or practices can be used to ensure dependency graphs remain accurate and up-to-date?
 
-### Lab 3 - Dependency Submission API 
+### Lab 3 - Dependency Submission API
 
 #### Objective
-In this Lab we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
+In this lab, we'll learn how to use the Dependency Submission Action to correctly populate the dependency graph.
 
 #### Steps
-1. Navigate to the `moshi` repository in your GitHub Organization
-2. Notice the dependency graph only shows 3 dependencies. This is unusual for a project of its size. This happens because the repository uses Gradle for its build process, and Gradle resolves dependencies dynamically during build time.
+1. Navigate to the `moshi` repository in your GitHub Organization.
+2. Notice that the dependency graph only shows 3 dependencies. This is unusual for a project of its size because the repository uses Gradle for its build process and Gradle resolves dependencies dynamically during build time.
 3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
-  a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file
+  a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file.
   b. Copy and paste the following workflow into the file:
 
 ``` yaml
@@ -127,7 +113,7 @@ jobs:
       uses: gradle/actions/dependency-submission@v4
 ```
 
-4. Commit and push the changes to the repository
+4. Commit and push the changes to the repository.
 
   <details>
     <summary>Git Commands </summary>
@@ -149,7 +135,29 @@ jobs:
 - How does automating dependency submission improve workflow efficiency compared to manually tracking dependencies? Are there any drawbacks?
 - How should your team incorporate reviewing and maintaining dependency graphs into their regular workflows?
 
-### Lab 4 - Software Bill Of Materials (SBOM) Generation and Attestations
+### Lab 4 - Automatic Dependency Submission
+
+#### Objective
+
+In this lab, we'll learn how to use the built-in Automatic Dependency Submission feature to correctly populate the dependency graph. Instead of adding an Actions workflow as in the previous exercise, we will use the built-in feature to automatically submit dependency graphs for supported languages.
+
+#### Steps
+1. Navigate to the `mona-gallery` repository in your GitHub Organization.
+2. Filter the dependencies by `ecosystem:Macen`.
+3. Notice the dependency graph only shows 4 dependencies. This is unusual for a project of its size. 
+4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
+5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
+6. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`.
+8. Navigate back to the `mona-gallery` repository and confirm that the changes made have been applied by looking at the `Settings` > `Code Security`. The `Automatic dependency submission` should be set to `Enabled`.
+9. The automatic submission will occur on the first push to the pom.xml file after the option is enabled. Go ahead and make a small change to the `storage/pom.xml` file – you can add a comment or change the version of one of the dependencies.
+10. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Maven dependencies, both direct and transitive.
+
+#### Discussion Points
+-  What are the advantages of using the built-in Automatic Dependency Submission feature over manually submitting dependency graphs?
+-  Why is it important to have a complete and accurate dependency graph? How can incomplete graphs affect project security and maintenance?
+- How does the built-in Automatic Dependency Submission feature compare to using the Dependency Submission Action in terms of ease of use and integration with existing workflows?
+
+### Lab 5 - Software Bill Of Materials (SBOM) Generation and Attestations
 
 #### Objective 
 
@@ -163,7 +171,7 @@ Methods to Retrieve SBOM:
 In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
 
 #### Steps
-1. Navigate to the `mona-gallery`repository in your organization
+1. Navigate to the `mona-gallery`repository in your organization.
 2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
 3. Add the following contents to the file: 
 
@@ -199,13 +207,13 @@ jobs:
 
       # Step 3: Upload SBOM as an artifact
       - name: Upload SBOM Artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4
         with:
           path: ${{ steps.sbom.outputs.fileName }}
           name: "SBOM"
 ```
 
-5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM
+5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM.
 
 ```yaml 
   - uses: actions/attest-build-provenance@v2
@@ -263,27 +271,23 @@ jobs:
 
 ## Supply Chain Security - Manage Your Environment
 
-### Lab 5 - Dependabot Alerts and Security Updates
+### Lab 6 - Dependabot Alerts and Security Updates
 
 #### Objective
 
-In this lab, we will enable and review Depenabot Alerts and Dependabot Security Updates
+In this lab, we will enable and review Dependabot Alerts and Dependabot Security Updates.
 
 #### Steps
-1. Edit your custom security configuration to enable dependabot.
-  a.  Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  On the `Code security configurations` page, under `Organization configurations`, locate the custom configuration you created earlier (Custom GHAS Configuration). Click on the Edit (pencil) icon next to the configuration
-2. Under `Dependency Graph and Dependabot` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
-3. In the `Security` section of the sidebar, select the `Code security` dropdown menu, click on `Global settings` You will be navigated to he `Glocal code security settings` page. Under `Dependabot`, select `Dependabot Action Runners`.
-
-<details>
-  <summary> Animated Guide</summary>
-
-![alt text](images/enable-dependabot.gif)
-
-</details>
-
-4. Go through each repository to view the generated Dependabot alerts and Pull Requests created by Dependabot.
-5. Choose a repository and click on the `Actions` tab, select `Dependabot Updates` and review Action run.
+1. Edit your custom security configuration to enable Dependabot.
+  a.  Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
+2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
+3. In the `Advanced Security` section of the sidebar click on `Global settings`. Select the `Grouped security updates` checkbox. This will group all Dependabot security updates into a single pull request per dependency.
+4. Check the `Dependabot on Action runners` checkbox. This will run all Dependabot workflows on GitHub Action runners.
+5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
+6. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
+7. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests to see if they are related to security updates and if they are grouped together.
+8. Navigate to the `Security` tab and check if there are any open Dependabot alerts. Review the alerts to see if they are related to security updates and if they are grouped together.
+9. Navigate to the PR again and merge it. After merging, check the `Security` tab again to see if the alert has automatically closed.
 
 #### Discussion Points
 - What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
@@ -291,19 +295,19 @@ In this lab, we will enable and review Depenabot Alerts and Dependabot Security 
 - How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
 - Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
 
-### Lab 6 - Dependabot Rules 
+### Lab 6 - Dependabot Rules
 
 #### Objective
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
 
 #### Steps
-1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Security`, select `Code security and analysis`.
+1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Advanced Security`, select `Code security`.
 2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
 3. Set Up the Rule:
 - Rule Name: Dismiss No-Patch Alerts for Go and Pip.
 - Target Alerts > Ecosystem: Select Go and Pip from the dropdown list.
-- Rules : Select Dismiss alerts > Until patch is available
-4. Select `Create Rule` button
+- Rules : Select Dismiss alerts > Until patch is available.
+4. Select `Create Rule` button.
 5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
 
 #### Discussion Points
@@ -311,7 +315,7 @@ In this lab, we will configure Dependabot Rules to manage alerts in the `mona-ga
 - How should teams prioritize alerts that cannot be dismissed due to the presence of patches? What criteria should be used to decide on the urgency of addressing these vulnerabilities?
 - How can teams effectively communicate the rationale for dismissing certain alerts to stakeholders, including management and security teams?
 
-### Lab 7 - Depenabot Version Updates
+### Lab 7 - Dependabot Version Updates
 
 #### Objective
 
@@ -319,8 +323,8 @@ In this exercise, we will create a Dependabot configuration file to automate ver
 
 #### Steps
 
-1. Inside the `.github` folder create a `dependabot.yml` file 
-2. Add the following configuration (Note: you must first create the label for this workflow to work)
+1. Inside the `.github` folder create a `dependabot.yml` file.
+2. Add the following configuration (Note: you must first create the label for this workflow to work).
 
 ```yaml
 
@@ -339,7 +343,7 @@ updates:
     
 ```
 
-3. Commit and push your changes 
+3. Commit and push your changes.
 
 
 <details>
@@ -352,7 +356,7 @@ git push origin main
   ```
   </details>
 
-4. Navigate to the `Pull Requests` tab and review the generated pull requests. 
+4. Navigate to the `Pull requests` tab and review the generated pull requests.
 
 #### Discussion Points 
 - What factors influence the decision to schedule updates weekly, daily, or monthly?
@@ -361,9 +365,72 @@ git push origin main
 - How can you test the configuration to ensure it is working as expected?
 - What is the process for reviewing and merging Dependabot pull requests?
 - How can you automate testing for these pull requests to ensure they don’t break your code?
-- How do you handle deprecated or unmaintained dependencies
+- How do you handle deprecated or unmaintained dependencies?
 
-### Lab 8 - Dependency Review
+### Lab 8 - Dependabot Updates for private packages
+
+#### Objective
+
+In this exercise, we will update our Dependabot configuration file to provide Dependabot access to a private package registry. This will allow Dependabot to update private packages in the `mona-gallery` repository.
+
+#### Steps
+
+###### Create a secret for Dependabot
+1. Create a personal access token (PAT) with the `read:packages` scope. This will allow Dependabot to access private packages in the `mona-gallery` repository.
+1. Navigate to the `mona-gallery` repository in your GitHub Organization.
+2. Click on the `Settings` tab, then select `Secrets and variables` > `Dependabot`.
+3. Click on the `New repository secret` button.
+4. Name the secret `PAT_FOR_DEPENDABOT` and paste the personal access token you created earlier.
+
+#### Edit the Dependabot Configuration
+1. Inside the `.github` edit the `dependabot.yml` configuration file we created in the previous lab.
+2. Define a new `registry` section in the configuration file. This will allow Dependabot to access private packages in the `mona-gallery` repository.
+3. Add the following configuration (Note: you must first create the label for this workflow to work).
+
+```yaml
+
+version: 2
+registries:
+  npm-github:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.PAT_FOR_DEPENDABOT}}
+    replaces-base: true
+updates:
+  # Keep npm dependencies up to date
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    registries: "npm-github"
+    schedule:
+      interval: "weekly"
+    # Raise all npm pull requests with custom labels
+    labels:
+      - "dependabot-version-update"
+    commit-message:
+      prefix: "DEPENDABOT VERSION UPDATES"
+    
+```
+
+3. Commit and push your changes.
+
+<details>
+    <summary>Git Commands </summary>
+
+  ```bash
+git add .github/dependabot/dependabot.yml
+git commit -m "Add Dependabot access to private registry"
+git push origin main
+  ```
+  </details>
+
+4. Navigate to the `Pull requests` tab and review the generated pull requests.
+
+#### Discussion Points 
+- Can we use the same PAT for multiple repositories? What are the security implications of this?
+- How can we ensure that the PAT is not exposed in the codebase?
+- How can we manage the lifecycle of the PAT, including rotation and revocation?
+
+### Lab 9 - Dependency Review
 
 #### Objective
 
@@ -371,8 +438,8 @@ In this lab, we will configure a Dependency Review workflow in GitHub Actions to
 
 #### Steps
 1. Open your repository in Codespaces.
-2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory 
-3. Add the following configuration file: 
+2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory.
+3. Add the following Actions workflow: 
 
 ```yaml
 
@@ -409,7 +476,7 @@ jobs:
         # Possible values: "development", "runtime", "unknown"
         fail-on-scopes: development, runtime
 ```
-4. Commit and push your changes 
+4. Commit and push your changes.
 
 <details>
     <summary>Git Commands </summary>
@@ -421,7 +488,7 @@ git push origin main
 ```
 </details>
 
-5. Create a branch from the `main` branch
+5. Create a branch from the `main` branch.
 
 <details>
     <summary>Git Commands </summary>
@@ -432,8 +499,8 @@ git push origin feature-a
 ```
 </details>
 
-6. Open a terminal in Codespaces and run `npm install json-web-token`
-7. Commit and push the code 
+6. Open a terminal in Codespaces and run `npm install json-web-token`.
+7. Commit and push the code.
 
 <details>
     <summary>Git Commands </summary>
@@ -445,7 +512,8 @@ git push
 ```
 </details>
 
-8. Raise a Pull Request to the `main` branch
+8. Raise a Pull Request to the `main` branch and observe the `Dependency Review` workflow running in the `Actions` tab.
+9. Once the workflow is complete, go back to the pull request you created and observe the comments added by the `Dependency Review` workflow.
 
 #### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
@@ -454,3 +522,158 @@ git push
 - How do you balance security requirements with the need to avoid workflow bottlenecks?
 - When should you allow exceptions for flagged vulnerabilities?
 
+### Lab 10 - Enforcing Dependency Review to Business Critical Repositories
+
+#### Objective
+
+In this lab, we will enforce the Dependency Review workflow to high-risk repositories in your organization. This will ensure that all pull requests to high-risk repositories are reviewed for vulnerable dependencies.
+
+#### Steps
+
+To achieve a central governance of the Dependency Review workflow and configuration, we will create the workflow and reference a configuration in a central `appsec-central` repository.
+
+1. Navigate to the `appsec-central` repository in your GitHub Organization.
+2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory.
+3. Add the following Actions workflow:
+
+```yaml
+name: 'Dependency Review'
+on: [pull_request]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.GHAS_APP_ID }}
+          private-key: ${{ secrets.GHAS_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: appsec-central
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          config-file: ${{ github.repository_owner }}/appsec-central/configs/dependency-review.yml@main
+          external-repo-token: ${{ steps.app-token.outputs.token }} 
+```
+4. Create a new file named `configs/dependency-review-config.yml` in the `.github` directory.
+5. Add the following configuration to the file:
+
+```yml
+fail-on-severity: 'critical'
+allow-licenses: GPL-3.0, BSD-3-Clause, MIT
+fail-on-scopes: runtime
+comment-summary-in-pr: true
+```
+
+Next, we need to make sure that the workflow we just created can run in other repositories in the organization. For this, we will change the Actions settings.
+1. Navigate to the Settings tab of the `appsec-central` repository.
+2. Under the `Actions` section, select `General`.
+3. Under the `Access` section:
+  - Select the `Accessible from repositories in the 'YOUR-ORGANIZATION-NAME' organization`.
+  - Click `Save` to apply the changes.
+
+To enforce the Dependency Review workflow to high-risk repositories, we will utilize Organization-level rulesets. This will allow us to enforce the Dependency Review workflow to all PRs raised in our high-risk repositories.
+1. Navigate to your Organization's settings.
+2. Under the `Code, planning, and automation` section, select `Repository` and then `Rulesets`.
+3. Click on the `New branch ruleset` button.
+4. Name the ruleset `Dependency Review`.
+5. Select the `Enforcement status` to `Active`.
+6. Under the `Target` section, select `Dynamic list by property`.
+7. Select the `Risk-level` property and then select the `Business Critical App` as value.
+8. Click `Add target` to add the target.
+9. Under the `Target branches` section, select `Include default branch`.
+10. Under the `Rules` section, select `Require workflows to pass before merging`.
+11. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
+12. Click `Add workflow` to add the rule.
+
+**Let's test it out!**
+1. Navigate to the `mona-gallery` repository in your GitHub Organization.
+2. Create a new branch from the `main` branch.
+3. Navigate to GitHub Advisory Database and pick a vulnerability in the pip package manager with severity `Critical`. Example, [CVE-2025-32375](https://github.com/advisories/GHSA-7v4r-c989-xh26).
+4. Edit the `auth-ext/requirements.txt` file and add the vulnerable package to the file.
+```
+bentoml==1.4.7
+```
+4. Commit and push the code.
+5. Open a pull request to the `main` branch and observe if the `Dependency Review` workflow is running as expected.
+
+<details>
+  <summary>Missing the result? It should look like this</summary>  
+   
+   ![Dependency Review Required](dependency-review-required.png)
+   
+</details>
+
+## Discussion Points
+- Can people override the ruleset? If so, how?
+- If you were to apply a similar ruleset to all repositories in your organization what would be the feedback from your developers?
+- How would you handle exceptions to the ruleset? For example, if a developer needs to merge a PR without passing the Dependency Review workflow?
+
+### Lab 11 - Establish an Organization‑wide SECURITY.md Policy
+#### Objective
+Set up a default `SECURITY.md` in a centralized `.github` repository so all your organization’s repositories inherit a baseline security policy.
+
+#### Steps
+1. Create a new repository under your organization named `.github` (skip if it already exists).
+2. Open the `.github` repo and click **Add file** > **Create new file**.
+3. Name the file `SECURITY.md` (at the root of the repository).
+4. Populate it with your organization’s security policy, for example:
+   - **Reporting vulnerabilities**
+   - **Supported versions**
+   - **Security configurations applied**
+   - **Contact & triage process**
+5. Commit the file to the **main** branch.
+6. To verify, navigate to any repository in your organization that does *not* have its own `SECURITY.md`. Under the **Code** tab you should see **Security policy** pointing to the default from `.github/SECURITY.md`.
+
+<details>
+  <summary>Optional: Example SECURITY.md template</summary>
+  ```markdown
+  # Security Policy
+
+  ## Reporting a Vulnerability
+  Please open an issue in this repository or email security@example.com.
+
+  ## Supported Versions
+  We support the latest minor releases of each major version.
+
+  ## Security Configurations
+  - Code scanning via CodeQL
+  - Dependabot enabled
+
+  ## Contact & Triage
+  Security team: security@example.com
+  ```
+</details>
+
+#### Discussion Points
+- How does a centralized `SECURITY.md` help with security policy consistency?
+- What are the advantages of having a default security policy for all repositories?
+- When should a repository override this default with its own `SECURITY.md`? 
+---
+
+### Lab 12 - Identify Top Vulnerable Ecosystems and Repositories
+#### Objective
+Use GitHub’s Security dashboard to find critical alert hotspots in your most prominent package ecosystem.
+
+#### Steps
+1. On the Organization page navigate to the `Security` tab.
+2. Use the `Overview` section and the `Detection` tabs to identify:
+   - **Top vulnerable ecosystems**: List the top 3 ecosystems with the most open critical alerts.
+   - **Repositories with most alerts**: List the top 5 repos with open critical alerts.
+
+<details>
+  <summary>Need a hand? Start with this filtering options</summary>
+  ```markdown
+  archived:false tool:dependabot dependabot.ecosystem:pip
+  ```
+</details>
+
+#### Discussion Points
+- How will you prioritize remediation across ecosystems?
+- What processes ensure ongoing visibility of these metrics?
