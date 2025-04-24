@@ -9,7 +9,7 @@ In this lab, you will learn how to apply a custom security configuration to repo
 
 #### Steps
 
-1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the configuration you created earlier in Module 0.
+1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the two configuration you created earlier in Module 0.
 2. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
  - Under the `Dependency Scanning` section:
@@ -27,8 +27,12 @@ In this lab, you will learn how to apply a custom security configuration to repo
    
  </details>
 
-5. The page will be redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
-   
+5. The page will be redirected to the `Configurations` page.
+  - For the `Supply chain security - Basic` configuration:
+    - Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
+  - For the `Supply chain security - Business Critical` configuration:
+    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and the then select the `Risk-level` custom propertyh with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
+
 <details>
   <summary>Animated Guide</summary>
   
@@ -36,6 +40,9 @@ In this lab, you will learn how to apply a custom security configuration to repo
 
 ![alt text](images/applytoallrepos.png)
 </details>
+
+### Discussion Points
+- What is the difference between enforced and non-enforced configurations? What is the order of precedence?
 
 ## Supply Chain Security - Know Your Environment
 

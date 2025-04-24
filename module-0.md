@@ -81,7 +81,7 @@ Create your first security configuration for your track:
 
 #### Steps
 1. In **Organization** settings, **Advanced Security** > **Configurations**, click **New configuration**.
-2. Name and describe your config (e.g., `<Track> Setup`).
+2. Name and describe your config (e.g., `<Track> - Basic`).
 3. Under **GitHub Advanced Security Features**:
     - For **Secret Protection** or **Code Security**, select **Include**.
     - For **Supply Chain Security**, select **Exclude**.
@@ -106,7 +106,7 @@ Create a high‑risk configuration for repositories tagged **Business Critical A
 
 #### Steps
 1. Go to **Advanced Security** > **Configurations**, click **New configuration**.
-2. Name it `Business Critical Policy`, add a description.
+2. Name it `<Track> - Business Critical`, add a description.
 3. Select **Include** for **GitHub Advanced Security Features**.
 4. Enable desired features (e.g., **Code scanning**, **Secret scanning**, **Dependabot alerts**).
 5. Set **Enforce Configuration** > **Enforce**.
