@@ -917,3 +917,56 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
 3. Familiarise your self with the KICS GitHub Action and the various configuration iptions that the tool provides
 4. Now navigate to the `.github` folder and create a new `kics-scan.yml` file
 5. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a sarif file of the results post scanning and then uploads the sarif file to GitHub Security Dashboard using the `upload-sarif` action
+ 
+
+    <details>
+     <summary>Solution</summary>
+
+     ```yaml
+        name: scan with KICS and upload SARIF
+
+    on:
+     push:
+        branches: [ "main" ]
+     pull_request:
+        branches: [ "main" ]
+    
+    jobs:
+      kics-job:
+        runs-on: ubuntu-latest
+        name: kics-action
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@v3
+          - name: Mkdir results-dir
+            # make sure results dir is created
+            run: mkdir -p results-dir
+          - name: Run KICS Scan with SARIF result
+            uses: checkmarx/kics-github-action@v2.1.7
+            with:
+              path: 'terraform'
+              # when provided with a directory on output_path
+              # it will generate the specified reports file named 'results.{extension}'
+              # in this example it will generate:
+              # - results-dir/results.json
+              # - results-dir/results.sarif
+              ignore_on_exit: results
+              output_path: results-dir
+              platform_type: terraform
+              output_formats: 'json,sarif'
+      
+          - name: Show results
+            run: |
+              cat results-dir/results.sarif
+              cat results-dir/results.json
+          - name: Upload SARIF file
+            uses: github/codeql-action/upload-sarif@v3
+            with:
+              sarif_file: results-dir/results.sarif
+
+     ```
+   </details>
+
+   6. Post the scan completion, you can navigate to the `Security` tab in the GitHub UI and under `Code scanning` in the dashboard you can see all the IaC vulnerabilities identified by KICS scanner
+
+   
