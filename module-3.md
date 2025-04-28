@@ -891,3 +891,76 @@ These are the only directories within the `mono-gallery` that we're interested i
 - What factors determine whether splitting monorepo scans is feasible? How can a monorepo's architecture influence the ease or complexity of implementing split scans?
 
 - Why is it necessary to handle categories that have not changed by submitting empty SARIF reports?
+
+
+## Lab 8 - Running Code Scanning with 3rd Party Scanners
+
+#### Objective
+The objective of this lab is to showcase how 3rd party code scanning tools can be integrated with GitHub Code Scannig (using actions or scanning using non actions infra and uploading scan results). While CodeQL is a robust built-in solution, we also have the option to integrate third-party tools for a customized approach. By configuring code scanning with 3rd Party actions, we can incorporate tools like KICS (IAC Code Scanning eg: Terroform), SonarQube (Code Quality Checks), Trivy (Iac, Container Scanning), etc. These tools can upload results in SARIF format, which will display alerts alongside GitHub's native scans, simplifying your security process. This flexibility is ideal for teams already using external analysis tools, allowing all findings to be centralized in GitHub's Security tab for easier management.
+
+In this lab we will be using KICS Infrastructure as Code scanner to scan terraform files in a repository
+
+#### Steps
+1. For this lab we will be using the `terragoat-iac` repository
+2. We will be using [KICS IaC scanner](https://github.com/marketplace/actions/kics-github-action) to run the scan
+3. Familiarise your self with the KICS GitHub Action and the various configuration iptions that the tool provides
+4. Now navigate to the `.github` folder and create a new `kics-scan.yml` file
+5. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a sarif file of the results post scanning and then uploads the sarif file to GitHub Security Dashboard using the `upload-sarif` action
+ 
+
+    <details>
+     <summary>Solution</summary>
+
+     ```yaml
+        name: scan with KICS and upload SARIF
+
+    on:
+     push:
+        branches: [ "main" ]
+     pull_request:
+        branches: [ "main" ]
+    
+    jobs:
+      kics-job:
+        runs-on: ubuntu-latest
+        name: kics-action
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@v3
+          - name: Mkdir results-dir
+            # make sure results dir is created
+            run: mkdir -p results-dir
+          - name: Run KICS Scan with SARIF result
+            uses: checkmarx/kics-github-action@v2.1.7
+            with:
+              path: 'terraform'
+              # when provided with a directory on output_path
+              # it will generate the specified reports file named 'results.{extension}'
+              # in this example it will generate:
+              # - results-dir/results.json
+              # - results-dir/results.sarif
+              ignore_on_exit: results
+              output_path: results-dir
+              platform_type: terraform
+              output_formats: 'json,sarif'
+      
+          - name: Show results
+            run: |
+              cat results-dir/results.sarif
+              cat results-dir/results.json
+          - name: Upload SARIF file
+            uses: github/codeql-action/upload-sarif@v3
+            with:
+              sarif_file: results-dir/results.sarif
+
+     ```
+   </details>
+
+6. Post the scan completion, you can navigate to the `Security` tab in the GitHub UI and under `Code scanning` in the dashboard you can see all the IaC vulnerabilities identified by KICS scanner
+  
+   #### Discussion Points
+
+- Discuss what 3rd party scanners that the teams are already using ?
+
+- Any challenges that dev teams are facing in terms of vulnerability analysis with multiple tools and reports and deashboards?
+
