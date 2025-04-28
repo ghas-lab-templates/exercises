@@ -910,3 +910,10 @@ These are the only directories within the `mono-gallery` that we're interested i
 The objective of this lab is to showcase how 3rd party code scanning tools can be integrated with GitHub Code Scannig (using actions or scanning using non actions infra and uploading scan results). While CodeQL is a robust built-in solution, we also have the option to integrate third-party tools for a customized approach. By configuring code scanning with 3rd Party actions, we can incorporate tools like KICS (IAC Code Scanning eg: Terroform), SonarQube (Code Quality Checks), Trivy (Iac, Container Scanning), etc. These tools can upload results in SARIF format, which will display alerts alongside GitHub's native scans, simplifying your security process. This flexibility is ideal for teams already using external analysis tools, allowing all findings to be centralized in GitHub's Security tab for easier management.
 
 In this lab we will be using KICS Infrastructure as Code scanner to scan terraform files in a repository
+
+#### Steps
+1. For this lab we will be using the `terragoat-iac` repository
+2. We will be using [KICS IaC scanner](https://github.com/marketplace/actions/kics-github-action) to run the scan
+3. Familiarise your self with the KICS GitHub Action and the various configuration iptions that the tool provides
+4. Now navigate to the `.github` folder and create a new `kics-scan.yml` file
+5. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a sarif file of the results post scanning and then uploads the sarif file to GitHub Security Dashboard using the `upload-sarif` action
