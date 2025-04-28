@@ -902,3 +902,11 @@ These are the only directories within the `mono-gallery` that we're interested i
 - What factors determine whether splitting monorepo scans is feasible? How can a monorepo's architecture influence the ease or complexity of implementing split scans?
 
 - Why is it necessary to handle categories that have not changed by submitting empty SARIF reports?
+
+
+## Lab 7 - Running Code Scanning with 3rd Party Scanners
+
+#### Objective
+The objective of this lab is to showcase how 3rd party code scanning tools can be integrated with GitHub Code Scannig (using actions or scanning using non actions infra and uploading scan results). While CodeQL is a robust built-in solution, we also have the option to integrate third-party tools for a customized approach. By configuring code scanning with 3rd Party actions, we can incorporate tools like KICS (IAC Code Scanning eg: Terroform), SonarQube (Code Quality Checks), Trivy (Iac, Container Scanning), etc. These tools can upload results in SARIF format, which will display alerts alongside GitHub's native scans, simplifying your security process. This flexibility is ideal for teams already using external analysis tools, allowing all findings to be centralized in GitHub's Security tab for easier management.
+
+In this lab we will be using KICS Infrastructure as Code scanner to scan terraform files in a repository
