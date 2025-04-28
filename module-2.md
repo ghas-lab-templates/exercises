@@ -11,21 +11,21 @@ In this lab, you will learn how to create and apply a custom security configurat
 #### Steps
 
 1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
-<details>
-  <summary> Animated Guide</summary>
+  <details>
+    <summary> Animated Guide</summary>
 
-![alt text](images/new-config.gif)
+  ![alt text](images/new-config.gif)
 
-</details>
+  </details>
 
 2. To help identify your custom security configuration and clarify its purpose, name your configuration and create a description. 
 
-<details>
-  <summary>Need Help? View Configuration Screenshot</summary>
-  
-![alt text](images/confignameanddesc.png)
+  <details>
+    <summary>Need Help? View Configuration Screenshot</summary>
+    
+  ![alt text](images/confignameanddesc.png)
 
-</details>
+  </details>
 
 3. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
@@ -36,20 +36,20 @@ In this lab, you will learn how to create and apply a custom security configurat
 
 4. Click on `Save Configuration` button. Please confirm save if prompted.
 
-  <details>
- <summary>Need Help? View Configuration Screenshot</summary>  
-   
-   ![alt text](images/config-options-secret-scanning.png)
-   
- </details>
+    <details>
+  <summary>Need Help? View Configuration Screenshot</summary>  
+    
+    ![alt text](images/config-options-secret-scanning.png)
+    
+  </details>
 
 5. The page will redirected to the Configurations page. Click on the Apply to dropdown and select All repositories. There will be a prompt for confirmation, select Apply
 
-<details>
-  <summary>Animated Guide</summary>
+  <details>
+    <summary>Animated Guide</summary>
 
-![alt text](images/applytoallrepos.png)
-</details>
+  ![alt text](images/applytoallrepos.png)
+  </details>
 
 ### Lab 2 - Custom Patterns with AI 
 
@@ -64,12 +64,12 @@ The objective of this lab is to demonstrate the uage of cutom patterns in identi
 4. Navigate to Settings tab of the repository, click on **Code security** section, and under Custom Patterns click on New pattern
 5. In the top right hand corner, click on Generate with AI
 
-<details>
-  <summary> Animated Guide</summary>
+  <details>
+    <summary> Animated Guide</summary>
 
-![alt text](images/custom-pattern-with-ai.gif)
+  ![alt text](images/custom-pattern-with-ai.gif)
 
-</details>
+  </details>
 
 6. In this lab we have a custom secret that has been embedded in the following location `storage/src/main/resources/application.properties`
 7. Specifically we will try to take AI assitance to create a regular expresssion for the minio.password mapped to `mona_value_abc124`
@@ -78,21 +78,21 @@ The objective of this lab is to demonstrate the uage of cutom patterns in identi
 10. This will copy the generated regular expresssion and the test strings into the New Custom Pattern creation page
 
 
-<details>
-  <summary> Animated Guide</summary>
+  <details>
+    <summary> Animated Guide</summary>
 
-![alt text](images/custom-pattern-prompt.gif)
+  ![alt text](images/custom-pattern-prompt.gif)
 
-</details>
+  </details>
 
 11. Give an appropriate `Pattern name` and click on `Save and dry run`
 
-<details>
-  <summary> Animated Guide</summary>
+  <details>
+    <summary> Animated Guide</summary>
 
-![alt text](images/custom-pattern-publish.gif)
+  ![alt text](images/custom-pattern-publish.gif)
 
-</details>
+  </details>
 
 ### Lab 3 - Push Protection 
 
@@ -107,12 +107,12 @@ The objective of this Lab is to demonstrate and familiarize the participants wit
 4. Oncel, push protection is enabled for the custom pattern, we will then try to commit some changes in the source code by trying to commit a string which matches the custom pattern
 5. Since push protection is enabled for the repo, the commit will be blocked for the user trying to commit the code
 
-<details>
-  <summary> Animated Guide</summary>
+  <details>
+    <summary> Animated Guide</summary>
 
-![alt text](images/custom-pattern-publish.gif)
+  ![alt text](images/custom-pattern-publish.gif)
 
-</details>
+  </details>
 
 ### Lab 4 - Custom Patterns at Organization level 
 
@@ -132,13 +132,13 @@ In this lab, you will focus specifically on identifying leaked Bearer tokens by 
 2. Name the pattern, this can be anything, but it should clearly indicate what the pattern is scanning for — for example, `Bearer Token`.
 3. First, define the pattern for the token itself — the secret that needs to be detected —  in the `Secret format` section. Since Bearer tokens can vary widely, but usually appear as long, random-looking strings, you should match a sequence of characters commonly found in secrets. This includes uppercase and lowercase letters, numbers, and special characters such as _, -, +, /, and =. To avoid matching regular English words or short random fragments, you should require the token to be at least 15 characters long. A simple character class with a minimum length ensures the token looks like a real secret and not regular text.
 
-<details>
-  <summary>Solution</summary>
+  <details>
+    <summary>Solution</summary>
 
-   ```md
-     [a-zA-Z0-9_\-+=/.]{15,}
-   ```
-</details>
+    ```md
+      [a-zA-Z0-9_\-+=/.]{15,}
+    ```
+  </details>
 
 4. Next, match what typically appears before a Bearer token in the `Before secret` section. In most cases, a Bearer token is introduced by an HTTP header like Authorization: Bearer <token>, or it might appear inside a quoted string in source code, such as "Bearer <token>". Your regex should account for these common formats. To do this, you should match either the word Authorization: followed by optional spaces, or a single or double quote character. After that, you should match the word Bearer (or Token) in a case-insensitive way, followed by at least one space. This ensures you are correctly targeting contexts where a Bearer token is presented.
 
@@ -152,13 +152,13 @@ In this lab, you will focus specifically on identifying leaked Bearer tokens by 
 
 5. After matching the token, you must ensure that the match ends cleanly in the `After Secret` secion. Typically, a real token will end with a space, a quotation mark, or at the very end of a line or file. Your regex should enforce that after the token, there is either whitespace, a quote, or the end of input. This helps prevent accidentally matching extra text or trailing characters that do not belong to the token.
 
-<details>
-  <summary>Solution</summary>
+  <details>
+    <summary>Solution</summary>
 
-   ```md
-    \z|[\s'"]
-   ```
-</details>
+    ```md
+      \z|[\s'"]
+    ```
+  </details>
 
 6. Before you can `Save and dry run` you must provide a `Test string`. You can use this one to get a match `Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`. Once provided you can `Save and dry run`. You will be prompted to select the repositories you want to run the dry run on. Select `All repositories in the organization`.
 7. Once satisfied with dry run results, click on `Publish pattern`. 
@@ -184,14 +184,14 @@ In this lab, you will go through the correct steps to remediate this leaked secr
 3. After revoking the old token, you must generate a new one. Create a replacement GitHub PAT token with only the minimum permissions necessary for its intended use. Click on your profile in the top right hand corner, and click on `Settings` in the menu bar. Scroll down to the bottom and select `Developer settings`. Under `Personal access tokens` select `Tokens(classic)` and generate a new classic token.
 4. Store this new token securely, such as using GitHub Actions Secrets. Navigate to a the repository with the workflow, `github-configurations`, and under `Settings` select `Actions` under the `Secrets and variables` section. Click on `New repository secret` and add in your newly created PAT and call it `SECRET_SCANNING_TOKEN`. Note that you can use any secret management system to store and use your workflow secrets like HashiCorp Vault, or an encrypted key vault provided by your cloud provider. The important lesson here is to **never commit the new token directly into your repository**.
 5. Update the GitHub Actions to reference the new secret  
-<details>
-  <summary>Solution</summary>
+  <details>
+    <summary>Solution</summary>
 
-   ```yaml
-      env:
-        GITHUB_TOKEN: ${{ secrets.SECRET_SCANNING_TOKEN }}
-   ```
-</details>
+    ```yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.SECRET_SCANNING_TOKEN }}
+    ```
+  </details>
 
 6. Verify the actions works and close the secret scanning alert with reason `Revoked`. 
 
@@ -213,12 +213,12 @@ This will allow you to understand how GitHub sends secret scanning events and pr
 2. Create a webhook in the mona-gallery repository.
 Navigate to the mona-gallery repository. Go to `Settings` > `Webhooks` > `Add webhook`.
 In the webhook setup form:
-- Payload URL: Paste the Smee.io channel URL you generated.
-- Content type: Select application/json.
-- Secret: Leave blank for this test (in production, always set a secret).
-- Under Which events would you like to trigger this webhook?, choose Let me select individual events.
-- Select only the checkbox for Secret scanning alert.
-- Save the webhook.
+  - Payload URL: Paste the Smee.io channel URL you generated.
+  - Content type: Select application/json.
+  - Secret: Leave blank for this test (in production, always set a secret).
+  - Under Which events would you like to trigger this webhook?, choose Let me select individual events.
+  - Select only the checkbox for Secret scanning alert.
+  - Save the webhook.
 3. Navigate to the secret scanning alerts, and choose the alert for the Bearer token. Close this alert as `False Positive`. 
 4. Inspect incoming webhook payloads on Smee.io.
 5. Open your Smee.io channel page. Youu should see incoming JSON payloads whenever GitHub sends a Secret Scanning event. Review the fields such as `alert_type`, `location`, `repository`, and `state`.
