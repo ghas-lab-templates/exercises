@@ -302,7 +302,7 @@ In this lab, we will enable and review Dependabot Alerts and Dependabot Security
 - How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
 - Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
 
-### Lab 6 - Dependabot Rules
+### Lab 7 - Dependabot Rules
 
 #### Objective
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
@@ -322,7 +322,7 @@ In this lab, we will configure Dependabot Rules to manage alerts in the `mona-ga
 - How should teams prioritize alerts that cannot be dismissed due to the presence of patches? What criteria should be used to decide on the urgency of addressing these vulnerabilities?
 - How can teams effectively communicate the rationale for dismissing certain alerts to stakeholders, including management and security teams?
 
-### Lab 7 - Dependabot Version Updates
+### Lab 8 - Dependabot Version Updates
 
 #### Objective
 
@@ -374,7 +374,7 @@ git push origin main
 - How can you automate testing for these pull requests to ensure they don’t break your code?
 - How do you handle deprecated or unmaintained dependencies?
 
-### Lab 8 - Dependabot Updates for private packages
+### Lab 9 - Dependabot Updates for private packages
 
 #### Objective
 
@@ -437,7 +437,7 @@ git push origin main
 - How can we ensure that the PAT is not exposed in the codebase?
 - How can we manage the lifecycle of the PAT, including rotation and revocation?
 
-### Lab 9 - Dependency Review
+### Lab 10 - Dependency Review
 
 #### Objective
 
@@ -529,7 +529,7 @@ git push
 - How do you balance security requirements with the need to avoid workflow bottlenecks?
 - When should you allow exceptions for flagged vulnerabilities?
 
-### Lab 10 - Enforcing Dependency Review to Business Critical Repositories
+### Lab 11 - Enforcing Dependency Review to Business Critical Repositories
 
 #### Objective
 
@@ -613,7 +613,7 @@ bentoml==1.4.7
 <details>
   <summary>Missing the result? It should look like this</summary>  
    
-   ![Dependency Review Required](dependency-review-required.png)
+   ![Dependency Review Required](images/dependency-review-required.png)
    
 </details>
 
@@ -622,7 +622,7 @@ bentoml==1.4.7
 - If you were to apply a similar ruleset to all repositories in your organization what would be the feedback from your developers?
 - How would you handle exceptions to the ruleset? For example, if a developer needs to merge a PR without passing the Dependency Review workflow?
 
-### Lab 11 - Establish an Organization‑wide SECURITY.md Policy
+### Lab 12 - Establish an Organization‑wide SECURITY.md Policy
 #### Objective
 Set up a default `SECURITY.md` in a centralized `.github` repository so all your organization’s repositories inherit a baseline security policy.
 
@@ -640,6 +640,7 @@ Set up a default `SECURITY.md` in a centralized `.github` repository so all your
 
 <details>
   <summary>Optional: Example SECURITY.md template</summary>
+ 
   ```markdown
   # Security Policy
 
@@ -656,6 +657,7 @@ Set up a default `SECURITY.md` in a centralized `.github` repository so all your
   ## Contact & Triage
   Security team: security@example.com
   ```
+
 </details>
 
 #### Discussion Points
@@ -664,7 +666,7 @@ Set up a default `SECURITY.md` in a centralized `.github` repository so all your
 - When should a repository override this default with its own `SECURITY.md`? 
 ---
 
-### Lab 12 - Identify Top Vulnerable Ecosystems and Repositories
+### Lab 13 - Identify Top Vulnerable Ecosystems and Repositories
 #### Objective
 Use GitHub’s Security dashboard to find critical alert hotspots in your most prominent package ecosystem.
 
@@ -676,7 +678,8 @@ Use GitHub’s Security dashboard to find critical alert hotspots in your most p
 
 <details>
   <summary>Need a hand? Start with this filtering options</summary>
-  ```markdown
+  
+ ```markdown
   archived:false tool:dependabot dependabot.ecosystem:pip
   ```
 </details>
