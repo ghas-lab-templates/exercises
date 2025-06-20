@@ -363,20 +363,20 @@ In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (
 ## Lab 6 - Security Campaigns
 
 #### Objective
-Security campaigns are a way to group alerts and share them with developers, so you can collaborate to remediate vulnerabilities in the code. In this lab we will try creating a security campaign for identified security alerts in the default branch and see how the Campaigns feature in GHAS will help bring in focussed remediation effort from Dev teams. With this feature you can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.
+Security campaigns are a way to group alerts and share them with developers, so you can collaborate to remediate vulnerabilities in the code. In this lab we will try creating a security campaign for identified security alerts in the default branch and see how the Campaigns feature in GHAS will help encourage focussed remediation effort from Dev teams. With this feature you can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.
 
 #### Steps
 
-For this exercise, we will use the ORG level Security tab for creating `Campaigns`
+For this exercise, we will use the Org level Security tab for creating `Campaigns`.
 
- 1. Navigate to the Security tab in your working Org
- 2. Under the security tab, click on the `Campaigns` menu on the left hand pane
- 3. In the subsequent menu, select an  existing template to create a Campaign
+ 1. In GitHub, navigate to your **Organization** `Security` tab.
+ 2. Under the `Security` tab, click on the `Campaigns` menu in the left-hand pane.
+ 3. Click on the `Create campaign` button.
+ 4. In the subsequent menu, select an existing template to create a Campaign:
     1. Critial CodeQL Alerts
     2. Mitre top 10 KEV
     3. SQL Injection
     4. Cross-site Scripting
-    5. or Create a custom filter for the campaign
 
 <details>
   <summary> Animated Guide</summary>
@@ -385,7 +385,7 @@ For this exercise, we will use the ORG level Security tab for creating `Campaign
 
 </details>
 
-4. **Question :** Can you create a custom campaign for all the open vulnerabilities of severity `critical` and has `Autofix Suggestions` ?
+**Challenge:** Can you create a custom campaign for all the open vulnerabilities of severity `critical` and has `Autofix Suggestions`?
 
  <details>
   <summary> Solution </summary>
