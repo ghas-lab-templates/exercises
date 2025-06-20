@@ -173,3 +173,9 @@ Create a GitHub App for your track to enable the use of the GitHub API and webho
 5. Click **Install** next to your organization name.
 6. Select **All repositories** in your organization.
 7. Click **Install**.
+
+**Idenitfy your next module**
+That completes module 0. To continue, refer to your course brief to identify the next module you should work on:
+- Supply chain security: [Module 1](module-1.md)
+- Secret Protection: [Module 2](module-2.md)
+- Code Security: [Module 3](module-3.md)
