@@ -2,7 +2,7 @@
 
 ---
 
-## Lab 1 - Default CodeQL 
+## Lab 1 - Default Setup 
 
 #### Objective
 In this lab, you will learn how to configure code sacanning default setup at the Organization level.
@@ -12,37 +12,26 @@ default setup will automatically create a custom code scanning configuration. Af
 
 #### Steps
 
-1. Navigate to the Org that you have been given access to
-2. Click on the `Settings` menu at the Org level
-3. Navigate to the `Advanced Security` menu on the left hand pane and then click on `Configurations`
-4. Click on `New Configuration`
-5. In the subsequent page that renders, key in a configuration name and give an appropriate description
-6. Select `Not set` for all the config options under `Secret scanning` , `Dependency Scanning` & `Private vulnerability reporting`
-7. Next click on `Save configuration`
+1. In GitHub, navigate to your **Organization** `Settings`.
+2. Within the **Security** group in the sidebar, click `Advanced Security` > `Configurations`.
+3. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
+4. Note that we have the option of applying the configuration to:
+    - **All repositories**
+    - **All repositories without configurations**
 
-     <details>
-      <summary> Animated Guide </summary>  
-        
-      ![create-branch](/images/code-scan-default-settings-4.gif)
+5. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
+6. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basic`.
+7. Finally click on `Apply` (this will start a CodeQL scan for all the eligible repositories under this org).
 
-    </details>
+> [!IMPORTANT]
+> Do not apply the default code scanning to the **mono** repository `
 
-8. Once the configuration is created, you can navigate to the newly created config and click on the `Apply to` drop down menu.
-9. Ideally you can select either:
-       a. All repositories
-       b. All repositories without configurations
+<details>
+  <summary> Animated Guide </summary>  
+    
+  ![create-branch](/images/code-scan-default-settings-5.gif)
 
-10. For this exercise, we will select all the repositories under the given org in the `Apply configurations` except the **mono** repository. And finally we will select `Apply configuration` drop down menu and select the newly created Security configuration
-11. Finally click on `Apply` (this would start a CodeQL scan for all the eligible repositories under this org)
-
-    ` Note: Do not apply the default code scanning to the **mono** repository `
-
-    <details>
-      <summary> Animated Guide </summary>  
-        
-      ![create-branch](/images/code-scan-default-settings-5.gif)
-
-    </details>
+</details>
 
 ## Lab 2 - Policies: Branch Ruleset to require code scanning results 
 
@@ -57,11 +46,11 @@ You will complete this exercise using GitHub's web UI at the organization level.
 1. Navigate to the `Settings` tab at the `Organization` level.
 2. In the left sidebar, select `Repository` and then click on `Rulesets`.
 3. Click the green button labelled `New ruleset` and choose `New branch ruleset`.
-4. Enter a clear name for your ruleset (e.g Require CodeQL results on PR).
+4. Enter a clear name for your ruleset (e.g `Require CodeQL results on PR`).
 5. Select `Enforcement status` to `Active`.
 6. Under `Target repositories` select `All repositories`. 
 7. Under `Target branches` select `Add target` and choose `Include default branch` from the dropdown menu. 
-8. Under `Branch rules`, select`Require code scanning results`. Keen the default settings (`Security alers:High or higher` and `Alerts:Errors`).
+8. Under `Branch rules`, select`Require code scanning results`. Note the default settings (`Security alerts: High or higher` and `Alerts: Errors`).
 9. Click the green `Create` button to finalise and activate your branch ruleset.
 
 We will verify the new ruleset by creating a pull request to the default branch in the next lab.
@@ -79,20 +68,22 @@ We will verify the new ruleset by creating a pull request to the default branch 
 2. How does enforcing rules at the organization level help maintain security consistency?
 3. What potential issues could arise from incorrectly configured branch rulesets?
 4. How could you adapt this ruleset for different types of repositories within your organization?
-5. What additional rules or security measures might complement required code s
-     
+5. What additional rules or security measures might complement required code scans?
 
 ## Lab 3 - Autofix on PR 
 
+> [!NOTE]
+> Open the `mona-gallery` repository in your organization.
+
 #### Objective
 
-Input sanitization is a fundamental security practice to prevent SQL injection attacks. Let's add a sanitize method in the javascript to help in mitigating against injection attack vectors.
+Input sanitization is a fundamental security practice to prevent SQL injection attacks. Let's add a sanitize method in javascript to help in mitigating against injection attack vectors.
 
-You can solve this exercise using either the codespaces or the UI. Codespaces is preferable as this is what a developer would use under normal circumstances. However, if codespaces is not loading for you please use the UI. 
+You can solve this exercise using either a local IDE or the UI. Local IDEs are preferable as this is what a developer would use under normal circumstances. However, the UI will suffice for such a simple fix.
 
 #### Steps
 
-1. Create a branch called `sql-injection-fix` and push it to the remote repo.
+1. If using an IDE, create a branch called `sql-injection-fix` and push it to the remote repo.
 
     <details>
       <summary> Hint </summary>
@@ -112,7 +103,7 @@ You can solve this exercise using either the codespaces or the UI. Codespaces is
     </details>
      
 
-2. Add the following sanitization function on **line 233** of `frontend/components/Gallery.vue`
+2. Add the following sanitization function on **line 233** of `frontend/src/components/Gallery.vue`
 
     ```js
     function sanitizeInput(input) {
@@ -133,7 +124,7 @@ You can solve this exercise using either the codespaces or the UI. Codespaces is
         artItem.title = sanitizeInput(artItem.title)
     ```
 
-4. Commit and push the code
+4. Commit and push the code (if using the UI, set the branch name to `sql-injection-fix` and propose the changes).
 
     <details>
        <summary> Animated Guide  </summary>  
@@ -142,19 +133,24 @@ You can solve this exercise using either the codespaces or the UI. Codespaces is
        
     </details>
 
-5. Raise a pull request to the `main` branch. Wait for the scans to complete and you should see a CodeQL javascript alert in your pull request. Oh no! There is a vulnerability in our vulnerability! Lucky we have autofix. Review the fix generated by autofix and if satisfied with it accept it. 
+5. Create a pull request to the `main` branch. Wait for the scans to complete and you should see a CodeQL javascript alert in your pull request. Oh no! There is a vulnerability in our sanitization! Luckily we have Copilot Autofix. Review the fix generated by Autofix, and if satisfied with it, accept it. This will retrigger a CodeQL scan and the alert should be resolved.
+
+> [!IMPORTANT]
+> Don't merge the pull request just yet, we will add to it in the next lab.
 
 ## Lab 4 - Autofix on Open Alerts
 
 #### Objective 
-In this lab, we will address two CodeQL alerts related to SQL Injection vulnerabilities in our Go code.
+In this lab, we will address two CodeQL alerts related to SQL injection vulnerabilities in our Go code.
 
 #### Steps
 
-1. Navigate to each SQL Injection alert and click  the `Generate Fix` button
-2. Once the fix is generated, carefully rgit steview it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial 
-3. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
-4. Choose the `sql-injection-fix` branch from the dropdown options, and select `Open a new pull request`. This will append your changes to the existing PR.
+1. Navigate to the `Security` tab in the `mona-gallery` repository.
+2. Use the `Rule` filter and select `Database query built from user-controlled sources`.
+3. Navigate to each SQL injection alert and click  the `Generate fix` button
+4. Once the fix is generated, carefully review it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial.
+5. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
+6. Choose the `sql-injection-fix` branch from the dropdown options, and select `Open a pull request`. This will append your changes to the existing PR.
 
 Proceed with these steps until both alerts are resolved.
 
@@ -168,21 +164,22 @@ Proceed with these steps until both alerts are resolved.
 
 ## Lab 5 - Advanced Configuration with custom build command
 
-### Objective
-In this lab, you will learn how to configure CodeQL scan with an advanced setup (Actions based). We will be defining a custom CodeQL scanning yml file, but with a custom build command to build the application before scanning the application for vulnerabilities. The idea is to showcase how custom build commands can be used to scan compiled languages in CodeQL. 
+> [!NOTE]
+> Open the `JavaVulnerableLab` repository in your organization.
 
-For this Lab, we will be using the `JavaVulnerableLab` repository
+### Objective
+In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (an Actions workflow file). We will be defining a custom CodeQL scanning yml file, but with a custom build command to build the application before scanning the application for vulnerabilities. This will showcase how custom build commands can be used to scan compiled languages in CodeQL.
 
 #### Steps
 
-1. Create the file `.github/codeql/codeql-config.yml`
+1. Create the file `.github/workflows/codeql.yml` by using the Actions marketplace template
    <details>
      <summary>Hint</summary>
 
-    a. You can navigate to `Security` tab and then navigate to the `Code scanning` menu under the `Vulnerability Alerts` list
-    b. Then click on `Add tool`
-    c. From the list of Security tools available, select the `CodeQL Analysis` and click `Configure`
-    d. This would open up the Actions editior with a pre defined template populated to run the CodeQL scan
+    1. Navigate to `Security` tab and then navigate to the `Code scanning` menu under the `Vulnerability Alerts` list
+    2. Then click on `Add tool`
+    3. From the list of Security tools available, select the `CodeQL Analysis` and click `Configure`
+    4. This will open up the Actions editor with a pre-defined template populated to run the CodeQL scan
 
    </details>
 
@@ -267,16 +264,16 @@ For this Lab, we will be using the `JavaVulnerableLab` repository
      ```
    </details>
 
-2.  If you analyse the yml file, you can see that by default the `build-mode` configured is `none` (build less scan)
-3.  As per the comments in the auto generated yml file, if for some reason, we have to issue our custom build command for this java application, we have to change the `build-mode` to `manual`
-4.  Can you suggest what changes you have to make to the CodeQL yml file to issue a custom build command before a scan is triggered with codeQL ?
+2.  If you analyse the yml file, you can see that by default the `build-mode` configured is `none` (buildless scan)
+3.  As per the comments in the auto generated yml file, if we have to run our custom build command for this java application, we have to change the `build-mode` to `manual`
+4.  Can you suggest what changes you have to make to the CodeQL yml file to run a custom build command before a scan is triggered with codeQL?
 
 <details>
      <summary>Hint</summary>
 
-a. Change the `build-mode` to manual from `none`
-b. In the `Initialize CodeQL` step, under the `if` condition which corresponds to the `manual` build step, comment out the `echo` commands and the `exit 1` command
-c. Replace these with the actual java build command. In this case, since it is a maven application, we would use the below command to build the source code:
+1. Change the `build-mode` from `none` to `manual`
+2. In the `Initialize CodeQL` step, under the `if` condition which corresponds to the `manual` build step, comment out the `echo` commands and the `exit 1` command
+3. Replace these with the actual java build command. In this case, since it is a maven application, we would use the below command to build the source code:
 
         `mvn clean install`
  </details>
@@ -348,9 +345,9 @@ c. Replace these with the actual java build command. In this case, since it is a
         - if: matrix.build-mode == 'manual'
           shell: bash
           run: |
-            echo 'If you are using a "manual" build mode for one or more of the' \
-              'languages you are analyzing, replace this with the commands to build' \
-              'your code, for example:'
+            # echo 'If you are using a "manual" build mode for one or more of the' \
+            #   'languages you are analyzing, replace this with the commands to build' \
+            #   'your code, for example:'
 
             mvn clean install
     
@@ -360,6 +357,8 @@ c. Replace these with the actual java build command. In this case, since it is a
             category: "/language:${{matrix.language}}"
 ```
 </details>
+
+5. Commit the changes to a new branch, for example `codeql-advanced-setup`, and push it to the repository.
 
 ## Lab 6 - Security Campaigns
 

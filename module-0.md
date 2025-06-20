@@ -14,7 +14,7 @@ In this module, you’ll perform the initial setup of GitHub Advanced Security (
 Understand what organization‑level Security Configurations are, how to review and edit them, and explore the built‑in and predefined **GitHub Recommended** configuration.
 
 #### Steps
-1. In GitHub, navigate to your **Organization** settings.
+1. In GitHub, navigate to your **Organization** `Settings`.
 2. Within the **Security** group in the sidebar, click **Advanced Security** > **Configurations**.
 3. Locate the **GitHub Recommended** policy and click **Edit**.
 4. Review each section:
