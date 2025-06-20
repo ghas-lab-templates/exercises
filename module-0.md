@@ -178,5 +178,5 @@ Create a GitHub App for your track to enable the use of the GitHub API and webho
 
 That completes module 0. To continue, refer to your course brief to identify the next module you should work on:
 - Supply chain security: [Module 1](module-1.md)
-- Secret Protection: [Module 2](module-2.md)
-- Code Security: [Module 3](module-3.md)
+- Secret scanning: [Module 2](module-2.md)
+- Code scanning: [Module 3](module-3.md)
