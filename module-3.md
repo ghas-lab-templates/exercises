@@ -5,18 +5,18 @@
 ## Lab 1 - Default CodeQL 
 
 #### Objective
-In this lab, you will learn how to configure the code sacanning default setup at the Organization level.
+In this lab, you will learn how to configure code sacanning default setup at the Organization level.
 
-Default setup for code scanning is the quickest, easiest, most low-maintenance way to enable code scanning for your repository. Based on the code in your repository, 
-default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned. We will be using the Org that you have been given access to configure Default CodeQL scan at the org level
+Default setup for code scanning is the quickest, easiest, most low-maintenance way to enable code scanning for your repositories. Based on the code in your repository, 
+default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned. We will be using the Org that you have been given access to configure Default CodeQL scans at the organization level.
 
 #### Steps
 
 1. Navigate to the Org that you have been given access to
 2. Click on the `Settings` menu at the Org level
-3. Navigate to `Advanced Security` menu on the left hand pane and then click on `Configurations`
+3. Navigate to the `Advanced Security` menu on the left hand pane and then click on `Configurations`
 4. Click on `New Configuration`
-5. In the subsequent page that renders, key in a configuratio name and give an appropriate description
+5. In the subsequent page that renders, key in a configuration name and give an appropriate description
 6. Select `Not set` for all the config options under `Secret scanning` , `Dependency Scanning` & `Private vulnerability reporting`
 7. Next click on `Save configuration`
 
@@ -27,12 +27,12 @@ default setup will automatically create a custom code scanning configuration. Af
 
     </details>
 
-8. Once the configuration is created, you can navigate to the newly created config and click on the drop down `Apply to` menu.
-9. Ideally you can select either 
+8. Once the configuration is created, you can navigate to the newly created config and click on the `Apply to` drop down menu.
+9. Ideally you can select either:
        a. All repositories
        b. All repositories without configurations
 
-10. For this exercise, we will select all the repositories under the given org in the `Apply configurations` except **mono** repository. And finally we will select `Apply configuration` drop down menu and select the newly created Security configuration
+10. For this exercise, we will select all the repositories under the given org in the `Apply configurations` except the **mono** repository. And finally we will select `Apply configuration` drop down menu and select the newly created Security configuration
 11. Finally click on `Apply` (this would start a CodeQL scan for all the eligible repositories under this org)
 
     ` Note: Do not apply the default code scanning to the **mono** repository `
