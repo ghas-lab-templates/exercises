@@ -363,7 +363,7 @@ In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (
 ## Lab 6 - Security Campaigns
 
 #### Objective
-Security campaigns are a way to group alerts and share them with developers, so you can collaborate to remediate vulnerabilities in the code. In this lab we will try creating a security campaign for identified security alerts in the default branch and see how the Campaigns feature in GHAS will help encourage focussed remediation effort from Dev teams. With this feature you can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.
+Security campaigns are a way to group alerts and prioritize them with developers, so you can focus on remediation of those select vulnerabilities. In this lab we will create a security campaign for identified security alerts in the default branch and see how the Campaigns feature in GHAS will help encourage focussed remediation effort from development teams. With this feature you can fix security alerts at scale by creating security campaigns and collaborating with developers to burn down your security backlog.
 
 #### Steps
 
@@ -372,7 +372,8 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
  1. In GitHub, navigate to your **Organization** `Security` tab.
  2. Under the `Security` tab, click on the `Campaigns` menu in the left-hand pane.
  3. Click on the `Create campaign` button.
- 4. In the subsequent menu, select an existing template to create a Campaign:
+ 4. Select `From template`
+ 5. In the subsequent menu, review the existing Campaign templates:
     1. Critial CodeQL Alerts
     2. Mitre top 10 KEV
     3. SQL Injection
@@ -385,7 +386,7 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
 
 </details>
 
-**Challenge:** Can you create a custom campaign for all the open vulnerabilities of severity `critical` and has `Autofix Suggestions`?
+**Challenge:** Rather than using a template, can you create a custom campaign for all the open vulnerabilities of severity `critical` and have `autofix` support?
 
  <details>
   <summary> Solution </summary>
@@ -396,6 +397,9 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
 
 ## Lab 7 - Code Scanning for monorepos
 
+> [!NOTE]
+> Open the `mono` repository in your organization.
+
 #### Objective
 
 In this lab, you will learn how to configure CodeQL for efficient monorepo scanning.
@@ -404,13 +408,11 @@ Monorepos are large in size, which often leads to longer scan times that can del
 
 This lab demonstrates the concept of monorepo scanning with CodeQL. However, the way it is ultimately divided will depend on factors such as the bottlenecks in the analysis, the tech stack, and the architecture.
 
-We will be using the `mono-gallery` repository to do the exercises for this lab. 
-
-Due to time and size constraints of real-world monorepos, mono-gallery is a smaller example, but its setup follows the same principles as a full-scale monorepo. This repository is a copy of the mona-gallery template and consists of multiple independent application tiers, each organized into separate directories:
+Due to time and size constraints of real-world monorepos, `mono` is a smaller example, but its setup follows the same principles as a full-scale monorepo. This repository is a copy of the mona-gallery template and consists of multiple independent application tiers, each organized into separate directories:
 
 - Directory: auth
     - Language: go
-    - Build Mode: autbuild
+    - Build Mode: autobuild
 - Directory: frontend
     - Language: javascript
     - Build Mode: none
@@ -427,28 +429,25 @@ Due to time and size constraints of real-world monorepos, mono-gallery is a smal
     - Language: actions
     - Build Mode: none
 
-These are the only directories within the `mono-gallery` that we're interested in scanning. Any changes outside these directories should be skipped. 
+These are the only directories within the `mono` repo that we're interested in scanning. Any changes outside these directories should be skipped.
 
 #### Steps
 
-1. Navigate to your code scanning settings and switch from the default workflow to the advanced workflow. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
+Earlier, we chose not to apply our security configuration to the `mono` repository. Now, we will create a custom CodeQL workflow that scans only the relevant directories in the monorepo. This will help us understand how to efficiently manage code scanning in large repositories.
 
-    <details>
-      <summary> Animated Guide</summary>
-    
-      ![alt text](images/default-to-advanced.gif)
-    
-    </details>
-
-
-2. The workflow you are creating will contain three distinct jobs:
+1. Navigate to the `Settings` tab of the `mono` repository.
+2. In the left sidebar, select `Advanced Security`.
+3. Enable `GitHub Advanced Security` for the repository.
+4. Next to `CodeQL analysis`, click the `Set up` dropdown, then select `Advanced`.
+5. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
+6. The workflow you are creating will contain three distinct jobs:
      - **detect_changes**: Identifies modified areas of your monorepo.
      - **analyze**: Performs the actual CodeQL analysis based on the detected changes.
      - **process_sarif**: Processes directories that have not changed. 
      
      Your task is to:
      1. Understand the YAML structure in the template below.
-     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions)
+     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions).
      3. Navigate to `.github/scripts` and review the scripts:
       - Understand the role of `process.awk` in mapping file changes to directories and languages.
       - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
@@ -568,7 +567,7 @@ These are the only directories within the `mono-gallery` that we're interested i
     ```    
 
 
-3. Update the action template to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
+7. Update the action template to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
 
    <details>
      <summary>Hint</summary>
@@ -643,7 +642,7 @@ These are the only directories within the `mono-gallery` that we're interested i
      
    </details>
 
-  4.  Update the action file to perform CodeQL analysis. Modify the job `analyze` to include CodeQL analysis for different components of the project using the category property.
+  8.  Update the action file to perform CodeQL analysis. Modify the job `analyze` to include CodeQL analysis for different components of the project using the category property.
 
        <details>
           <summary>Hint</summary>
@@ -712,7 +711,7 @@ These are the only directories within the `mono-gallery` that we're interested i
          ```
        </details>
 
-   5. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
+   9. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
 
       - If a push rule requires all checks to pass before merging, and CodeQL does not analyze certain parts of the monorepo, those checks will remain in a neutral state and merging will be blocked.
       
@@ -907,57 +906,57 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
 5. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a sarif file of the results post scanning and then uploads the sarif file to GitHub Security Dashboard using the `upload-sarif` action
  
 
-    <details>
-     <summary>Solution</summary>
+   <details>
+   <summary>Solution</summary>
 
-     ```yaml
-        name: scan with KICS and upload SARIF
+   ```yaml
+   name: scan with KICS and upload SARIF
 
-    on:
-     push:
-        branches: [ "main" ]
-     pull_request:
-        branches: [ "main" ]
-    
-    jobs:
-      kics-job:
-        runs-on: ubuntu-latest
-        name: kics-action
-        steps:
-          - name: Checkout repo
-            uses: actions/checkout@v3
-          - name: Mkdir results-dir
-            # make sure results dir is created
-            run: mkdir -p results-dir
-          - name: Run KICS Scan with SARIF result
-            uses: checkmarx/kics-github-action@v2.1.7
-            with:
-              path: 'terraform'
-              # when provided with a directory on output_path
-              # it will generate the specified reports file named 'results.{extension}'
-              # in this example it will generate:
-              # - results-dir/results.json
-              # - results-dir/results.sarif
-              ignore_on_exit: results
-              output_path: results-dir
-              platform_type: terraform
-              output_formats: 'json,sarif'
-      
-          - name: Show results
-            run: |
-              cat results-dir/results.sarif
-              cat results-dir/results.json
-          - name: Upload SARIF file
-            uses: github/codeql-action/upload-sarif@v3
-            with:
-              sarif_file: results-dir/results.sarif
+   on:
+    push:
+       branches: [ "main" ]
+    pull_request:
+       branches: [ "main" ]
 
-     ```
+   jobs:
+     kics-job:
+       runs-on: ubuntu-latest
+       name: kics-action
+       steps:
+         - name: Checkout repo
+           uses: actions/checkout@v3
+         - name: Mkdir results-dir
+           # make sure results dir is created
+           run: mkdir -p results-dir
+         - name: Run KICS Scan with SARIF result
+           uses: checkmarx/kics-github-action@v2.1.7
+           with:
+             path: 'terraform'
+             # when provided with a directory on output_path
+             # it will generate the specified reports file named 'results.{extension}'
+             # in this example it will generate:
+             # - results-dir/results.json
+             # - results-dir/results.sarif
+             ignore_on_exit: results
+             output_path: results-dir
+             platform_type: terraform
+             output_formats: 'json,sarif'
+     
+         - name: Show results
+           run: |
+             cat results-dir/results.sarif
+             cat results-dir/results.json
+         - name: Upload SARIF file
+           uses: github/codeql-action/upload-sarif@v3
+           with:
+             sarif_file: results-dir/results.sarif
+   ```
+   
    </details>
 
 6. Post the scan completion, you can navigate to the `Security` tab in the GitHub UI and under `Code scanning` in the dashboard you can see all the IaC vulnerabilities identified by KICS scanner
-  
-   #### Discussion Points
+
+#### Discussion Points
 
 - Discuss what 3rd party scanners that the teams are already using ?
 
