@@ -24,7 +24,7 @@ default setup will automatically create a custom code scanning configuration. Af
 7. Finally click on `Apply` (this will start a CodeQL scan for all the eligible repositories under this org).
 
 > [!IMPORTANT]
-> Do not apply the default code scanning to the **mono** repository.
+> Do not apply the security configuration to the **mono** repository.
 
 <details>
   <summary> Animated Guide </summary>  
