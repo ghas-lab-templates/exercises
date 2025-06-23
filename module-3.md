@@ -893,17 +893,19 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
 
 ## Lab 8 - Running Code Scanning with 3rd Party Scanners
 
-#### Objective
-The objective of this lab is to showcase how 3rd party code scanning tools can be integrated with GitHub Code Scannig (using actions or scanning using non actions infra and uploading scan results). While CodeQL is a robust built-in solution, we also have the option to integrate third-party tools for a customized approach. By configuring code scanning with 3rd Party actions, we can incorporate tools like KICS (IAC Code Scanning eg: Terroform), SonarQube (Code Quality Checks), Trivy (Iac, Container Scanning), etc. These tools can upload results in SARIF format, which will display alerts alongside GitHub's native scans, simplifying your security process. This flexibility is ideal for teams already using external analysis tools, allowing all findings to be centralized in GitHub's Security tab for easier management.
+> [!NOTE]
+> Open the `terragoat-iac` repository in your organization.
 
-In this lab we will be using KICS Infrastructure as Code scanner to scan terraform files in a repository
+#### Objective
+The objective of this lab is to showcase how 3rd party code scanning tools can be integrated with GitHub Code Scannig (using Actions or 3rd party CI/CD). While CodeQL is a robust, built-in solution, we also have the flexibility to integrate other tools for a customized approach. By configuring code scanning with 3rd party Actions, we can incorporate tools like KICS (IaC code scanning), SonarQube (code quality checks), Trivy (container scanning), etc. These tools can produce results as SARIF files, which can be uploaded to GitHub Code Scanning to display alerts alongside GitHub's CodeQL scans, simplifying your code review process. This flexibility is ideal for teams already using external analysis tools, allowing all findings to be centralized in GitHub's Security tab for easier management.
+
+In this lab we will be using KICS Infrastructure as Code scanner to scan terraform files in a repository.
 
 #### Steps
-1. For this lab we will be using the `terragoat-iac` repository
-2. We will be using [KICS IaC scanner](https://github.com/marketplace/actions/kics-github-action) to run the scan
-3. Familiarise your self with the KICS GitHub Action and the various configuration iptions that the tool provides
-4. Now navigate to the `.github` folder and create a new `kics-scan.yml` file
-5. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a sarif file of the results post scanning and then uploads the sarif file to GitHub Security Dashboard using the `upload-sarif` action
+1. We will be using [KICS IaC scanner](https://github.com/marketplace/actions/kics-github-action) to run the scan.
+2. Familiarise yourself with the KICS GitHub Action and the various configuration options that the tool provides.
+3. Now navigate to the `.github/workflows` folder and create a new `kics-scan.yml` file.
+4. Referencing the KICS Gitub Action marketplace documentation, can you create the config that runs a KICS scan on the `terragoat-iac` repo, creates a SARIF file of the results, and then uploads the SARIF file to GitHub Security Overview dashboard using the `upload-sarif` action.
  
 
    <details>
@@ -924,7 +926,7 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
        name: kics-action
        steps:
          - name: Checkout repo
-           uses: actions/checkout@v3
+           uses: actions/checkout@v4
          - name: Mkdir results-dir
            # make sure results dir is created
            run: mkdir -p results-dir
@@ -954,11 +956,11 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
    
    </details>
 
-6. Post the scan completion, you can navigate to the `Security` tab in the GitHub UI and under `Code scanning` in the dashboard you can see all the IaC vulnerabilities identified by KICS scanner
+5. Post scan completion, you can navigate to the `Security` tab in the GitHub UI and under `Code scanning` in the dashboard you can see all the IaC vulnerabilities identified by KICS scanner.
 
 #### Discussion Points
 
-- Discuss what 3rd party scanners that the teams are already using ?
+- What 3rd party scanners are your teams are already using?
 
-- Any challenges that dev teams are facing in terms of vulnerability analysis with multiple tools and reports and deashboards?
+- Are there any challenges that dev teams are facing in terms of vulnerability analysis with multiple tools and dashboards?
 
