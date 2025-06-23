@@ -912,7 +912,7 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
    <summary>Solution</summary>
 
    ```yaml
-   name: scan with KICS and upload SARIF
+   name: Scan with KICS and upload SARIF
 
    on:
     push:
@@ -920,6 +920,11 @@ In this lab we will be using KICS Infrastructure as Code scanner to scan terrafo
     pull_request:
        branches: [ "main" ]
 
+   permissions:
+    contents: read
+    actions: read
+    security-events: write
+    
    jobs:
      kics-job:
        runs-on: ubuntu-latest
