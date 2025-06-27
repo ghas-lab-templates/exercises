@@ -706,7 +706,7 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
                       - name: Perform CodeQL Analysis
                         uses: github/codeql-action/analyze@v3
                         with:
-                        category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+                          category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
 
          ```
        </details>
@@ -850,7 +850,7 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
            - name: Perform CodeQL Analysis
              uses: github/codeql-action/analyze@v3
              with:
-             category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
+              category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
      process_sarif:
          name: Process SARIF
          needs: [detect_changes, analyze]
