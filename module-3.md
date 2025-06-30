@@ -127,7 +127,7 @@ You can solve this exercise using either a local IDE or the UI. Local IDEs are p
 4. Commit and push the code (if using the UI, set the branch name to `sql-injection-fix` and propose the changes).
 
     <details>
-       <summary> Animated Guide  </summary>  
+       <summary> Animated Guide </summary>  
         
        ![sanitization](/images/sanitise-method.gif)
        
@@ -146,11 +146,12 @@ In this lab, we will address two CodeQL alerts related to SQL injection vulnerab
 #### Steps
 
 1. Navigate to the `Security` tab in the `mona-gallery` repository.
-2. Use the `Rule` filter and select `Database query built from user-controlled sources`.
-3. Navigate to each SQL injection alert and click  the `Generate fix` button
-4. Once the fix is generated, carefully review it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial.
-5. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
-6. Choose the `sql-injection-fix` branch from the dropdown options, and select `Open a pull request`. This will append your changes to the existing PR.
+2. Click on the `Code scanning` tab.
+3. Use the `Rule` filter and select `Database query built from user-controlled sources`.
+4. Navigate to each SQL injection alert and click  the `Generate fix` button
+5. Once the fix is generated, carefully review it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial.
+6. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
+7. Choose the `sql-injection-fix` branch from the dropdown options, and select `Open a pull request`. This will append your changes to the existing PR.
 
 Proceed with these steps until both alerts are resolved.
 
@@ -172,14 +173,15 @@ In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (
 
 #### Steps
 
-1. Create the file `.github/workflows/codeql.yml` by using the Actions marketplace template
+1. Create the file `.github/workflows/codeql.yml` by using the Actions marketplace template for CodeQL, which can be found by navigating to the `Actions` tab.
    <details>
      <summary>Hint</summary>
 
-    1. Navigate to `Security` tab and then navigate to the `Code scanning` menu under the `Vulnerability Alerts` list
-    2. Then click on `Add tool`
-    3. From the list of Security tools available, select the `CodeQL Analysis` and click `Configure`
-    4. This will open up the Actions editor with a pre-defined template populated to run the CodeQL scan
+    1. Navigate to `Actions` tab
+    2. If you've already run a workflow in this repository before, select the `New workflow` button. Otherwise, skip to step 3.
+    3. Search for `CodeQL` in the search bar
+    4. From the list of results, select `Configure` under `CodeQL Analysis`
+    5. This will open up the Actions editor with a pre-defined template populated to run the CodeQL scan
 
    </details>
 

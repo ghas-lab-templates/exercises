@@ -85,10 +85,8 @@ Create your first security configuration for your track:
 #### Steps
 1. In **Organization** settings, **Advanced Security** > **Configurations**, click **New configuration**.
 2. Name and describe your config (e.g., `<Track> - Basic`, `Basic code security configuration`).
-3. Under **GitHub Advanced Security Features**:
-    - For **Secret Protection** or **Code Security**, select **Include**.
-    - For **Supply Chain Security**, select **Exclude**.
-4. Enable only the feature for your track:
+3. Under **GitHub Advanced Security features**, select **Include**.
+4. Enable **ONLY** the features for your track:
    - **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
    - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
    - **Supply Chain Security**: set **Dependency graph** > **Enabled**.
