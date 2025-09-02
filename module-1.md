@@ -2,23 +2,38 @@
 
 ## Enablement  
 
-### Lab 1 - Editing your Security Configuration and Enabling Dependency Graph
+### Lab 1 - Setting Up a Custom Security Configuration and Enabling Dependency Graph
 
 #### Objective 
-In this lab, you will learn how to apply a custom security configuration to repositories in your organization.
+In this lab, you will learn how to create and apply a custom security configuration to repositories in your organization. 
 
 #### Steps
 
-1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the two configuration you created earlier in Module 0.
-2. For each configuration option select the following:
+1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
+<details>
+  <summary> Animated Guide</summary>
+
+![alt text](images/new-config.gif)
+
+</details>
+
+2. To help identify your custom security configuration and clarify its purpose, name your configuration and create a description. 
+
+<details>
+  <summary>Need Help? View Configuration Screenshot</summary>
+  
+![alt text](images/confignameanddesc.png)
+
+</details>
+
+3. For each configuration option select the following:
  - `GitHub Advanced Security Features`: Select `Include`.
- - Under the `Dependency Scanning` section:
-  - `Dependency Graph`: Select `Enabled`.
-  -  All Other Settings: Select `Not set`.
+ - `Dependency Graph`: Select `Enabled`.
+ - All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
 
-4. Click on the `Save Configuration` button. Please confirm save if prompted.
+4. Click on `Save Configuration` button. Please confirm save if prompted.
 
   <details>
  <summary>Need Help? View Configuration Screenshot</summary>  
@@ -27,22 +42,13 @@ In this lab, you will learn how to apply a custom security configuration to repo
    
  </details>
 
-5. The page will be redirected to the `Configurations` page.
-  - For the `Supply chain security - Basic` configuration:
-    - Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
-  - For the `Supply chain security - Business Critical` configuration:
-    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and the then select the `Risk-level` custom propertyh with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
-
+5. The page will redirected to the `Configurations` page. Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation, select `Apply`.
+   
 <details>
-  <summary>Animated Guide</summary>
+  <summary>Need Help? View Configuration Screenshot</summary>
   
-**TO DO: GIF THIS WHEN TOTAL NUMBER OF REPOS CONFIRMED**
-
 ![alt text](images/applytoallrepos.png)
 </details>
-
-### Discussion Points
-- What is the difference between enforced and non-enforced configurations? What is the order of precedence?
 
 ## Supply Chain Security - Know Your Environment
 
@@ -138,7 +144,7 @@ jobs:
 7. Confirm that the dependency graph now shows a complete and accurate list of dependencies.
 
 #### Discussion Points
--  Why is it important to have a complete and accurate dependency graph? How can incomplete graphs affect project security and maintenance?
+- Why is it important to have a complete and accurate dependency graph? How can incomplete graphs affect project security and maintenance?
 - How does automating dependency submission improve workflow efficiency compared to manually tracking dependencies? Are there any drawbacks?
 - How should your team incorporate reviewing and maintaining dependency graphs into their regular workflows?
 
@@ -150,7 +156,7 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization.
-2. Filter the dependencies by `ecosystem:Macen`.
+2. Filter the dependencies by `ecosystem:Maven`.
 3. Notice the dependency graph only shows 4 dependencies. This is unusual for a project of its size. 
 4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
 5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
@@ -161,8 +167,6 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 
 #### Discussion Points
 -  What are the advantages of using the built-in Automatic Dependency Submission feature over manually submitting dependency graphs?
--  Why is it important to have a complete and accurate dependency graph? How can incomplete graphs affect project security and maintenance?
-- How does the built-in Automatic Dependency Submission feature compare to using the Dependency Submission Action in terms of ease of use and integration with existing workflows?
 
 ### Lab 5 - Software Bill Of Materials (SBOM) Generation and Attestations
 
