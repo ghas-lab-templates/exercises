@@ -368,19 +368,40 @@ jobs:
 
 ## Supply Chain Security - Manage Your Environment
 
-### Lab 6 - Dependabot Rules 
+### Lab 6 - Dependabot Alerts and Security Updates
+
+#### Objective
+
+In this lab, we will enable and review Dependabot Alerts and Dependabot Security Updates.
+
+#### Steps
+1. Edit your custom security configuration to enable Dependabot. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
+2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
+3. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
+4. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
+5. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests.
+9. Merge a PR. After merging, check the `Security` tab again to see if the alert has automatically closed.
+
+#### Discussion Points
+- What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
+- How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
+- How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
+- Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
+- In what situation would you use group dependabot updates? What are the pros and cons? 
+
+### Lab 7 - Dependabot Rules
 
 #### Objective
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
 
 #### Steps
-1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Security`, select `Code security and analysis`.
+1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Advanced Security`, select `Code security`.
 2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
 3. Set Up the Rule:
 - Rule Name: Dismiss No-Patch Alerts for Go and Pip.
 - Target Alerts > Ecosystem: Select Go and Pip from the dropdown list.
-- Rules : Select Dismiss alerts > Until patch is available
-4. Select `Create Rule` button
+- Rules : Select Dismiss alerts > Until patch is available.
+4. Select `Create Rule` button.
 5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
 
 #### Discussion Points
@@ -388,7 +409,7 @@ In this lab, we will configure Dependabot Rules to manage alerts in the `mona-ga
 - How should teams prioritize alerts that cannot be dismissed due to the presence of patches? What criteria should be used to decide on the urgency of addressing these vulnerabilities?
 - How can teams effectively communicate the rationale for dismissing certain alerts to stakeholders, including management and security teams?
 
-### Lab 7 - Depenabot Version Updates
+### Lab 8 - Dependabot Version Updates
 
 #### Objective
 
@@ -396,8 +417,8 @@ In this exercise, we will create a Dependabot configuration file to automate ver
 
 #### Steps
 
-1. Inside the `.github` folder create a `dependabot.yml` file 
-2. Add the following configuration (Note: you must first create the label for this workflow to work)
+1. Inside the `.github` folder create a `dependabot.yml` file.
+2. Add the following configuration (Note: you must first create the label for this workflow to work).
 
 ```yaml
 
@@ -416,7 +437,7 @@ updates:
     
 ```
 
-3. Commit and push your changes 
+3. Commit and push your changes.
 
 
 <details>
@@ -429,7 +450,7 @@ git push origin main
   ```
   </details>
 
-4. Navigate to the `Pull Requests` tab and review the generated pull requests. 
+4. Navigate to the `Pull requests` tab and review the generated pull requests.
 
 #### Discussion Points 
 - What factors influence the decision to schedule updates weekly, daily, or monthly?
@@ -438,9 +459,10 @@ git push origin main
 - How can you test the configuration to ensure it is working as expected?
 - What is the process for reviewing and merging Dependabot pull requests?
 - How can you automate testing for these pull requests to ensure they don’t break your code?
-- How do you handle deprecated or unmaintained dependencies
+- How do you handle deprecated or unmaintained dependencies?
 
-### Lab 8 - Dependency Review
+
+### Lab 9 - Dependency Review
 
 #### Objective
 
@@ -528,5 +550,72 @@ git push
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
 - What steps can teams take to ensure compliance with allowed licenses?
 - What strategies can be implemented to minimize friction during reviews?
-- How do you balance security requirements with the need to avoid workflow bott
+- How do you balance security requirements with the need to avoid workflow bottlenecks?
+- When should you allow exceptions for flagged vulnerabilities?
+  
 
+### Lab 10 - Establish an Organization‑wide SECURITY.md Policy
+#### Objective
+Set up a default `SECURITY.md` in a centralized `.github` repository so all your organization’s repositories inherit a baseline security policy.
+
+#### Steps
+1. Create a new repository under your organization named `.github` (skip if it already exists).
+2. Open the `.github` repo and click **Add file** > **Create new file**.
+3. Name the file `SECURITY.md` (at the root of the repository).
+4. Populate it with your organization’s security policy, for example:
+   - **Reporting vulnerabilities**
+   - **Supported versions**
+   - **Security configurations applied**
+   - **Contact & triage process**
+5. Commit the file to the **main** branch.
+6. To verify, navigate to any repository in your organization that does *not* have its own `SECURITY.md`. Under the **Code** tab you should see **Security policy** pointing to the default from `.github/SECURITY.md`.
+
+<details>
+  <summary>Optional: Example SECURITY.md template</summary>
+ 
+  ```markdown
+  # Security Policy
+
+  ## Reporting a Vulnerability
+  Please open an issue in this repository or email security@example.com.
+
+  ## Supported Versions
+  We support the latest minor releases of each major version.
+
+  ## Security Configurations
+  - Code scanning via CodeQL
+  - Dependabot enabled
+
+  ## Contact & Triage
+  Security team: security@example.com
+  ```
+
+</details>
+
+#### Discussion Points
+- How does a centralized `SECURITY.md` help with security policy consistency?
+- What are the advantages of having a default security policy for all repositories?
+- When should a repository override this default with its own `SECURITY.md`? 
+---
+
+### Lab 11 - Identify Top Vulnerable Ecosystems and Repositories
+#### Objective
+Use GitHub’s Security dashboard to find critical alert hotspots in your most prominent package ecosystem.
+
+#### Steps
+1. On the Organization page navigate to the `Security` tab.
+2. Use the `Overview` section and the `Detection` tabs to identify:
+   - **Top vulnerable ecosystems**: List the top 3 ecosystems with the most open critical alerts.
+   - **Repositories with most alerts**: List the top 5 repos with open critical alerts.
+
+<details>
+  <summary>Need a hand? Start with this filtering options</summary>
+  
+ ```markdown
+  archived:false tool:dependabot dependabot.ecosystem:pip
+  ```
+</details>
+
+#### Discussion Points
+- How will you prioritize remediation across ecosystems?
+- What processes ensure ongoing visibility of these metrics?
