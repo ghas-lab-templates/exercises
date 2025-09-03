@@ -27,7 +27,7 @@ default setup will automatically create a custom code scanning configuration. Af
     - **All repositories**
     - **All repositories without configurations**
 
-12. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
+12. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository & **JavaVulnerableLab** repository.
 13. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basi. Finally click on `Apply` (this will trigger CodeQL scan for all the eligible repositories under this org).
 
 > [!IMPORTANT]
