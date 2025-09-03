@@ -285,22 +285,19 @@ jobs:
 In this lab, we will enable and review Dependabot Alerts and Dependabot Security Updates.
 
 #### Steps
-1. Edit your custom security configuration to enable Dependabot.
-  a.  Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
+1. Edit your custom security configuration to enable Dependabot. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
 2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
-3. In the `Advanced Security` section of the sidebar click on `Global settings`. Select the `Grouped security updates` checkbox. This will group all Dependabot security updates into a single pull request per dependency.
-4. Check the `Dependabot on Action runners` checkbox. This will run all Dependabot workflows on GitHub Action runners.
-5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
-6. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
-7. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests to see if they are related to security updates and if they are grouped together.
-8. Navigate to the `Security` tab and check if there are any open Dependabot alerts. Review the alerts to see if they are related to security updates and if they are grouped together.
-9. Navigate to the PR again and merge it. After merging, check the `Security` tab again to see if the alert has automatically closed.
+3. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
+4. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
+5. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests.
+9. Merge a PR. After merging, check the `Security` tab again to see if the alert has automatically closed.
 
 #### Discussion Points
 - What factors should you consider when setting up this automation, such as potential disruptions, update frequency, and testing the changes?
 - How do your developers feel about receiving automatic pull requests? Are they concerned about workload, stability, or reviewing frequent updates?
 - How will you triage the alerts and prioritize them for review (e.g., critical vulnerabilities first)?
 - Who in your team or organization will be responsible for managing these alerts and reviewing the pull requests?
+- In what situation would you use group dependabot updates? What are the pros and cons? 
 
 ### Lab 7 - Dependabot Rules
 
@@ -374,70 +371,8 @@ git push origin main
 - How can you automate testing for these pull requests to ensure they don’t break your code?
 - How do you handle deprecated or unmaintained dependencies?
 
-### Lab 9 - Dependabot Updates for private packages
 
-#### Objective
-
-In this exercise, we will update our Dependabot configuration file to provide Dependabot access to a private package registry. This will allow Dependabot to update private packages in the `mona-gallery` repository.
-
-#### Steps
-
-###### Create a secret for Dependabot
-1. Create a personal access token (PAT) with the `read:packages` scope. This will allow Dependabot to access private packages in the `mona-gallery` repository.
-1. Navigate to the `mona-gallery` repository in your GitHub Organization.
-2. Click on the `Settings` tab, then select `Secrets and variables` > `Dependabot`.
-3. Click on the `New repository secret` button.
-4. Name the secret `PAT_FOR_DEPENDABOT` and paste the personal access token you created earlier.
-
-#### Edit the Dependabot Configuration
-1. Inside the `.github` edit the `dependabot.yml` configuration file we created in the previous lab.
-2. Define a new `registry` section in the configuration file. This will allow Dependabot to access private packages in the `mona-gallery` repository.
-3. Add the following configuration (Note: you must first create the label for this workflow to work).
-
-```yaml
-
-version: 2
-registries:
-  npm-github:
-    type: npm-registry
-    url: https://npm.pkg.github.com
-    token: ${{secrets.PAT_FOR_DEPENDABOT}}
-    replaces-base: true
-updates:
-  # Keep npm dependencies up to date
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    registries: "npm-github"
-    schedule:
-      interval: "weekly"
-    # Raise all npm pull requests with custom labels
-    labels:
-      - "dependabot-version-update"
-    commit-message:
-      prefix: "DEPENDABOT VERSION UPDATES"
-    
-```
-
-3. Commit and push your changes.
-
-<details>
-    <summary>Git Commands </summary>
-
-  ```bash
-git add .github/dependabot/dependabot.yml
-git commit -m "Add Dependabot access to private registry"
-git push origin main
-  ```
-  </details>
-
-4. Navigate to the `Pull requests` tab and review the generated pull requests.
-
-#### Discussion Points 
-- Can we use the same PAT for multiple repositories? What are the security implications of this?
-- How can we ensure that the PAT is not exposed in the codebase?
-- How can we manage the lifecycle of the PAT, including rotation and revocation?
-
-### Lab 10 - Dependency Review
+### Lab 9 - Dependency Review
 
 #### Objective
 
@@ -445,8 +380,8 @@ In this lab, we will configure a Dependency Review workflow in GitHub Actions to
 
 #### Steps
 1. Open your repository in Codespaces.
-2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory.
-3. Add the following Actions workflow: 
+2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory 
+3. Add the following configuration file: 
 
 ```yaml
 
@@ -483,7 +418,7 @@ jobs:
         # Possible values: "development", "runtime", "unknown"
         fail-on-scopes: development, runtime
 ```
-4. Commit and push your changes.
+4. Commit and push your changes 
 
 <details>
     <summary>Git Commands </summary>
@@ -495,7 +430,7 @@ git push origin main
 ```
 </details>
 
-5. Create a branch from the `main` branch.
+5. Create a branch from the `main` branch
 
 <details>
     <summary>Git Commands </summary>
@@ -506,8 +441,8 @@ git push origin feature-a
 ```
 </details>
 
-6. Open a terminal in Codespaces and run `npm install json-web-token`.
-7. Commit and push the code.
+6. Open a terminal in Codespaces and run `npm install json-web-token`
+7. Commit and push the code 
 
 <details>
     <summary>Git Commands </summary>
@@ -519,8 +454,7 @@ git push
 ```
 </details>
 
-8. Raise a Pull Request to the `main` branch and observe the `Dependency Review` workflow running in the `Actions` tab.
-9. Once the workflow is complete, go back to the pull request you created and observe the comments added by the `Dependency Review` workflow.
+8. Raise a Pull Request to the `main` branch
 
 #### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
@@ -528,101 +462,9 @@ git push
 - What strategies can be implemented to minimize friction during reviews?
 - How do you balance security requirements with the need to avoid workflow bottlenecks?
 - When should you allow exceptions for flagged vulnerabilities?
+  
 
-### Lab 11 - Enforcing Dependency Review to Business Critical Repositories
-
-#### Objective
-
-In this lab, we will enforce the Dependency Review workflow to high-risk repositories in your organization. This will ensure that all pull requests to high-risk repositories are reviewed for vulnerable dependencies.
-
-#### Steps
-
-To achieve a central governance of the Dependency Review workflow and configuration, we will create the workflow and reference a configuration in a central `appsec-central` repository.
-
-1. Navigate to the `appsec-central` repository in your GitHub Organization.
-2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory.
-3. Add the following Actions workflow:
-
-```yaml
-name: 'Dependency Review'
-on: [pull_request]
-permissions:
-  contents: read
-  pull-requests: write
-jobs:
-  dependency-review:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout Repository'
-        uses: actions/checkout@v4
-      - uses: actions/create-github-app-token@v1
-        id: app-token
-        with:
-          app-id: ${{ secrets.GHAS_APP_ID }}
-          private-key: ${{ secrets.GHAS_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: appsec-central
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
-        with:
-          config-file: ${{ github.repository_owner }}/appsec-central/configs/dependency-review.yml@main
-          external-repo-token: ${{ steps.app-token.outputs.token }} 
-```
-4. Create a new file named `configs/dependency-review-config.yml` in the `.github` directory.
-5. Add the following configuration to the file:
-
-```yml
-fail-on-severity: 'critical'
-allow-licenses: GPL-3.0, BSD-3-Clause, MIT
-fail-on-scopes: runtime
-comment-summary-in-pr: true
-```
-
-Next, we need to make sure that the workflow we just created can run in other repositories in the organization. For this, we will change the Actions settings.
-1. Navigate to the Settings tab of the `appsec-central` repository.
-2. Under the `Actions` section, select `General`.
-3. Under the `Access` section:
-  - Select the `Accessible from repositories in the 'YOUR-ORGANIZATION-NAME' organization`.
-  - Click `Save` to apply the changes.
-
-To enforce the Dependency Review workflow to high-risk repositories, we will utilize Organization-level rulesets. This will allow us to enforce the Dependency Review workflow to all PRs raised in our high-risk repositories.
-1. Navigate to your Organization's settings.
-2. Under the `Code, planning, and automation` section, select `Repository` and then `Rulesets`.
-3. Click on the `New branch ruleset` button.
-4. Name the ruleset `Dependency Review`.
-5. Select the `Enforcement status` to `Active`.
-6. Under the `Target` section, select `Dynamic list by property`.
-7. Select the `Risk-level` property and then select the `Business Critical App` as value.
-8. Click `Add target` to add the target.
-9. Under the `Target branches` section, select `Include default branch`.
-10. Under the `Rules` section, select `Require workflows to pass before merging`.
-11. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
-12. Click `Add workflow` to add the rule.
-
-**Let's test it out!**
-1. Navigate to the `mona-gallery` repository in your GitHub Organization.
-2. Create a new branch from the `main` branch.
-3. Navigate to GitHub Advisory Database and pick a vulnerability in the pip package manager with severity `Critical`. Example, [CVE-2025-32375](https://github.com/advisories/GHSA-7v4r-c989-xh26).
-4. Edit the `auth-ext/requirements.txt` file and add the vulnerable package to the file.
-```
-bentoml==1.4.7
-```
-4. Commit and push the code.
-5. Open a pull request to the `main` branch and observe if the `Dependency Review` workflow is running as expected.
-
-<details>
-  <summary>Missing the result? It should look like this</summary>  
-   
-   ![Dependency Review Required](images/dependency-review-required.png)
-   
-</details>
-
-## Discussion Points
-- Can people override the ruleset? If so, how?
-- If you were to apply a similar ruleset to all repositories in your organization what would be the feedback from your developers?
-- How would you handle exceptions to the ruleset? For example, if a developer needs to merge a PR without passing the Dependency Review workflow?
-
-### Lab 12 - Establish an Organization‑wide SECURITY.md Policy
+### Lab 10 - Establish an Organization‑wide SECURITY.md Policy
 #### Objective
 Set up a default `SECURITY.md` in a centralized `.github` repository so all your organization’s repositories inherit a baseline security policy.
 
@@ -666,7 +508,7 @@ Set up a default `SECURITY.md` in a centralized `.github` repository so all your
 - When should a repository override this default with its own `SECURITY.md`? 
 ---
 
-### Lab 13 - Identify Top Vulnerable Ecosystems and Repositories
+### Lab 11 - Identify Top Vulnerable Ecosystems and Repositories
 #### Objective
 Use GitHub’s Security dashboard to find critical alert hotspots in your most prominent package ecosystem.
 
