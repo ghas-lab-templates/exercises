@@ -14,14 +14,22 @@ default setup will automatically create a custom code scanning configuration. Af
 
 1. In GitHub, navigate to your **Organization** `Settings`.
 2. Within the **Security** group in the sidebar, click `Advanced Security` > `Configurations`.
-3. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
-4. Note that we have the option of applying the configuration to:
+3. Name and describe your config (e.g., Code Security - Basic)
+4. Under GitHub Advanced Security features, select Include.
+5. Enable ONLY the features for your track
+   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
+Leave other settings **Not set**.
+6. For **Use as default for newly created repositories**, choose **None**.
+7. For **Enforce Configuration**, select **Don't enforce**.
+8. Click **Save Configuration**.
+9. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
+10. Note that we have the option of applying the configuration to:
     - **All repositories**
     - **All repositories without configurations**
 
-5. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
-6. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basic`.
-7. Finally click on `Apply` (this will start a CodeQL scan for all the eligible repositories under this org).
+11. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
+12. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basic`.
+13. Finally click on `Apply` (this will start a CodeQL scan for all the eligible repositories under this org).
 
 > [!IMPORTANT]
 > Do not apply the security configuration to the **mono** repository.
