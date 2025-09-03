@@ -17,19 +17,18 @@ default setup will automatically create a custom code scanning configuration. Af
 3. Name and describe your config (e.g., Code Security - Basic)
 4. Under GitHub Advanced Security features, select Include.
 5. Enable ONLY the features for your track
-   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
-Leave other settings **Not set**.
-6. For **Use as default for newly created repositories**, choose **None**.
-7. For **Enforce Configuration**, select **Don't enforce**.
-8. Click **Save Configuration**.
-9. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
-10. Note that we have the option of applying the configuration to:
+   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard** and **Prevent direct alert dismissals** > **Enabled**
+6. Leave other settings **Not set**.
+7. For **Use as default for newly created repositories**, choose **None**.
+8. For **Enforce Configuration**, select **Don't enforce**.
+9. Click **Save Configuration**.
+10. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
+11. Note that we have the option of applying the configuration to:
     - **All repositories**
     - **All repositories without configurations**
 
-11. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
-12. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basic`.
-13. Finally click on `Apply` (this will start a CodeQL scan for all the eligible repositories under this org).
+12. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository.
+13. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basi. Finally click on `Apply` (this wilCodeQL scan for all the eligible repositories under this org).
 
 > [!IMPORTANT]
 > Do not apply the security configuration to the **mono** repository.
