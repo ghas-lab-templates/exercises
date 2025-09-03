@@ -168,117 +168,203 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 #### Discussion Points
 -  What are the advantages of using the built-in Automatic Dependency Submission feature over manually submitting dependency graphs?
 
-### Lab 5 - Software Bill Of Materials (SBOM) Generation and Attestations
+### Lab 5 – Build Provenance, SBOM Generation, and Attestation
 
 #### Objective 
 
-A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating an SBOM helps improve supply chain security and enables transparency about the software used.
+You can use GitHub Actions to generate artifact attestations that establish build provenance for artifacts such as binaries and container images. This produces a cryptographically signed calims including information about the workflow, repository, organiszation, environment, commit SHA and other information associated with the OIDC token.  
+
+A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating and attesting an SBOM improves supply chain security by enabling transparency about the software used and providing cryptographic proof of its integrity.
 
 Methods to Retrieve SBOM:
 - UI: You can download an SBOM directly via GitHub's UI under the Dependency graph or Security features.
 - REST API: GitHub provides a REST API to retrieve SBOMs programmatically.
 - GitHub Action: For automation, the SBOM Generator Action is a wrapper around the REST API and integrates directly into your workflows.
 
-In this lab, we will use a GitHub Action to generate, upload, and attest the SBOM.
+Together, SBOMs and build provenance provide:
+- Transparency into both dependencies and build processes
+- Traceability of artifacts back to their source and build environment
+- Verification through attestations that prove authenticity and integrity
+
+In this lab, we will use a GitHub Action to release, upload, and attest the SBOM.
 
 #### Steps
 1. Navigate to the `mona-gallery`repository in your organization.
-2. Create a new workflow file named `generate-sbom.yml` in the `.github/workflows` directory. 
-3. Add the following contents to the file: 
+2. Locate the workflow file named `release-attestation.yml` in the `.github/workflows` directory. Review the workflow below - what is it doing?
 
 ```yaml
 
-name: SBOM Generation and Attestation
+name: Release with SBOM and Provenance attestation
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: write
-      id-token: write
-      attestations: write
       packages: write
-
-    steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step 2: Generate SBOM
-      - name: Generate SBOM
-        uses: advanced-security/sbom-generator-action@v0.0.1
-        id: sbom
-        env: 
-          GITHUB_TOKEN: ${{ github.token }}
-
-      # Step 3: Upload SBOM as an artifact
-      - name: Upload SBOM Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          path: ${{ steps.sbom.outputs.fileName }}
-          name: "SBOM"
-```
-
-5. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the attest-build-provenance action to create an attestation for our SBOM.
-
-```yaml 
-  - uses: actions/attest-build-provenance@v2
-      with:
-       subject-path: ${{steps.sbom.outputs.fileName }}
-```
-
-<details>
-  <summary> Solution: workflow file</summary>
-
-```yaml
-name: SBOM Generation and Attestation
-
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
- build:
-   runs-on: ubuntu-latest
-   permissions:
-     actions: read
-     contents: write
-     id-token: write
-     attestations: write
-     packages: write
+      attestations: write
+      id-token: write
     
-   steps:
-    - uses: actions/checkout@v3
+    strategy:
+      matrix:
+        service:
+          - name: auth
+            dockerfile: docker/auth.Dockerfile
+            context: 
+          - name: auth-ext
+            dockerfile: docker/auth-ext.Dockerfile
+            context: .
+          - name: frontend
+            dockerfile: docker/frontend.Dockerfile
+            context: .
+          - name: gallery
+            dockerfile: docker/gallery.Dockerfile
+            context: .
+          - name: storage
+            dockerfile: docker/storage.Dockerfile
+            context: .
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: advanced-security/sbom-generator-action@v0.0.1
-      id: sbom
-      env: 
-        GITHUB_TOKEN: ${{ github.token }}
-        
-    - uses: actions/attest-build-provenance@v2
-      with:
-       subject-path: ${{steps.sbom.outputs.fileName }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    -  uses: actions/upload-artifact@v3.1.0
-       with: 
-        path: ${{steps.sbom.outputs.fileName }}
-        name: "SBOM"
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+            
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.service.context }}
+          file: ${{ matrix.service.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
 ```
 
-</details>
+4. Update the workflow to generate artifact attestation for each container.
+
+      <details>
+        <summary>Need Help? Here's a hint</summary>
+           Use the `actions/attest-build-provenance@v3` after the release of each container. You can read about it here - https://github.com/actions/attest-build-provenance
+      </details>
+      
+      
+      <details>
+        <summary> Solution </summary>
+      
+      ```yaml
+            - name: Generate artifact attestation
+              uses: actions/attest-build-provenance@v3
+              with:
+                subject-name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}
+                subject-digest: ${{ steps.push.outputs.digest }}
+                push-to-registry: true
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+      ```
+      
+      </details>
+
+5. Update the workflow to generate an SBOM in `CycloneDX (cdx)` format
+
+      <details>
+        <summary>Need Help? Here's a hint</summary>
+           Use the `uses: anchore/sbom-action@v0.20.5` after the artifact attestation step. You can read about it here - https://github.com/anchore/sbom-action
+      </details>
+      
+      <details>
+        <summary> Solution </summary>
+      
+      ```yaml
+            - name: Generate SBOM for built image
+              uses: anchore/sbom-action@v0.20.5
+              with:
+                image: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}@${{ steps.push.outputs.digest }}
+                format: cyclonedx-json
+                output-file: ${{ matrix.service.name }}-sbom.cdx.json
+                upload-artifact: false
+                upload-release-assets: false
+      
+      ```
+      
+      </details>
+
+
+6. SBOM attestation ensures the integrity, authenticity, and trustworthiness of a Software Bill of Materials by proving it was generated from a secure and verified process. Update the workflow to use the `attest-sbom` action to create an attestation for our SBOM and upload it as an artifact using the `upload-artifact` action. 
+
+      
+      <details>
+        <summary>Need Help? Here's a hint</summary>
+           Use the `actions/attest-sbom@v3` after the release of each container. You can read about it here - https://github.com/actions/attest-sbom
+           Use the `actions/upload-artifact@v4` to upload the action. You can read about it here - https://github.com/actions/upload-artifact
+      </details>
+      
+      
+      <details>
+        <summary> Solution </summary>
+      
+      ```yaml
+      
+            - name: Attest SBOM
+              uses: actions/attest-sbom@v3
+              with:
+                subject-name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}
+                subject-digest: ${{ steps.push.outputs.digest }}
+                sbom-path: ${{ matrix.service.name }}-sbom.cdx.json
+                push-to-registry: true
+      
+            - name: Upload SBOM artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{ matrix.service.name }}-sbom-${{ github.run_id }}
+                path: ${{ matrix.service.name }}-sbom.cdx.json
+      
+      ```
+      
+      </details>
+
 
 #### Discussion Points 
+- Why is build provenance important for supply chain security?
+- What types of attacks can provenance and SBOM attestation help prevent?
+- How would you verify that the SBOM and provenance attestations are valid
+- How do SBOMs differ from provenance metadata, and why do we need both?
 - Why are SBOMs critical for supply chain security? How can they help organizations manage software vulnerabilities and risks?
-- How does SBOM attestation ensure the integrity and authenticity of the generated SBOM? What are the implications of not attesting SBOMs?
-- How can SBOMs assist in meeting compliance requirements and providing transparency to stakeholders or customers?
-- What challenges might teams face in generating, managing, and using SBOMs effectively? How can these challenges be addressed?
-- How can teams integrate SBOM generation and attestation into their CI/CD pipelines without causing disruptions?
-- What strategies should be used to store and manage SBOM artifacts securely and efficiently? How can teams ensure they are accessible when needed?
+- How does this workflow help meet compliance requirements?
+- What risks remain even after implementing SBOMs and provenance?
 
 ## Supply Chain Security - Manage Your Environment
 
