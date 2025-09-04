@@ -155,6 +155,10 @@ Proceed with these steps until both alerts are resolved.
 </details>
 8. Disable the push ruleset in the Organisation settings and continue to next lab
 
+#### Discussion Points
+
+1. 
+
 ## Lab 5 - Advanced Configuration with custom build command
 
 > [!NOTE]
@@ -304,6 +308,7 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
 2. How are you reducing technical debt around historical vulnerabilities ?
 3. What makes a security alert suitable for inclusion in a campaign vs. individual remediation?
 4. Do you think security campaigns can reduce some amount of frictions in the conversations that Security teams will have with Develeppment teams ?
+5. Where do you think autofix would be more effective in fixing the historical vulnerabilities (standalone vs in campaigns ?)
 
 ## Lab 7 - Code Scanning for monorepos
 
