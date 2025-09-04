@@ -155,15 +155,14 @@ jobs:
 In this lab, we'll learn how to use the built-in Automatic Dependency Submission feature to correctly populate the dependency graph. Instead of adding an Actions workflow as in the previous exercise, we will use the built-in feature to automatically submit dependency graphs for supported languages.
 
 #### Steps
-1. Navigate to the `mona-gallery` repository in your GitHub Organization.
-2. Filter the dependencies by `ecosystem:Maven`.
-3. Notice the dependency graph only shows 4 dependencies. This is unusual for a project of its size. 
+1. Navigate to the `OpenAPI.net` repository in your GitHub Organization.
+2. Filter the dependencies by `ecosystem:Nuget`.
+3. Notice the dependency graph only shows 67 dependencies. This is unusual for a project of its size. 
 4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
 5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
 6. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`.
 8. Navigate back to the `mona-gallery` repository and confirm that the changes made have been applied by looking at the `Settings` > `Code Security`. The `Automatic dependency submission` should be set to `Enabled`.
-9. The automatic submission will occur on the first push to the pom.xml file after the option is enabled. Go ahead and make a small change to the `storage/pom.xml` file – you can add a comment or change the version of one of the dependencies.
-10. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Maven dependencies, both direct and transitive.
+9. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Maven dependencies, both direct and transitive.
 
 #### Discussion Points
 -  What are the advantages of using the built-in Automatic Dependency Submission feature over manually submitting dependency graphs?
