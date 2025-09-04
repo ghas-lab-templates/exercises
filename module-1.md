@@ -285,13 +285,14 @@ jobs:
         <summary> Solution </summary>
       
       ```yaml
-            - name: Generate artifact attestation
-              uses: actions/attest-build-provenance@v3
-              with:
-                subject-name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}
-                subject-digest: ${{ steps.push.outputs.digest }}
-                push-to-registry: true
-                github-token: ${{ secrets.GITHUB_TOKEN }}
+          - name: Generate artifact attestation
+            uses: actions/attest-build-provenance@v3
+            with:
+              subject-name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}
+              subject-digest: ${{ steps.push.outputs.digest }}
+              push-to-registry: true
+              registry-username: ${{ github.actor }}
+              registry-password: ${{ secrets.GITHUB_TOKEN }}
       
       ```
       
