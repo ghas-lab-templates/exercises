@@ -1,4 +1,4 @@
-# Module 3 - Code Scanning
+# Module 2 - Code Scanning
 
 ---
 
