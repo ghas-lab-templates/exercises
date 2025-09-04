@@ -63,6 +63,12 @@ The goal of this lab is to demonstrate how to use custom patterns in GitHub to i
 
   </details>
 
+#### Discussion Points 
+- In what instances would you define custom patterns at the repository, organisation and enterprise instance? 
+- Who should be responsible for approving new custom patterns before they’re applied widely?
+- How often should custom patterns be reviewed or updated?
+- How do you raise awareness so developers understand what’s being flagged and why?
+
 ### Lab 3 - Push Protection 
 
 #### Objective
@@ -82,6 +88,10 @@ The purpose of this lab is to demonstrate and familiarize participants with the 
   ![alt text](images/custom-pattern-publish.gif)
 
   </details>
+
+#### Discussion Points 
+- Should it be enabled for all repos by default, or only for sensitive ones (e.g., customer-facing, production)?
+- How does push protection differ in impact from secret scanning? What risks does it eliminate?
 
 ### Lab 4 - Custom Patterns at Organization level 
 
