@@ -12,33 +12,12 @@ default setup will automatically create a custom code scanning configuration. Af
 
 #### Steps
 
-1. In GitHub, navigate to your **Organization** `Settings`.
-2. Within the **Security** group in the sidebar, click `Advanced Security` > `Configurations`.
-3. Name and describe your config (e.g., Code Security - Basic)
-4. Under GitHub Advanced Security features, select Include.
-5. Enable ONLY the features for your track
-   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard** and **Prevent direct alert dismissals** > **Enabled**
-6. Leave other settings **Not set**.
-7. For **Use as default for newly created repositories**, choose **None**.
-8. For **Enforce Configuration**, select **Don't enforce**.
-9. Click **Save Configuration**.
-10. Navigate to your recently created config, `Code Security - Basic` and click on the `Apply to` drop down menu.
-11. Note that we have the option of applying the configuration to:
-    - **All repositories**
-    - **All repositories without configurations**
+1. In GitHub, navigate to the security configuration you created in the previous module
+2. Update your configuration with the following settings:
+   - `Code Scanning`: set `Default setup` > `Enabled with advanced set up allowed` 
+3. Leave other settings `Not set`.
+4. Click `Save Configuration`. This should apply to all repositories.
 
-12. For this exercise, we will instead select the specific repositories under our org by using the `Apply configurations` section, where we will select all repositories _EXCEPT_ the **mono** repository & **JavaVulnerableLab** repository.
-13. After selecting the other repositories, click the `Apply configuration` drop down menu and select the configuration you created in the previous lab, `Code Security - Basi. Finally click on `Apply` (this will trigger CodeQL scan for all the eligible repositories under this org).
-
-> [!IMPORTANT]
-> Do not apply the security configuration to the **mono** repository.
-
-<details>
-  <summary> Animated Guide </summary>  
-    
-  ![create-branch](/images/code-scan-default-settings-5.gif)
-
-</details>
 
 ## Lab 2 - Policies: Branch Ruleset to require code scanning results 
 
