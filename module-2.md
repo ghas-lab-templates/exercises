@@ -20,7 +20,12 @@ In this lab, you will learn how to create and apply a custom security configurat
 - `Bypass priveleges`: Select `Not set`
 - `Prevent direct alert dismissals`: Select `Enabled`
 3. Click on `Save Configuration` button. Please confirm save if prompted.
-4. Navigate to the `mona-gallery`. Under the `Security` tab, select `secret scanning`. Inspect the alerts. 
+4. Navigate to the `mona-gallery`. Under the `Security` tab, select `secret scanning`. Inspect the alerts.
+
+#### Discussion Points 
+- Why enable validity checks?
+- Why delegate bypass priveleges to repositories?
+- Why prevent direct alert dismissals?
 
 ### Lab 2 - Custom Patterns with AI 
 
