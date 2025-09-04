@@ -514,49 +514,11 @@ jobs:
   - Repository targeting criteria: All repositories
   - Target branches: Include default branches
   - Under branch rules select `Require workflows to pass before merging`. Click on `Add workflow` and choose the `dependency-review` workflow in the `github-configurations` repository. 
-5.  Open the `mona-gallery` repository in Codespaces.
-6. Create a new file named `dependency-review.yml` in the `.github/workflows` directory
-7. Select Create. 
-8. Add the following configuration file: 
-
-
-9. Commit and push your changes 
-
-<details>
-    <summary>Git Commands </summary>
-
-```bash
-git add .github/workflows/dependency-review.yml
-git commit -m "Add Dependency Review workflow"
-git push origin main
-```
-</details>
-
-10. Create a branch from the `main` branch
-
-<details>
-    <summary>Git Commands </summary>
-
-  ```bash
-git checkout -b feature-a
-git push origin feature-a
-```
-</details>
-
-11. Open a terminal in Codespaces and run `npm install json-web-token`
-12. Commit and push the code 
-
-<details>
-    <summary>Git Commands </summary>
-
- ```bash
-git add .
-git commit -m "added json-web-token dependency"
-git push
-```
-</details>
-
-13. Raise a Pull Request to the `main` branch
+5. Open the `mona-gallery` repository.
+6. Create a branch from the `main` branch
+7. Update the file `auth-ext/requirements.txt` with package `pycrypto==2.6.0`
+8. Commit and push the code 
+9. Raise a Pull Request to the `main` branch
 
 #### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
