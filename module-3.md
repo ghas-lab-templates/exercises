@@ -133,7 +133,7 @@ In this lab, we will address two CodeQL alerts related to SQL injection vulnerab
 
 1. Navigate to the `Security` tab in the `mona-gallery` repository.
 2. Click on the `Code scanning` tab.
-3. Use the `Rule` filter and select `Database query built from user-controlled sources`.
+3. Use the `Rule` filter and select `go/sql-injection`.
 4. Navigate to each SQL injection alert and click  the `Generate fix` button
 5. Once the fix is generated, carefully review it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial.
 6. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
