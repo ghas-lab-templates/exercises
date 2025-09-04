@@ -520,6 +520,7 @@ jobs:
 7. Update the file `auth-ext/requirements.txt` with package `pycrypto==2.6.0`
 8. Commit and push the code 
 9. Raise a Pull Request to the `main` branch
+10. Once you've confirmed the workflow is breaking, navigate back to the push ruleset and disable the workflow from your Organization settings.
 
 #### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
