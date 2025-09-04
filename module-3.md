@@ -124,6 +124,12 @@ You can solve this exercise using either a local IDE or the UI. Local IDEs are p
 > [!IMPORTANT]
 > Don't merge the pull request just yet, we will add to it in the next lab.
 
+#### Discussion Points
+
+1. Will GitHub always suggest an autofix remediation for all the alerts identified in CodeQL scans ?
+2. Discuss the types of vulnerabilities Autofix handles most effectively (SQL injection, XSS, dependency issues, etc.)
+3. Can we accept the recommendations by Copilot Autofix as is ?
+
 ## Lab 4 - Autofix on Open Alerts
 
 #### Objective 
@@ -291,6 +297,13 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
 ![alt text](images/Security-Campaign-02.gif)
 
 </details>  
+
+#### Discussion Points
+
+1. Is historical vulnerabilities remediation a challenge for your teams today ?
+2. How are you reducing technical debt around historical vulnerabilities ?
+3. What makes a security alert suitable for inclusion in a campaign vs. individual remediation?
+4. Do you think security campaigns can reduce some amount of frictions in the conversations that Security teams will have with Develeppment teams ?
 
 ## Lab 7 - Code Scanning for monorepos
 
