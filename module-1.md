@@ -354,7 +354,7 @@ jobs:
       ```
       
       </details>
-
+7. Create a v1.0.0 tag and trigger a release.
 
 #### Discussion Points 
 - Why is build provenance important for supply chain security?
