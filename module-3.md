@@ -564,48 +564,50 @@ jobs:
        </details>    
     
     
-       <details>
-          <summary>Solution</summary>
-              
+         <details>
+           <summary>Solution</summary>
+         
          ```yaml
-    
-                analyze:
-                  name: Analyze (${{ matrix.language }})
-                  needs: detect_changes
-                  runs-on: 'ubuntu-latest' 
-                  permissions:
-                    # required for all workflows
-                    security-events: write
-                    # required to fetch internal or private CodeQL packs
-                    packages: read
-                    # only required for workflows in private repositories
-                    actions: read
-                    contents: read
-                  strategy:
-                    fail-fast: true
-                    matrix: 
-                      include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
-    
-                  steps:
-                      - name: Checkout repository
-                        uses: actions/checkout@v4
-                        with:
-                          sparse-checkout: |
-                            ${{ matrix.directory }}
-                            .github/scripts/empty.sarif
-                          sparse-checkout-cone-mode: false       
-                      - name: Initialize CodeQL
-                        uses: github/codeql-action/init@v3
-                        with:
-                            languages: ${{ matrix.language }}
-                            build-mode: ${{ matrix.build_mode }}
-                      - name: Perform CodeQL Analysis
-                        uses: github/codeql-action/analyze@v3
-                        with:
-                          category: "/language:${{matrix.language}}/app:${{matrix.directory}}"
-
+         analyze:
+           name: Analyze (${{ matrix.language }})
+           needs: detect_changes
+           runs-on: ubuntu-latest
+           permissions:
+             # required for all workflows
+             security-events: write
+             # required to fetch internal or private CodeQL packs
+             packages: read
+             # only required for workflows in private repositories
+             actions: read
+             contents: read
+           strategy:
+             fail-fast: true
+             matrix:
+               include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+         
+           steps:
+             - name: Checkout repository
+               uses: actions/checkout@v4
+               with:
+                 sparse-checkout: |
+                   ${{ matrix.directory }}
+                   .github/scripts/empty.sarif
+                 sparse-checkout-cone-mode: false
+         
+             - name: Initialize CodeQL
+               uses: github/codeql-action/init@v3
+               with:
+                 languages: ${{ matrix.language }}
+                 build-mode: ${{ matrix.build_mode }}
+         
+             - name: Perform CodeQL Analysis
+               uses: github/codeql-action/analyze@v3
+               with:
+                 category: "/language:${{ matrix.language }}/app:${{ matrix.directory }}"
+            ...
          ```
-       </details>
+         <details>
+
 
    9. Modify the action file to handle the `process_sarif` job, ensuring that all required checks pass by submitting an empty SARIF report for unchanged components.
 
