@@ -334,49 +334,8 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
 
 1. Navigate to the `Settings` tab of the `mono` repository.
 2. In the left sidebar, select `Advanced Security`.
-3. Enable `GitHub Advanced Security` for the repository (if it's not yet enabled).
-4. Next to `CodeQL analysis`, click the `Set up` dropdown, then select `Advanced`.
-5. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
-6. The workflow you are creating will contain three distinct jobs:
-     - **detect_changes**: Identifies modified areas of your monorepo.
-     - **analyze**: Performs the actual CodeQL analysis based on the detected changes.
-     - **process_sarif**: Processes directories that have not changed. 
-     
-     Your task is to:
-     1. Understand the YAML structure in the template below.
-     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions).
-     3. Navigate to `.github/scripts` and review the scripts:
-      - Understand the role of `process.awk` in mapping file changes to directories and languages.
-      - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
-
-        <details>
-          <summary>Explanation</summary>
-          
-               
-          This awk script processes a configuration file (`cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
-                     
-          Here is a step-by-step explanation of the script:
-                     
-          `BEGIN` Block:
-        
-          Reads the `cfg_for_dir.txt` file line by line.
-          Each line is split into fields based on the semicolon delimiter.
-          Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
-                     
-          `Main` Block:
-        
-          For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
-          If the directory is not yet in the `dirs` array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
-          Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in `dirs`. If they are not, it adds them to the `no_changes` array with similar JSON-formatted information.
-                
-          `END` Block:
-        
-          Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
-          The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
-          The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code 
-          analysis or build orchestration.
-
-        </details>
+3. Under `Code scanning` for the repository `Switch to advanced`
+4. You'll be directed to the `codeql.yml file. Update it to the following template
 
    **Monorepo CodeQL Template**
     ```yaml
@@ -462,6 +421,48 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
                     
 
     ```    
+
+5. The workflow you are creating will contain three distinct jobs:
+     - **detect_changes**: Identifies modified areas of your monorepo.
+     - **analyze**: Performs the actual CodeQL analysis based on the detected changes.
+     - **process_sarif**: Processes directories that have not changed. 
+     
+     Your task is to:
+     1. Understand the YAML structure in the template.
+     2. Familiarize yourself with the GitHub Actions structure, which includes jobs, steps, and workflow triggers. You can read more about GitHub Actions [here](https://docs.github.com/en/actions).
+     3. Navigate to `.github/scripts` and review the scripts:
+      - Understand the role of `process.awk` in mapping file changes to directories and languages.
+      - Verify how JSON outputs for changes (`matrix`) and unchanged directories (`matrix_no_changes`) are generated.
+
+        <details>
+          <summary>Explanation</summary>
+          
+               
+          This awk script processes a configuration file (`cfg_for_dir.txt`) that identifies the programming language and build mode for each directory. It then checks which directories have changes and which do not, and outputs this information in JSON format.
+                     
+          Here is a step-by-step explanation of the script:
+                     
+          `BEGIN` Block:
+        
+          Reads the `cfg_for_dir.txt` file line by line.
+          Each line is split into fields based on the semicolon delimiter.
+          Populates the `cfg_for_dir` associative array with the directory path as the key, and another associative array as the value, which contains the language and build mode for that directory.
+                     
+          `Main` Block:
+        
+          For each record processed, it checks if the directory (the first field) is in `cfg_for_dir`.
+          If the directory is not yet in the `dirs` array, it adds an entry to the dirs array with JSON-formatted information about the directory, language, and build mode.
+          Also, it iterates through all keys in `cfg_for_dir` and checks if they are not in `dirs`. If they are not, it adds them to the `no_changes` array with similar JSON-formatted information.
+                
+          `END` Block:
+        
+          Outputs the contents of `dirs` and `no_changes` arrays in JSON format.
+          The `changes` array contains directories where files have changed, while the `no_changes` array contains directories where no files have changed.
+          The final output is a JSON object that lists directories with changes and directories without changes, each with their corresponding language and build mode. This can be used for further processing, such as code 
+          analysis or build orchestration.
+
+        </details>
+
 
 
 7. Update the action template to detect changes on both `push` and `pull_request` events. This should be implemented in the `detect_changes` job within the `# TODO: Implement detection logic` section.
