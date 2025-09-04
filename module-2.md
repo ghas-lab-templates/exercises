@@ -11,9 +11,7 @@ In this lab, you will learn how to create and apply a custom security configurat
 #### Steps
 
 1. In GitHub, navigate to the security configuration you created in module 1.
-2. Update your configuration with the following settings:
-   - ``: set `Default setup` > `Enabled with advanced set up allowed` 
-3. For each configuration option under `Secret Scanning` select the following:
+2. For each configuration option under `Secret Scanning` select the following:
 - `Secret Scanning - Alerts`: Select `Enabled`
 - `Validity check`: Select `Enabled`
 - `Non-provider patterns`: Select `Enabled`
@@ -21,21 +19,20 @@ In this lab, you will learn how to create and apply a custom security configurat
 - `Push protection`: Select `Enabled`
 - `Bypass priveleges`: Select `Not set`
 - `Prevent direct alert dismissals`: Select `Enabled`
-4. Click on `Save Configuration` button. Please confirm save if prompted.
-5. Navigate to the `mona-gallery`. Under the `Security` tab, select `secret scanning`. Inspect the alerts. 
+3. Click on `Save Configuration` button. Please confirm save if prompted.
+4. Navigate to the `mona-gallery`. Under the `Security` tab, select `secret scanning`. Inspect the alerts. 
 
 ### Lab 2 - Custom Patterns with AI 
 
 #### Objective
 
-The objective of this lab is to demonstrate the usage of cutom patterns in identifying secrets which are not part of the Secret Scanning Partner Program in GitHub
+The goal of this lab is to demonstrate how to use custom patterns in GitHub to identify secrets that are not part of the Secret Scanning Partner Program.
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization
-2. Please note that the Custom patterns can be created at 3 levels of Hierarchy - Enterprise, Organisation & Repository
-3. For this Lab, we will create the custom pattern in the repo scope
-4. Navigate to Settings tab of the repository, click on **Code security** section, and under Custom Patterns click on New pattern
-5. In the top right hand corner, click on Generate with AI
+2. Please note that Custom patterns can be created at 3 levels within the GitHub hierarchy - Enterprise, Organization & Repository. For this Lab, we will create the custom pattern in the repo scope
+3.Open the repository’s Settings tab. Under the `Code security` section, go to `Custom Patterns` and click `New pattern`.
+4. In the top right hand corner, click on `Generate with AI`
 
   <details>
     <summary> Animated Guide</summary>
@@ -44,12 +41,11 @@ The objective of this lab is to demonstrate the usage of cutom patterns in ident
 
   </details>
 
-6. In this lab we have a custom secret that has been embedded in the following location `storage/src/main/resources/application.properties`
-7. Specifically we will try to take AI assitance to create a regular expresssion for the minio.password mapped to `mona_value_abc124`
-8. Fill in the options `I want a regular expression that` and `Examples of what I am looking for`
-9. Once you are happy with th generated regular expression, click on the buttom `Use result`
-10. This will copy the generated regular expresssion and the test strings into the New Custom Pattern creation page
-
+5. A custom secret has been embedded in the file: `storage/src/main/resources/application.properties`
+6. We will use AI assistance to generate a regular expression for the secret `minio.password` mapped to the value `mona_value_abc124`
+7. Fill in the options `I want a regular expression that` and `Examples of what I am looking for`
+8. Once the generated regular expression meets your needs, click `Use result`
+9. This copies the generated regular expression and test strings into the New Custom Pattern creation page.
 
   <details>
     <summary> Animated Guide</summary>
@@ -58,7 +54,7 @@ The objective of this lab is to demonstrate the usage of cutom patterns in ident
 
   </details>
 
-11. Give an appropriate `Pattern name` and click on `Save and dry run`
+10. Provide a clear and descriptive Pattern name, then click Save and dry run.
 
   <details>
     <summary> Animated Guide</summary>
@@ -71,14 +67,14 @@ The objective of this lab is to demonstrate the usage of cutom patterns in ident
 
 #### Objective
 
-The objective of this Lab is to demonstrate and familiarize the participants with the Secret Scanning Push protection feature
+The purpose of this lab is to demonstrate and familiarize participants with the Secret Scanning Push Protection feature in GitHub.
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization
-2. Continuing from Lab 2, where we already created a custom pattern to identify a custom secret and published the custom pattern which captured the `mona_value_abc124` secret
-3. In this exercies, we will now enable the Push protection feature at the repository level (push protection can also be enabled at the Enterprise and Organiation level) and then psecifically enable push protection for the newly created custom pattern
+2. Recall from Lab 2 that we created and published a custom pattern to capture the secret `mona_value_abc124`.
+3. Commit changes to the source code that include a string matching the custom pattern.
 4. Oncel, push protection is enabled for the custom pattern, we will then try to commit some changes in the source code by trying to commit a string which matches the custom pattern
-5. Since push protection is enabled for the repo, the commit will be blocked for the user trying to commit the code
+5. Because Push Protection is active for the repository, the commit will be blocked, preventing the secret from being pushed.
 
   <details>
     <summary> Animated Guide</summary>
