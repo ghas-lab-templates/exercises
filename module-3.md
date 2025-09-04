@@ -330,8 +330,6 @@ These are the only directories within the `mono` repo that we're interested in s
 
 #### Steps
 
-Earlier, we chose not to apply our security configuration to the `mono` repository. Now, we will create a custom CodeQL workflow that scans only the relevant directories in the monorepo. This will help us understand how to efficiently manage code scanning in large repositories.
-
 1. Navigate to the `Settings` tab of the `mono` repository.
 2. In the left sidebar, select `Advanced Security`.
 3. Under `Code scanning` for the repository `Switch to advanced`
