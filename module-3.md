@@ -1,5 +1,5 @@
 
-# Module 2 - Secret Scanning
+# Module 3 - Secret Scanning
 
 ## Enablement  
 
