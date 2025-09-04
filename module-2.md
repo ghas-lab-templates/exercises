@@ -10,52 +10,25 @@ In this lab, you will learn how to create and apply a custom security configurat
 
 #### Steps
 
-1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
-  <details>
-    <summary> Animated Guide</summary>
-
-  ![alt text](images/new-config.gif)
-
-  </details>
-
-2. To help identify your custom security configuration and clarify its purpose, name your configuration and create a description. 
-
-  <details>
-    <summary>Need Help? View Configuration Screenshot</summary>
-    
-  ![alt text](images/confignameanddesc.png)
-
-  </details>
-
-3. For each configuration option select the following:
- - `GitHub Advanced Security Features`: Select `Include`.
- - `Secret Scanning - Alerts`: Select `Enabled`.
- - All Other Settings: Select `Not set`.
- - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
- - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
-
+1. In GitHub, navigate to the security configuration you created in module 1.
+2. Update your configuration with the following settings:
+   - ``: set `Default setup` > `Enabled with advanced set up allowed` 
+3. For each configuration option under `Secret Scanning` select the following:
+- `Secret Scanning - Alerts`: Select `Enabled`
+- `Validity check`: Select `Enabled`
+- `Non-provider patterns`: Select `Enabled`
+- `Scan for generic passwords`: Select `Enabled`
+- `Push protection`: Select `Enabled`
+- `Bypass priveleges`: Select `Not set`
+- `Prevent direct alert dismissals`: Select `Enabled`
 4. Click on `Save Configuration` button. Please confirm save if prompted.
-
-    <details>
-  <summary>Need Help? View Configuration Screenshot</summary>  
-    
-    ![alt text](images/config-options-secret-scanning.png)
-    
-  </details>
-
-5. The page will redirected to the Configurations page. Click on the Apply to dropdown and select All repositories. There will be a prompt for confirmation, select Apply
-
-  <details>
-    <summary>Animated Guide</summary>
-
-  ![alt text](images/applytoallrepos.png)
-  </details>
+5. Navigate to the `mona-gallery`. Under the `Security` tab, select `secret scanning`. Inspect the alerts. 
 
 ### Lab 2 - Custom Patterns with AI 
 
 #### Objective
 
-The objective of this lab is to demonstrate the uage of cutom patterns in identifying secrets which are not part of the Secret Scanning Partner Program in GitHub
+The objective of this lab is to demonstrate the usage of cutom patterns in identifying secrets which are not part of the Secret Scanning Partner Program in GitHub
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization
