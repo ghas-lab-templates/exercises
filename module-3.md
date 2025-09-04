@@ -335,90 +335,90 @@ These are the only directories within the `mono` repo that we're interested in s
 3. Under `Code scanning` for the repository `Switch to advanced`
 4. You'll be directed to the `codeql.yml file. Update it to the following template
 
-   **Monorepo CodeQL Template**
-    ```yaml
+**Monorepo CodeQL Template**
 
-          name: "CodeQL Monorepo Analysis"
-    
-          on:
-            push:
-              branches: [ "main" ]
-            pull_request:
-              branches: [ "main" ]
-            schedule:
-              - cron: '19 1 * * 1'
-    
-          jobs:
-            detect_changes:
-              runs-on: ubuntu-latest
-              permissions:
-                actions: read
-                contents: read
-              outputs:
-                matrix: ${{ steps.detect_changes.outputs.matrix }}
-                matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  with:
-                    fetch-depth: 2        
-                - name: Find changed directories and map to directories and languages
-                  id: detect_changes
-                  run: |
-                    # TODO: Implement detection logic
-    
-            analyze:
-              name: Analyze (${{ matrix.language }})
-              needs: detect_changes
-              runs-on: ubuntu-latest
-              permissions:
-                security-events: write
-                packages: read
-                actions: read
-                contents: read
-              strategy:
-                fail-fast: true
-                matrix:
-                  include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
-    
-              steps:
-                - name: Checkout repository
-                  uses: actions/checkout@v4
-                  with:
-                    sparse-checkout: |
-                      ${{ matrix.directory }}
-                    sparse-checkout-cone-mode: false
-                # TODO: Implement CodeQL analysis steps
-    
-            process_sarif:
-              name: Process SARIF
-              needs: [detect_changes, analyze]
-              runs-on: ubuntu-latest
-              permissions:
-                # required for all workflows
-                security-events: write
-                # required to fetch internal or private CodeQL packs
-                packages: read
-                # only required for workflows in private repositories
-                actions: read
-                contents: read
-              strategy:
-                fail-fast: true
-                matrix: 
-                  include:  # TODO: Implement what needs to be passed into the matrix
-    
-              steps:
-              - name: Checkout repository
-                uses: actions/checkout@v4
-                with:
-                  sparse-checkout: |
-                     # TODO: Implement what needs to be checked out
-                  sparse-checkout-cone-mode: false
-              
-               # TODO: Implement processing unchanged files 
-                    
+```yaml
+name: "CodeQL Monorepo Analysis"
 
-    ```    
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '19 1 * * 1'
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      matrix: ${{ steps.detect_changes.outputs.matrix }}
+      matrix_no_changes: ${{ steps.detect_changes.outputs.matrix_no_changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Find changed directories and map to directories and languages
+        id: detect_changes
+        run: |
+          # TODO: Implement detection logic
+
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    needs: detect_changes
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: true
+      matrix:
+        include: ${{ fromJson(needs.detect_changes.outputs.matrix) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ${{ matrix.directory }}
+          sparse-checkout-cone-mode: false
+
+      # TODO: Implement CodeQL analysis steps
+
+  process_sarif:
+    name: Process SARIF
+    needs: [detect_changes, analyze]
+    runs-on: ubuntu-latest
+    permissions:
+      # required for all workflows
+      security-events: write
+      # required to fetch internal or private CodeQL packs
+      packages: read
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: true
+      matrix:
+        include: # TODO: Implement what needs to be passed into the matrix
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            # TODO: Implement what needs to be checked out
+          sparse-checkout-cone-mode: false
+
+      # TODO: Implement processing unchanged files
+``` 
 
 5. The workflow you are creating will contain three distinct jobs:
      - **detect_changes**: Identifies modified areas of your monorepo.
