@@ -465,12 +465,10 @@ git push origin main
 
 #### Objective
 
-In this lab, we will configure a Dependency Review workflow in GitHub Actions to analyze pull requests (PRs) and alert on the introduction of vulnerable dependencies to the `mona-gallery` repository.
+This lab will guide you through setting up and enforcing dependency review workflows in GitHub using GitHub Actions and organization push rulesets. 
 
 #### Steps
-1. Open your repository in Codespaces.
-2. Create a new file named `dependency-review.yml` in the `.github/workflows` directory 
-3. Add the following configuration file: 
+1. Navigate to the `github-configurations` repository and locate the file named `.github/workflows/dependency-review.yml`. What is this workflow doing?
 
 ```yaml
 
@@ -506,8 +504,23 @@ jobs:
         # ([String]). Block pull requests that introduce vulnerabilities in the scopes that match this list (optional)
         # Possible values: "development", "runtime", "unknown"
         fail-on-scopes: development, runtime
+
 ```
-4. Commit and push your changes 
+2. Go to the repository `Settings` page. Under `Code and automation` section, click `Actions`. In the `General` sub-section, scroll down to `Access` at the bottom of the page. Select `Accessible from repositories in the [YOUR ORG] organization`. Click Save
+3. Navigate to your `Organization Settings` page. Under the `Code, planning, and automation section`, click `Repository`. Under `Rulesets`, then select `New branch ruleset`.
+4. Fill out the following details:
+  - Ruleset name: Dependency Review
+  - Enforcement Status: enabled
+  - Repository targeting criteria: All repositories
+  - Target branches: Include default branches
+  - Under branch rules select `Require workflows to pass before merging`. Click on `Add workflow` and choose the `dependency-review` workflow in the `github-configurations` repository. 
+5.  Open the `mona-gallery` repository in Codespaces.
+6. Create a new file named `dependency-review.yml` in the `.github/workflows` directory
+7. Select Create. 
+8. Add the following configuration file: 
+
+
+9. Commit and push your changes 
 
 <details>
     <summary>Git Commands </summary>
@@ -519,7 +532,7 @@ git push origin main
 ```
 </details>
 
-5. Create a branch from the `main` branch
+10. Create a branch from the `main` branch
 
 <details>
     <summary>Git Commands </summary>
@@ -530,8 +543,8 @@ git push origin feature-a
 ```
 </details>
 
-6. Open a terminal in Codespaces and run `npm install json-web-token`
-7. Commit and push the code 
+11. Open a terminal in Codespaces and run `npm install json-web-token`
+12. Commit and push the code 
 
 <details>
     <summary>Git Commands </summary>
@@ -543,7 +556,7 @@ git push
 ```
 </details>
 
-8. Raise a Pull Request to the `main` branch
+13. Raise a Pull Request to the `main` branch
 
 #### Discussion Points
 - Why is it important to manage open-source licenses in addition to vulnerabilities?
@@ -552,7 +565,6 @@ git push
 - How do you balance security requirements with the need to avoid workflow bottlenecks?
 - When should you allow exceptions for flagged vulnerabilities?
   
-
 ### Lab 10 - Establish an Organization‑wide SECURITY.md Policy
 #### Objective
 Set up a default `SECURITY.md` in a centralized `.github` repository so all your organization’s repositories inherit a baseline security policy.
