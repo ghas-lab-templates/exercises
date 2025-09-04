@@ -143,7 +143,7 @@ In this lab, you will focus specifically on identifying leaked Bearer tokens by 
 
 #### Objective 
 
-In the previous lab, you set up a custom GitHub Secret Scanning pattern that successfully detected a leaked Bearer token in the repository github-configurations, located in the file .github/workflows/secret-scanning-report.yml on line 25.
+In the previous lab, you set up a custom GitHub Secret Scanning pattern that successfully detected a leaked Bearer token in the repository `github-configurations`, located in the file `.github/workflows/secret-scanning-report.yml` on line 25.
 
 In this lab, you will go through the correct steps to remediate this leaked secret to prevent unauthorized access or misuse.
 
