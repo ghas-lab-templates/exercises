@@ -161,7 +161,6 @@ You will define a custom codeql.yml workflow that includes a custom build comman
 This demonstrates how CodeQL can be configured to analyze compiled languages such as Java by integrating custom build steps.
 
 #### Steps
-1.
 1. Navigate to the repository settings, under Advanced Security -> Code Scanning section choose the `switch to advanced setup`. You will be redirected to the codeql.yml workflow file in the repository.
 2. Examine the generated workflow. Take note of the default value set for the `build-mode` parameter. Consider what this default behavior implies for how your application is built and scanned.
 3. According to the comments in the auto-generated file, you must change the build-mode to `manual` if you want to supply your own build steps.
