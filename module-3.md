@@ -34,7 +34,7 @@ You will complete this exercise using GitHub's web UI at the organization level.
 3. Click the green button labelled `New ruleset` and choose `New branch ruleset`.
 4. Enter a clear name for your ruleset (e.g `Require CodeQL results on PR`).
 5. Select `Enforcement status` to `Active`.
-6. Under `Target repositories` select `All repositories`. 
+6. Under `Target repositories` select `mona-gallery`. 
 7. Under `Target branches` select `Add target` and choose `Include default branch` from the dropdown menu. 
 8. Under `Branch rules`, select`Require code scanning results`. Note the default settings (`Security alerts: High or higher` and `Alerts: Errors`).
 9. Click the green `Create` button to finalise and activate your branch ruleset.
@@ -147,7 +147,7 @@ Proceed with these steps until both alerts are resolved.
    ![sanitization](/images/generate-fix.gif)
    
 </details>
-
+8. Disable the push ruleset in the Organisation settings and continue to next lab
 
 ## Lab 5 - Advanced Configuration with custom build command
 
@@ -155,107 +155,17 @@ Proceed with these steps until both alerts are resolved.
 > Open the `JavaVulnerableLab` repository in your organization.
 
 ### Objective
-In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (an Actions workflow file). We will be defining a custom CodeQL scanning yml file, but with a custom build command to build the application before scanning the application for vulnerabilities. This will showcase how custom build commands can be used to scan compiled languages in CodeQL.
+In this lab, you will learn how to configure a CodeQL scan using Advanced Setup (via a GitHub Actions workflow file).
+You will define a custom codeql.yml workflow that includes a custom build command to compile the application before running the CodeQL scan.
+
+This demonstrates how CodeQL can be configured to analyze compiled languages such as Java by integrating custom build steps.
 
 #### Steps
-
-1. Create the file `.github/workflows/codeql.yml` by using the Actions marketplace template for CodeQL, which can be found by navigating to the `Actions` tab.
-   <details>
-     <summary>Hint</summary>
-
-    1. Navigate to `Actions` tab
-    2. If you've already run a workflow in this repository before, select the `New workflow` button. Otherwise, skip to step 3.
-    3. Search for `CodeQL` in the search bar
-    4. From the list of results, select `Configure` under `CodeQL Analysis`
-    5. This will open up the Actions editor with a pre-defined template populated to run the CodeQL scan
-
-   </details>
-
-   <details>
-     <summary>Solution</summary>
-
-     ```yaml
-        # For most projects, this workflow file will not need changing; you simply need
-        # to commit it to your repository.
-        #
-        # You may wish to alter this file to override the set of languages analyzed,
-        # or to provide custom queries or build logic.
-        #
-        # ******** NOTE ********
-        # We have attempted to detect the languages in your repository. Please check
-        # the `language` matrix defined below to confirm you have the correct set of
-        # supported CodeQL languages.
-        #
-        name: "CodeQL Advanced"
-
-    on:
-      push:
-        branches: [ "main" ]
-      pull_request:
-        branches: [ "main" ]
-    
-    jobs:
-      analyze:
-        name: Analyze (${{ matrix.language }})
-        runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-        permissions:
-          security-events: write
-          packages: read
-          actions: read
-          contents: read
-    
-        strategy:
-          fail-fast: false
-          matrix:
-            include:
-            - language: java-kotlin
-              build-mode: none # This mode only analyzes Java. Set this to 'autobuild' or 'manual' to analyze Kotlin too.
-        # CodeQL supports the following values keywords for 'language': 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
-        # Use `c-cpp` to analyze code written in C, C++ or both
-        # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
-        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
-        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
-        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
-        
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-    
-        - name: Initialize CodeQL
-          uses: github/codeql-action/init@v3
-          with:
-            languages: ${{ matrix.language }}
-            build-mode: ${{ matrix.build-mode }}
-
-         # If the analyze step fails for one of the languages you are analyzing with
-         # "We were unable to automatically build your code", modify the matrix above
-         # to set the build mode to "manual" for that language. Then modify this step
-         # to build your code.
-         # ℹ️ Command-line programs to run using the OS shell.
-         # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-        - if: matrix.build-mode == 'manual'
-          shell: bash
-          run: |
-            echo 'If you are using a "manual" build mode for one or more of the' \
-              'languages you are analyzing, replace this with the commands to build' \
-              'your code, for example:'
-            echo '  make bootstrap'
-            echo '  make release'
-            exit 1
-    
-        - name: Perform CodeQL Analysis
-          uses: github/codeql-action/analyze@v3
-          with:
-            category: "/language:${{matrix.language}}"
-     ```
-   </details>
-
-2.  If you analyse the yml file, you can see that by default the `build-mode` configured is `none` (buildless scan)
-3.  As per the comments in the auto generated yml file, if we have to run our custom build command for this java application, we have to change the `build-mode` to `manual`
-4.  Can you suggest what changes you have to make to the CodeQL yml file to run a custom build command before a scan is triggered with codeQL?
-
+1.
+1. Navigate to the repository settings, under Advanced Security -> Code Scanning section choose the `switch to advanced setup`. You will be redirected to the codeql.yml workflow file in the repository.
+2. Examine the generated workflow. Take note of the default value set for the `build-mode` parameter. Consider what this default behavior implies for how your application is built and scanned.
+3. According to the comments in the auto-generated file, you must change the build-mode to `manual` if you want to supply your own build steps.
+4.  Update the workflow so that the job includes the command necessary to build the Java application.
 <details>
      <summary>Hint</summary>
 
@@ -346,7 +256,7 @@ In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (
 ```
 </details>
 
-5. Commit the changes to a new branch, for example `codeql-advanced-setup`, and push it to the repository.
+5. Push your changes and navigate to the Actions tab to see the workflow run. 
 
 ## Lab 6 - Security Campaigns
 
