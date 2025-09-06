@@ -161,8 +161,8 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
 5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
 6. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`.
-8. Navigate back to the `mona-gallery` repository and confirm that the changes made have been applied by looking at the `Settings` > `Code Security`. The `Automatic dependency submission` should be set to `Enabled`.
-9. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Maven dependencies, both direct and transitive.
+8. Navigate back to the `OpenAPI.net` repository and confirm that the changes made have been applied by looking at the `Settings` > `Code Security`. The `Automatic dependency submission` should be set to `Enabled`.
+9. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Nuget dependencies, both direct and transitive.
 
 #### Discussion Points
 -  What are the advantages of using the built-in Automatic Dependency Submission feature over manually submitting dependency graphs?
