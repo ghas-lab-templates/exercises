@@ -157,7 +157,7 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 #### Steps
 1. Navigate to the `OpenAPI.net` repository in your GitHub Organization.
 2. Filter the dependencies by `ecosystem:Nuget`.
-3. Notice the dependency graph only shows 67 dependencies. This is unusual for a project of its size. 
+3. Notice the dependency graph only shows a small number of dependencies for a project of its size. 
 4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
 5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
 6. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`.
