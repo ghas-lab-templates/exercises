@@ -171,7 +171,7 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 
 #### Objective 
 
-You can use GitHub Actions to generate artifact attestations that establish build provenance for artifacts such as binaries and container images. This produces a cryptographically signed calims including information about the workflow, repository, organiszation, environment, commit SHA and other information associated with the OIDC token.  
+You can use GitHub Actions to generate artifact attestations that establish build provenance for artifacts such as binaries and container images. This produces a cryptographically signed claim including information about the workflow, repository, organization, environment, commit SHA and other information associated with the OIDC token.  
 
 A Software Bill of Materials (SBOM) is a comprehensive list of software components, dependencies, and versions within a project. Generating and attesting an SBOM improves supply chain security by enabling transparency about the software used and providing cryptographic proof of its integrity.
 
@@ -188,7 +188,7 @@ Together, SBOMs and build provenance provide:
 In this lab, we will use a GitHub Action to release, upload, and attest the SBOM.
 
 #### Steps
-1. Navigate to the `mona-gallery`repository in your organization.
+1. Navigate to the `mona-gallery` repository in your organization.
 2. Locate the workflow file named `release-attestation.yml` in the `.github/workflows` directory. Review the workflow below - what is it doing?
 
 ```yaml
