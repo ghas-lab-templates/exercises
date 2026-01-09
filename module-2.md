@@ -100,19 +100,18 @@ The objective of this Lab is to demonstrate and familiarize the participants wit
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization
-2. Continuing from Lab 2, where we already created a custom pattern to identify a custom secret and published the custom pattern which captured the `mona_value_abc124` secret
+2. Continuing from Lab 2, where you created a custom pattern to identify a custom secret. Before enabling push protection, you must first publish the pattern. In the custom pattern page, click `Publish pattern` if you haven't already done so.
 3. In this exercise, we will now enable push protection for the custom pattern at the repository level. Note: Push protection can also be enabled at the organization and enterprise levels.
 
-4. To enable push protection for the custom pattern:
-   - Navigate to the repository `Settings` tab.
-   - In the `Security` section of the sidebar, click `Advanced Security`.
-   - Under `Secret Protection`, under `Custom patterns`, click the settings icon (gear or pencil) for your custom pattern.
-   - Scroll down to `Push Protection` and click `Enable`.
-   - **Important:** The `Enable` button is only visible for published patterns. Push protection must also be enabled at the repository level for this to work.
+4. To enable push protection for the published custom pattern:
+   - In the repository `Settings` tab, in the `Security` section of the sidebar, click `Advanced Security`.
+   - Under `Secret Protection`, under `Custom patterns`, click the settings icon (gear or pencil) next to your custom pattern.
+   - Scroll down to the `Push Protection` section and click `Enable`.
+   - **Important:** The `Enable` button is only visible for published patterns. If you don't see the `Enable` button, make sure you have published the pattern first (see step 2).
 
-5. Once push protection is enabled for the custom pattern, we will test it by attempting to commit code changes.
+5. Once push protection is enabled for the custom pattern, we will test it by attempting to commit code changes that include the secret string matching the custom pattern (`mona_value_abc124`).
 
-6. Since push protection is enabled, the commit will be blocked for the user trying to commit the code.
+6. Since push protection is now enabled, the commit will be blocked, and you will see a push protection warning preventing the secret from being committed to the repository.
 
   <details>
     <summary> Animated Guide</summary>
