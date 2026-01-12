@@ -1,4 +1,3 @@
-
 # Module 2 - Secret Scanning
 
 ## Enablement  
@@ -10,7 +9,7 @@ In this lab, you will learn how to create and apply a custom security configurat
 
 #### Steps
 
-1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Code security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
+1. Click on your Organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`.  You will be navigated to the `Code security configurations` page, click `New configuration` button.
   <details>
     <summary> Animated Guide</summary>
 
@@ -27,9 +26,8 @@ In this lab, you will learn how to create and apply a custom security configurat
 
   </details>
 
-3. For each configuration option select the following:
- - `GitHub Advanced Security Features`: Select `Include`.
- - `Secret Scanning - Alerts`: Select `Enabled`.
+3. For each configuration option, select the following:
+ - `Secret Protection` → `Secret scanning`: Select `Enabled`.
  - All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
@@ -102,10 +100,18 @@ The objective of this Lab is to demonstrate and familiarize the participants wit
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization
-2. Continuing from Lab 2, where we already created a custom pattern to identify a custom secret and published the custom pattern which captured the `mona_value_abc124` secret
-3. In this exercies, we will now enable the Push protection feature at the repository level (push protection can also be enabled at the Enterprise and Organiation level) and then psecifically enable push protection for the newly created custom pattern
-4. Oncel, push protection is enabled for the custom pattern, we will then try to commit some changes in the source code by trying to commit a string which matches the custom pattern
-5. Since push protection is enabled for the repo, the commit will be blocked for the user trying to commit the code
+2. Continuing from Lab 2, where you created a custom pattern to identify a custom secret. Before enabling push protection, you must first publish the pattern. In the custom pattern page, click `Publish pattern` if you haven't already done so.
+3. In this exercise, we will now enable push protection for the custom pattern at the repository level. Note: Push protection can also be enabled at the organization and enterprise levels.
+
+4. To enable push protection for the published custom pattern:
+   - In the repository `Settings` tab, in the `Security` section of the sidebar, click `Advanced Security`.
+   - Under `Secret Protection`, under `Custom patterns`, click the settings icon (gear or pencil) next to your custom pattern.
+   - Scroll down to the `Push Protection` section and click `Enable`.
+   - **Important:** The `Enable` button is only visible for published patterns. If you don't see the `Enable` button, make sure you have published the pattern first (see step 2).
+
+5. Once push protection is enabled for the custom pattern, we will test it by attempting to commit code changes that include the secret string matching the custom pattern (`mona_value_abc124`).
+
+6. Since push protection is now enabled, the commit will be blocked, and you will see a push protection warning preventing the secret from being committed to the repository.
 
   <details>
     <summary> Animated Guide</summary>
@@ -128,7 +134,7 @@ In this lab, you will focus specifically on identifying leaked Bearer tokens by 
 
 #### Steps
 
-1. Go to your GitHub organization’s `Settings` > `Advanced Security` > `Global Settings`. Scroll to the `Custom patterns` section under `Secret Scanning` . Click on `New pattern`. 
+1. Go to your GitHub organization's `Settings` > `Advanced Security` > `Global Settings`. Scroll to the `Custom patterns` section under `Secret Scanning` . Click on `New pattern`. 
 2. Name the pattern, this can be anything, but it should clearly indicate what the pattern is scanning for — for example, `Bearer Token`.
 3. First, define the pattern for the token itself — the secret that needs to be detected —  in the `Secret format` section. Since Bearer tokens can vary widely, but usually appear as long, random-looking strings, you should match a sequence of characters commonly found in secrets. This includes uppercase and lowercase letters, numbers, and special characters such as _, -, +, /, and =. To avoid matching regular English words or short random fragments, you should require the token to be at least 15 characters long. A simple character class with a minimum length ensures the token looks like a real secret and not regular text.
 
@@ -227,4 +233,3 @@ In the webhook setup form:
 - What considerations should you keep in mind when configuring webhooks at scale across many repositories?
 - How would you integrate webhook-based alerting with existing security tools or incident management platforms?
 - What kinds of automated actions could your organization take when a secret leak is detected?
-
