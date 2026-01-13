@@ -84,15 +84,14 @@ Create your first security configuration for your track:
 #### Steps
 1. In **Organization** settings, **Advanced Security** > **Configurations**, click **New configuration**.
 2. Name and describe your config (e.g., `<Track> - Basic`, `Basic code security configuration`).
-3. Under **GitHub Advanced Security features**, select **Include**.
-4. Enable **ONLY** the features for your track:
-   - **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
-   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
-   - **Supply Chain Security**: set **Dependency graph** > **Enabled**.
-5. Leave other settings **Not set**.
-6. For **Use as default for newly created repositories**, choose **None**.
-7. For **Enforce Configuration**, select **Don't enforce**.
-8. Click **Save Configuration**.
+3. Enable **ONLY** the features for your track:
+   - Enable **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
+   - Enable **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
+   - Enable **Dependency scanning**: set **Dependency graph** > **Enabled**.
+4. Leave other settings **Not set**.
+5. For **Use as default for newly created repositories**, choose **None**.
+6. For **Enforce Configuration**, select **Don't enforce**.
+7. Click **Save Configuration**.
 
 #### Discussion Points
 - Why start with minimal settings before enforcing policies?
