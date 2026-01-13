@@ -18,10 +18,9 @@ Understand what organization‑level Security Configurations are, how to review 
 2. Within the **Security** group in the sidebar, click **Advanced Security** > **Configurations**.
 3. Locate the **GitHub Recommended** policy and click **Edit**.
 4. Review each section:
-   - **GitHub Advanced Security Features**
    - **Secret scanning**
    - **Code scanning**
-   - **Dependency graph & Dependabot**
+   - **Dependency scanning**
    - **Policy**
 5. Note the default settings (e.g., defaults for new repos, enforcement) and click **Cancel** to exit.
 
