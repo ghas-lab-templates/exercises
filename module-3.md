@@ -442,7 +442,8 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
 1. Navigate to the `Settings` tab of the `mono` repository.
 2. In the left sidebar, select `Advanced Security`.
 3. Enable `GitHub Advanced Security` for the repository (if it's not yet enabled).
-4. Next to `CodeQL analysis`, click the `Set up` dropdown, then select `Advanced`.
+4. Next to `CodeQL analysis`, click the `Set up` dropdown, then select `Switch to advanced`.
+    NOTE: If the Advanced configuration option is grayed out, disable Policy enforcement in configurations created outside of this lab. 
 5. You'll be directed to save a workflow template in the `.github/workflows` directory. You will edit this workflow in the following steps.
 6. The workflow you are creating will contain three distinct jobs:
      - **detect_changes**: Identifies modified areas of your monorepo.
