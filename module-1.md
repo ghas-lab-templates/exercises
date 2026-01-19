@@ -53,7 +53,7 @@ Understand how to navigate and interpret dependency graphs at both the organizat
 
 #### Steps: Organization Level Dependencies 
 1. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
-2. Review the licenses used in the Organization.
+2. Review the `Licenses` used in the Organization.
 3. Explore the relationship between dependencies and dependents.
 <details>
   <summary> Animated Guide</summary>
