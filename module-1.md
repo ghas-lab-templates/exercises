@@ -11,14 +11,13 @@ In this lab, you will learn how to apply a custom security configuration to repo
 
 1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the two configuration you created earlier in Module 0.
 2. For each configuration option select the following:
- - `GitHub Advanced Security Features`: Select `Include`.
  - Under the `Dependency Scanning` section:
   - `Dependency Graph`: Select `Enabled`.
   -  All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
 
-4. Click on the `Save Configuration` button. Please confirm save if prompted.
+4. Click on the `Save Configuration` or `Update Configuration` button. Please confirm if prompted.
 
   <details>
  <summary>Need Help? View Configuration Screenshot</summary>  
