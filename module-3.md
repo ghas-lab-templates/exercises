@@ -5,7 +5,7 @@
 ## Lab 1 - Default Setup 
 
 #### Objective
-In this lab, you will learn how to configure code sacanning default setup at the Organization level.
+In this lab, you will learn how to configure code scanning default setup at the Organization level.
 
 Default setup for code scanning is the quickest, easiest, most low-maintenance way to enable code scanning for your repositories. Based on the code in your repository, 
 default setup will automatically create a custom code scanning configuration. After enabling default setup, the code written in CodeQL-supported languages in your repository will be scanned. We will be using the Org that you have been given access to configure Default CodeQL scans at the organization level.
