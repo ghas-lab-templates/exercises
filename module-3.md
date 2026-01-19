@@ -375,12 +375,14 @@ For this exercise, we will use the Org level Security tab for creating `Campaign
  2. Under the `Security` tab, click on the `Campaigns` menu in the left-hand pane.
  3. Click on the `Create campaign` button.
  4. Select `From template`
- 5. In the subsequent menu, review the existing Campaign templates:
+ 5. In the subsequent menu, review the existing Campaign templates and pick one:
     1. Critial CodeQL Alerts
     2. Mitre top 10 KEV
     3. SQL Injection
     4. Cross-site Scripting
-
+ 6. Create a new code scanning campaign by clicking "Save as" and selecting "Published campaign"
+ 7. Choose a due date and publish/create the campaign
+    
 <details>
   <summary> Animated Guide</summary>
 
