@@ -277,7 +277,7 @@ In this lab, you will learn how to configure a CodeQL scan with Advanced Setup (
 2. In the `Initialize CodeQL` step, under the `if` condition which corresponds to the `manual` build step, comment out the `echo` commands and the `exit 1` command
 3. Replace these with the actual java build command. In this case, since it is a maven application, we would use the below command to build the source code:
 
-        `mvn clean install`
+        mvn clean install
  </details>
 
  <details>
