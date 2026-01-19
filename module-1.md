@@ -30,7 +30,7 @@ In this lab, you will learn how to apply a custom security configuration to repo
   - For the `Supply chain security - Basic` configuration:
     - Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
   - For the `Supply chain security - Business Critical` configuration:
-    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and the then select the `Risk-level` custom propertyh with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
+    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and then select the `Risk-level` custom property with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
 
 <details>
   <summary>Animated Guide</summary>
