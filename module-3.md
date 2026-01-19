@@ -720,7 +720,7 @@ Earlier, we chose not to apply our security configuration to the `mono` reposito
 
       - If a push rule requires all checks to pass before merging, and CodeQL does not analyze certain parts of the monorepo, those checks will remain in a neutral state and merging will be blocked.
       
-      - To address this, you need to submit can empty SARIF file (available in `.github/scripts/empty.sarif`) for any unmodified components to mark them as successfully analyzed.
+      - To address this, you need to submit an empty SARIF file (available in `.github/scripts/empty.sarif`) for any unmodified components to mark them as successfully analyzed.
 
 
 
