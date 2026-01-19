@@ -145,10 +145,10 @@ Create a GitHub App for your track to enable the use of the GitHub API and webho
 5. Permissions:
    - **Repository permissions**: 
         - select `Read and write` for `Code scanning alerts`, `Secret scanning alerts`, `Dependabot alerts`, and `Pull requests`.
-        - select `Read` for `Contents` and `Issues`.
+        - select `Read-only` for `Contents` and `Issues`.
    - **Organization permissions**:
         - select `Read and write` for `Campaigns`
-        - select `Read` for `Members`
+        - select `Read-only` for `Members`
 6. Click **Create GitHub App**.
 
 **Generate a private key and store it in GitHub Secrets**
