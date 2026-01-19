@@ -104,10 +104,13 @@ Create your first security configuration for your track:
 Create a high‑risk configuration for repositories tagged **Business Critical App** and require enforcement.
 
 #### Steps
-1. Go to **Advanced Security** > **Configurations**, click **New configuration**.
+1. In **Organization** settings, go to **Advanced Security** > **Configurations**, click **New configuration**.
 2. Name it `<Track> - Business Critical`, add a description.
-3. Select **Include** for **GitHub Advanced Security Features**.
-4. Enable desired features (e.g., **Code scanning**, **Secret scanning**, **Dependabot alerts**).
+3. Enable **ONLY** the features for your track:
+   - Enable **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
+   - Enable **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
+   - Enable **Dependency scanning**: set **Dependency graph** > **Enabled**.
+4. Leave other settings **Not set**.
 5. Set **Enforce Configuration** > **Enforce**.
 6. Click **Save Configuration**.
 
