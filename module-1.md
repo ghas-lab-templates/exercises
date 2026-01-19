@@ -84,8 +84,9 @@ In this lab, we'll learn how to use the Dependency Submission Action to correctl
 
 #### Steps
 1. Navigate to the `moshi` repository in your GitHub Organization.
-2. Notice that the dependency graph only shows 3 dependencies. This is unusual for a project of its size because the repository uses Gradle for its build process and Gradle resolves dependencies dynamically during build time.
-3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
+2. On the repository page, locate the Insights tab in the navigation bar at the top. Under the Insights sections, find and click on Dependency Graph from the left-hand menu.
+3. Notice that the dependency graph only shows 3 dependencies. This is unusual for a project of its size because the repository uses Gradle for its build process and Gradle resolves dependencies dynamically during build time.
+4. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
   a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file.
   b. Copy and paste the following workflow into the file:
 
