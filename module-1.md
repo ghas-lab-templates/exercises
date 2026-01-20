@@ -288,10 +288,10 @@ In this lab, we will enable and review Dependabot Alerts and Dependabot Security
 #### Steps
 1. Edit your custom security configuration to enable Dependabot.
   a.  Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
-2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
-3. In the `Advanced Security` section of the sidebar click on `Global settings`. Select the `Grouped security updates` checkbox. This will group all Dependabot security updates into a single pull request per dependency.
+2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`. Update configuration.
+3. In the `Advanced Security` section of the sidebar click on `Global settings`. Toggle the `Grouped security updates` checkbox to ON. This will group all Dependabot security updates into a single pull request per dependency.
 4. Check the `Dependabot on Action runners` checkbox. This will run all Dependabot workflows on GitHub Action runners.
-5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
+5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Advanced Security` under `Security` section if the changes have been applied.
 6. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
 7. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests to see if they are related to security updates and if they are grouped together.
 8. Navigate to the `Security` tab and check if there are any open Dependabot alerts. Review the alerts to see if they are related to security updates and if they are grouped together.
