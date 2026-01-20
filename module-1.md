@@ -309,14 +309,14 @@ In this lab, we will enable and review Dependabot Alerts and Dependabot Security
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
 
 #### Steps
-1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Advanced Security`, select `Code security`.
+1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, select `Advanced Security` under `Security` section
 2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
 3. Set Up the Rule:
 - Rule Name: Dismiss No-Patch Alerts for Go and Pip.
 - Target Alerts > Ecosystem: Select Go and Pip from the dropdown list.
 - Rules : Select Dismiss alerts > Until patch is available.
 4. Select `Create Rule` button.
-5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
+5. Navigate to the `Security` tab and select Dependabot Alerts tab and view which alerts have been closed. 
 
 #### Discussion Points
 - What are the potential risks of dismissing alerts for unpatched vulnerabilities? How can these risks be mitigated?
