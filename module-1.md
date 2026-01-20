@@ -409,7 +409,8 @@ updates:
   # Keep npm dependencies up to date
   - package-ecosystem: "npm"
     directory: "/frontend"
-    registries: "npm-github"
+    registries:
+      - "npm-github"
     schedule:
       interval: "weekly"
     # Raise all npm pull requests with custom labels
