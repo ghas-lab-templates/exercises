@@ -594,13 +594,15 @@ To enforce the Dependency Review workflow to high-risk repositories, we will uti
 3. Click on the `New branch ruleset` button.
 4. Name the ruleset `Dependency Review`.
 5. Select the `Enforcement status` to `Active`.
-6. Under the `Target` section, select `Dynamic list by property`.
-7. Select the `Risk-level` property and then select the `Business Critical App` as value.
-8. Click `Add target` to add the target.
-9. Under the `Target branches` section, select `Include default branch`.
-10. Under the `Rules` section, select `Require workflows to pass before merging`.
-11. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
-12. Click `Add workflow` to add the rule.
+6. Under the `Target repositories` section, set `Repository targeting criteria` to "Repositories matching a filter".
+7. Edit `Repositories matching a filter`.
+8. Select the `Risk-level` property and then select the `Business Critical App` as value. Click Apply.
+9. Click `Apply` to select the matching repository.
+10. Under the `Target branches` section, select `Include default branch`.
+11. Under the `Rules` section, select `Require workflows to pass before merging`.
+12. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
+13. Click `Add workflow` to add the rule.
+14. Create the Ruleset.
 
 **Let's test it out!**
 1. Navigate to the `mona-gallery` repository in your GitHub Organization.
