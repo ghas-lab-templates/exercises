@@ -596,7 +596,7 @@ To enforce the Dependency Review workflow to high-risk repositories, we will uti
 5. Select the `Enforcement status` to `Active`.
 6. Under the `Target repositories` section, set `Repository targeting criteria` to "Repositories matching a filter".
 7. Edit `Repositories matching a filter`.
-8. Select the `Risk-level` property and then select the `Business Critical App` as value. Click Apply.
+8. Select the `Risk-level` property and then select the `Business Critical App` as value.
 9. Click `Apply` to select the matching repository.
 10. Under the `Target branches` section, select `Include default branch`.
 11. Under the `Rules` section, select `Require workflows to pass before merging`.
