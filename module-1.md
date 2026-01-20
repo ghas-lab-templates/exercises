@@ -389,6 +389,7 @@ In this exercise, we will update our Dependabot configuration file to provide De
 2. Click on the `Settings` tab, then select `Secrets and variables` > `Dependabot`.
 3. Click on the `New repository secret` button.
 4. Name the secret `PAT_FOR_DEPENDABOT` and paste the personal access token you created earlier.
+5. Add secret.
 
 #### Edit the Dependabot Configuration
 1. Inside the `.github` edit the `dependabot.yml` configuration file we created in the previous lab.
