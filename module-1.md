@@ -568,7 +568,7 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
-          config-file: ${{ github.repository_owner }}/appsec-central/configs/dependency-review.yml@main
+          config-file: ${{ github.repository_owner }}/appsec-central/.github/configs/dependency-review-config.yml@main
           external-repo-token: ${{ steps.app-token.outputs.token }} 
 ```
 4. Create a new file named `configs/dependency-review-config.yml` in the `.github` directory.
