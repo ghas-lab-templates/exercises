@@ -11,14 +11,13 @@ In this lab, you will learn how to apply a custom security configuration to repo
 
 1. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. You will be navigated to the `Code security configurations` page. By now you are familiar with this page, so go ahead and click the edit (pencil) icon next to the two configuration you created earlier in Module 0.
 2. For each configuration option select the following:
- - `GitHub Advanced Security Features`: Select `Include`.
  - Under the `Dependency Scanning` section:
   - `Dependency Graph`: Select `Enabled`.
   -  All Other Settings: Select `Not set`.
  - In the `Policy` options, for `Use as default for newly created repositories`, select `All repositories`.
  - In the `Policy` options, for `Enforce Configuration`, select `Don't Enforce`.
 
-4. Click on the `Save Configuration` button. Please confirm save if prompted.
+4. Click on the `Save Configuration` or `Update Configuration` button. Please confirm if prompted.
 
   <details>
  <summary>Need Help? View Configuration Screenshot</summary>  
@@ -31,7 +30,7 @@ In this lab, you will learn how to apply a custom security configuration to repo
   - For the `Supply chain security - Basic` configuration:
     - Click on the `Apply to` dropdown and select `All repositories`. There will be a prompt for confirmation; select `Apply`.
   - For the `Supply chain security - Business Critical` configuration:
-    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and the then select the `Risk-level` custom propertyh with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
+    - You can use the other way to apply configuration to subset of repositories. Select the `custom property` and then select the `Risk-level` custom property with `Business Critical App` value. This should show the `mona-gallery` repository as a search result. Select the `mona-gallery` repository and using the `Apply configuration` button, apply the `Supply chain security - Business Critical` configuration to it.
 
 <details>
   <summary>Animated Guide</summary>
@@ -54,7 +53,7 @@ Understand how to navigate and interpret dependency graphs at both the organizat
 
 #### Steps: Organization Level Dependencies 
 1. On the Organization page, locate the `Insights` tab in the navigation bar at the top. Under the `Insights` sections, find and click on `Dependencies` from the left-hand menu. 
-2. Review the licenses used in the Organization.
+2. Review the `Licenses` used in the Organization.
 3. Explore the relationship between dependencies and dependents.
 <details>
   <summary> Animated Guide</summary>
@@ -85,8 +84,9 @@ In this lab, we'll learn how to use the Dependency Submission Action to correctl
 
 #### Steps
 1. Navigate to the `moshi` repository in your GitHub Organization.
-2. Notice that the dependency graph only shows 3 dependencies. This is unusual for a project of its size because the repository uses Gradle for its build process and Gradle resolves dependencies dynamically during build time.
-3. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
+2. On the repository page, locate the Insights tab in the navigation bar at the top. Under the Insights sections, find and click on Dependency Graph from the left-hand menu.
+3. Notice that the dependency graph only shows 3 dependencies. This is unusual for a project of its size because the repository uses Gradle for its build process and Gradle resolves dependencies dynamically during build time.
+4. Add the Dependency Submission Action. Fortunately, Gradle provides a GitHub Action that can generate and submit a dependency graph for Gradle projects.
   a. Navigate to the `.github/workflows` directory in your repository and create the `dependency-submission.yml` file.
   b. Copy and paste the following workflow into the file:
 
@@ -150,12 +150,13 @@ In this lab, we'll learn how to use the built-in Automatic Dependency Submission
 
 #### Steps
 1. Navigate to the `mona-gallery` repository in your GitHub Organization.
-2. Filter the dependencies by `ecosystem:Macen`.
-3. Notice the dependency graph only shows 4 dependencies. This is unusual for a project of its size. 
-4. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
-5. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
-6. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`.
-8. Navigate back to the `mona-gallery` repository and confirm that the changes made have been applied by looking at the `Settings` > `Code Security`. The `Automatic dependency submission` should be set to `Enabled`.
+2. 2. On the repository page, locate the Insights tab in the navigation bar at the top. Under the Insights sections, find and click on Dependency Graph from the left-hand menu.
+3. Filter the dependencies by `ecosystem:Maven`.
+4. Notice the dependency graph only shows 4 dependencies. This is unusual for a project of its size. 
+5. Instead of adding an Actions workflow like in the previous exercises, we will use the built-in feature to automatically submit dependency graphs for supported languages. We can do this by enabling the `Automatic Dependency Submission` feature in the repository settings or better yet continue using the custom security configuration we created earlier.
+6. Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier to edit it.
+7. Under the `Dependency scanning` section, navigate to the dropdown for `Automatic dependency submission` and set it to `Enabled`. Update/Save configuration. 
+8. Navigate back to the `mona-gallery` repository and confirm that the changes made have been applied by looking at the `Settings` > `Advanced Security` (under Security section). The `Automatic dependency submission` should be set to `Enabled`.
 9. The automatic submission will occur on the first push to the pom.xml file after the option is enabled. Go ahead and make a small change to the `storage/pom.xml` file – you can add a comment or change the version of one of the dependencies.
 10. Give it a minute for the workflow to finish before confirming that the dependency graph now shows a complete list of Maven dependencies, both direct and transitive.
 
@@ -287,10 +288,10 @@ In this lab, we will enable and review Dependabot Alerts and Dependabot Security
 #### Steps
 1. Edit your custom security configuration to enable Dependabot.
   a.  Click on your organization's settings. In the `Security` section of the sidebar, select the `Advanced Security` dropdown menu, then click `Configurations`. Locate the custom configuration you created earlier. Click on the Edit (pencil) icon next to the configuration.
-2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`.
-3. In the `Advanced Security` section of the sidebar click on `Global settings`. Select the `Grouped security updates` checkbox. This will group all Dependabot security updates into a single pull request per dependency.
+2. Under the `Dependency scanning` section, navigate to the dropdowns for `Dependabot alerts` and `Security updates`, and set both to `Enabled`. Update configuration.
+3. In the `Advanced Security` section of the sidebar click on `Global settings`. Toggle the `Grouped security updates` checkbox to ON. This will group all Dependabot security updates into a single pull request per dependency.
 4. Check the `Dependabot on Action runners` checkbox. This will run all Dependabot workflows on GitHub Action runners.
-5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Code Security` section if the changes have been applied.
+5. Navigate back to the `mona-gallery` repository and check in the `Settings` > `Advanced Security` under `Security` section if the changes have been applied.
 6. Navigate to the `Actions` tab and check if there are any `Dependabot Updates` workflows in progress. Review the workflow logs to see if the update was successful.
 7. Navigate to the `Pull requests` tab and check if there are any open pull requests from Dependabot. Review the pull requests to see if they are related to security updates and if they are grouped together.
 8. Navigate to the `Security` tab and check if there are any open Dependabot alerts. Review the alerts to see if they are related to security updates and if they are grouped together.
@@ -308,14 +309,14 @@ In this lab, we will enable and review Dependabot Alerts and Dependabot Security
 In this lab, we will configure Dependabot Rules to manage alerts in the `mona-gallery` repository. Since this repository is very active and the development team does not have time to remove or replace dependencies unless a patch is available, we will create a rule to dismiss alerts for the `Go` and `Pip` ecosystems when no patch exists.
 
 #### Steps
-1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, under `Advanced Security`, select `Code security`.
+1. Navigate to the `mona-gallery` repository. Click on the `Settings` tab, select `Advanced Security` under `Security` section
 2. Scroll to the `Dependabot Rules` section and select the cog wheel icon to manage rules. Click on the `New Rule` green button.
 3. Set Up the Rule:
 - Rule Name: Dismiss No-Patch Alerts for Go and Pip.
 - Target Alerts > Ecosystem: Select Go and Pip from the dropdown list.
 - Rules : Select Dismiss alerts > Until patch is available.
 4. Select `Create Rule` button.
-5. Navigate to the Dependabot Alerts tab and view which alerts have been closed. 
+5. Navigate to the `Security` tab and select Dependabot Alerts tab and view which alerts have been closed. 
 
 #### Discussion Points
 - What are the potential risks of dismissing alerts for unpatched vulnerabilities? How can these risks be mitigated?
@@ -388,6 +389,7 @@ In this exercise, we will update our Dependabot configuration file to provide De
 2. Click on the `Settings` tab, then select `Secrets and variables` > `Dependabot`.
 3. Click on the `New repository secret` button.
 4. Name the secret `PAT_FOR_DEPENDABOT` and paste the personal access token you created earlier.
+5. Add secret.
 
 #### Edit the Dependabot Configuration
 1. Inside the `.github` edit the `dependabot.yml` configuration file we created in the previous lab.
@@ -407,7 +409,8 @@ updates:
   # Keep npm dependencies up to date
   - package-ecosystem: "npm"
     directory: "/frontend"
-    registries: "npm-github"
+    registries:
+      - "npm-github"
     schedule:
       interval: "weekly"
     # Raise all npm pull requests with custom labels
@@ -565,7 +568,7 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
-          config-file: ${{ github.repository_owner }}/appsec-central/configs/dependency-review.yml@main
+          config-file: ${{ github.repository_owner }}/appsec-central/.github/configs/dependency-review-config.yml@main
           external-repo-token: ${{ steps.app-token.outputs.token }} 
 ```
 4. Create a new file named `configs/dependency-review-config.yml` in the `.github` directory.
@@ -591,13 +594,15 @@ To enforce the Dependency Review workflow to high-risk repositories, we will uti
 3. Click on the `New branch ruleset` button.
 4. Name the ruleset `Dependency Review`.
 5. Select the `Enforcement status` to `Active`.
-6. Under the `Target` section, select `Dynamic list by property`.
-7. Select the `Risk-level` property and then select the `Business Critical App` as value.
-8. Click `Add target` to add the target.
-9. Under the `Target branches` section, select `Include default branch`.
-10. Under the `Rules` section, select `Require workflows to pass before merging`.
-11. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
-12. Click `Add workflow` to add the rule.
+6. Under the `Target repositories` section, set `Repository targeting criteria` to "Repositories matching a filter".
+7. Edit `Repositories matching a filter`.
+8. Select the `Risk-level` property and then select the `Business Critical App` as value.
+9. Click `Apply` to select the matching repository.
+10. Under the `Target branches` section, select `Include default branch`.
+11. Under the `Rules` section, select `Require workflows to pass before merging`.
+12. Select `Add workflow` and find `appsec-central` repository from the dropdown list and pick the `Dependency Review` workflow we created earlier. (Note: typing `.g` should be enough for the workflow to show up).
+13. Click `Add workflow` to add the rule.
+14. Create the Ruleset.
 
 **Let's test it out!**
 1. Navigate to the `mona-gallery` repository in your GitHub Organization.

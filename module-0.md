@@ -18,10 +18,9 @@ Understand what organization‑level Security Configurations are, how to review 
 2. Within the **Security** group in the sidebar, click **Advanced Security** > **Configurations**.
 3. Locate the **GitHub Recommended** policy and click **Edit**.
 4. Review each section:
-   - **GitHub Advanced Security Features**
    - **Secret scanning**
    - **Code scanning**
-   - **Dependency graph & Dependabot**
+   - **Dependency scanning**
    - **Policy**
 5. Note the default settings (e.g., defaults for new repos, enforcement) and click **Cancel** to exit.
 
@@ -85,15 +84,14 @@ Create your first security configuration for your track:
 #### Steps
 1. In **Organization** settings, **Advanced Security** > **Configurations**, click **New configuration**.
 2. Name and describe your config (e.g., `<Track> - Basic`, `Basic code security configuration`).
-3. Under **GitHub Advanced Security features**, select **Include**.
-4. Enable **ONLY** the features for your track:
-   - **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
-   - **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
-   - **Supply Chain Security**: set **Dependency graph** > **Enabled**.
-5. Leave other settings **Not set**.
-6. For **Use as default for newly created repositories**, choose **None**.
-7. For **Enforce Configuration**, select **Don't enforce**.
-8. Click **Save Configuration**.
+3. Enable **ONLY** the features for your track:
+   - Enable **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
+   - Enable **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
+   - Enable **Dependency scanning**: set **Dependency graph** > **Enabled**.
+4. Leave other settings **Not set**.
+5. For **Use as default for newly created repositories**, choose **None**.
+6. For **Enforce Configuration**, select **Don't enforce**.
+7. Click **Save Configuration**.
 
 #### Discussion Points
 - Why start with minimal settings before enforcing policies?
@@ -106,10 +104,13 @@ Create your first security configuration for your track:
 Create a high‑risk configuration for repositories tagged **Business Critical App** and require enforcement.
 
 #### Steps
-1. Go to **Advanced Security** > **Configurations**, click **New configuration**.
+1. In **Organization** settings, go to **Advanced Security** > **Configurations**, click **New configuration**.
 2. Name it `<Track> - Business Critical`, add a description.
-3. Select **Include** for **GitHub Advanced Security Features**.
-4. Enable desired features (e.g., **Code scanning**, **Secret scanning**, **Dependabot alerts**).
+3. Enable **ONLY** the features for your track:
+   - Enable **Secret Protection**: set **Secret scanning – Alerts** > **Enabled**.
+   - Enable **Code Security**: set **Default setup** > **Enabled** and **Runner type** > **Standard**.
+   - Enable **Dependency scanning**: set **Dependency graph** > **Enabled**.
+4. Leave other settings **Not set**.
 5. Set **Enforce Configuration** > **Enforce**.
 6. Click **Save Configuration**.
 
@@ -144,10 +145,10 @@ Create a GitHub App for your track to enable the use of the GitHub API and webho
 5. Permissions:
    - **Repository permissions**: 
         - select `Read and write` for `Code scanning alerts`, `Secret scanning alerts`, `Dependabot alerts`, and `Pull requests`.
-        - select `Read` for `Contents` and `Issues`.
+        - select `Read-only` for `Contents` and `Issues`.
    - **Organization permissions**:
         - select `Read and write` for `Campaigns`
-        - select `Read` for `Members`
+        - select `Read-only` for `Members`
 6. Click **Create GitHub App**.
 
 **Generate a private key and store it in GitHub Secrets**
