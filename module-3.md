@@ -150,7 +150,7 @@ In this lab, we will address two CodeQL alerts related to SQL injection vulnerab
 3. Use the `Rule` filter and select `Database query built from user-controlled sources`.
 4. Navigate to each SQL injection alert and click  the `Generate fix` button
 5. Once the fix is generated, carefully review it to ensure accuracy. AI-generated suggestions can vary, so verifying each proposed solution is crucial.
-6. Click the dropdown arrow on the green `Commit to new branch` button and select `Commit to branch`.
+6. Click on the green `Commit to new branch` button.
 7. Choose the `sql-injection-fix` branch from the dropdown options, and select `Open a pull request`. This will append your changes to the existing PR.
 
 Proceed with these steps until both alerts are resolved.
